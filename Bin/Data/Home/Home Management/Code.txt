@@ -1,0 +1,13 @@
+# Rank tumor mutations by predicted T-cell response
+import numpy as np
+
+def neoantigen_score(binding, expression, clonality):
+    return 0.5*binding + 0.3*expression + 0.2*clonality
+
+mutations = {"KRAS_G12D": (0.92, 0.80, 0.95),
+             "TP53_R175H": (0.71, 0.88, 0.90),
+             "BRAF_V600E": (0.85, 0.77, 0.99)}
+
+for name, v in sorted(mutations.items(),
+        key=lambda kv: -neoantigen_score(*kv[1])):
+    print(f"{name:12s} -> {neoantigen_score(*v):.3f}")
