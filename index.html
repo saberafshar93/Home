@@ -2,1312 +2,527 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Helix Atlas — AI-Native Drug Discovery</title>
-<meta name="description" content="Helix Atlas fuses molecular simulation with machine learning to compress years of drug discovery into months.">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ImmunoVerse | 3D Immunotherapy Hub</title>
 <style>
-  :root{
-    --bg:            #05070c;
-    --bg-soft:       #090d16;
-    --grid-line:     rgba(150,190,255,0.05);
-    --card:          rgba(14,19,32,0.55);
-    --card-solid:    #0c111c;
-    --border:        rgba(255,255,255,0.08);
-    --border-glow:   rgba(0,230,184,0.4);
-    --cyan:          #00e6b8;
-    --violet:        #8b6bff;
-    --text:          #f2f5f9;
-    --muted:         #8b96ab;
-    --muted-dim:     #5b6478;
+:root{
+  --bg:#050816; --panel:rgba(16,22,48,.62); --line:rgba(140,170,255,.18);
+  --txt:#e8edff; --mute:#9aa7d6; --a:#4df0c8; --b:#7b6cff; --c:#ff5d8f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Inter,system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0;width:100%;height:100%}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:1000;background:linear-gradient(90deg,var(--a),var(--b),var(--c))}
+main,footer{position:relative;z-index:2}
+a{color:inherit;text-decoration:none}
 
-    --f-display: 'Space Grotesk', sans-serif;
-    --f-body:    'Inter', sans-serif;
-    --f-mono:    'JetBrains Mono', monospace;
-  }
+/* ---------- HEADER ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:70px;background:rgba(5,8,22,.55);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.5px}
+.logo i{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--a) 35%,var(--b));box-shadow:0 0 18px var(--a);animation:pulse 3s infinite}
+@keyframes pulse{50%{transform:scale(1.18)}}
+nav ul{display:flex;list-style:none;gap:4px}
+nav li{position:relative}
+nav li>a{display:block;padding:24px 14px;font-size:14px;font-weight:600;letter-spacing:.4px;color:var(--mute);transition:.25s}
+nav li:hover>a,nav li.open>a{color:#fff}
+nav li>a::after{content:"▾";margin-left:5px;font-size:10px}
+.drop{position:absolute;top:100%;left:0;min-width:230px;padding:10px;border-radius:0 0 16px 16px;
+  background:rgba(10,14,36,.94);border:1px solid var(--line);border-top:2px solid var(--a);
+  opacity:0;visibility:hidden;transform:translateY(-10px) rotateX(-12deg);transform-origin:top;transition:.3s;
+  box-shadow:0 20px 50px rgba(0,0,0,.5)}
+nav li:hover .drop,nav li.open .drop{opacity:1;visibility:visible;transform:none}
+.drop a{display:block;padding:10px 14px;border-radius:10px;font-size:13.5px;color:var(--mute);transition:.2s}
+.drop a:hover{background:linear-gradient(90deg,rgba(77,240,200,.15),transparent);color:#fff;padding-left:20px}
+#burger{display:none;background:none;border:1px solid var(--line);color:#fff;font-size:22px;border-radius:8px;padding:2px 10px;cursor:pointer}
 
-  *{ margin:0; padding:0; box-sizing:border-box; }
+/* ---------- LAYOUT ---------- */
+section{padding:110px 8vw 60px;position:relative}
+.tag{display:inline-block;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--a);margin-bottom:10px}
+h2{font-size:clamp(28px,4vw,46px);line-height:1.15;margin-bottom:14px}
+h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:680px;color:var(--mute);margin-bottom:34px}
+.reveal{opacity:0;transform:translateY(50px) scale(.97);transition:1s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.btn{display:inline-block;padding:12px 26px;border-radius:50px;font-weight:700;font-size:14px;border:0;cursor:pointer;
+  background:linear-gradient(90deg,var(--a),var(--b));color:#041022;transition:.3s;box-shadow:0 8px 30px rgba(77,240,200,.25)}
+.btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(123,108,255,.45)}
+.btn.ghost{background:transparent;color:#fff;border:1px solid var(--line);box-shadow:none}
 
-  html{ scroll-behavior:smooth; }
+/* ---------- HERO SLIDER ---------- */
+#home{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:100px}
+.slider{position:relative;height:min(520px,70vh);min-height:430px}
+.slide{position:absolute;inset:0;display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;
+  opacity:0;visibility:hidden;transform:translateX(60px);transition:opacity .9s,transform .9s,visibility .9s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.slide .kicker{color:var(--a);letter-spacing:3px;font-size:12px;text-transform:uppercase;margin-bottom:14px}
+.slide h1{font-size:clamp(34px,5.2vw,70px);line-height:1.06;margin-bottom:18px}
+.slide p{color:var(--mute);max-width:520px;margin-bottom:26px}
+.slide .art{height:100%;max-height:480px;perspective:1000px}
+.slide .art svg{width:100%;height:100%;filter:drop-shadow(0 30px 60px rgba(123,108,255,.35));animation:floaty 7s ease-in-out infinite;transform-style:preserve-3d}
+@keyframes floaty{50%{transform:translateY(-14px) rotateY(8deg) rotateX(3deg)}}
+.dots{display:flex;justify-content:center;gap:14px;margin-top:26px}
+.dots button{width:16px;height:16px;border-radius:50%;border:2px solid var(--mute);background:transparent;cursor:pointer;position:relative;transition:.3s}
+.dots button.active{border-color:var(--a);background:var(--a);box-shadow:0 0 16px var(--a);transform:scale(1.25)}
+.timer{height:3px;max-width:240px;margin:16px auto 0;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.timer i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b))}
+.scrollhint{text-align:center;color:var(--mute);font-size:12px;letter-spacing:2px;margin-top:26px}
+.scrollhint b{display:block;margin:8px auto 0;width:22px;height:36px;border:2px solid var(--mute);border-radius:12px;position:relative}
+.scrollhint b::after{content:"";position:absolute;left:50%;top:6px;width:4px;height:7px;margin-left:-2px;border-radius:3px;background:var(--a);animation:wheel 1.6s infinite}
+@keyframes wheel{to{transform:translateY(14px);opacity:0}}
 
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:var(--f-body);
-    line-height:1.6;
-    overflow-x:hidden;
-    -webkit-font-smoothing:antialiased;
-  }
+/* ---------- STATS ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;margin-top:30px}
+.stat{padding:26px;border-radius:20px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);text-align:center}
+.stat b{display:block;font-size:42px;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{color:var(--mute);font-size:13px}
 
-  a{ color:inherit; text-decoration:none; }
-  ul{ list-style:none; }
-  img,canvas{ display:block; max-width:100%; }
+/* ---------- BLOG ---------- */
+.blog-wrap{position:relative}
+.blog-scroll{display:flex;gap:26px;overflow-x:auto;padding:10px 4px 26px;scrollbar-width:thin;scrollbar-color:var(--b) rgba(255,255,255,.08);cursor:grab}
+.blog-scroll::-webkit-scrollbar{height:10px}
+.blog-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.07);border-radius:10px}
+.blog-scroll::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--a),var(--b));border-radius:10px}
+.post{flex:0 0 340px;border-radius:22px;overflow:hidden;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);
+  transition:transform .4s,box-shadow .4s;user-select:none}
+.post:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 24px 60px rgba(77,240,200,.18)}
+.post .img{height:200px;overflow:hidden}
+.post .img svg{width:100%;height:100%;display:block;transition:transform .8s}
+.post:hover .img svg{transform:scale(1.12) rotate(2deg)}
+.post .body{padding:20px}
+.post h3{font-size:18px;line-height:1.3;margin-bottom:12px}
+.post time{color:var(--mute);font-size:13px;display:flex;gap:8px;align-items:center}
+.post time::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a)}
 
-  ::selection{ background:var(--cyan); color:#00110d; }
+/* ---------- CARDS ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;perspective:1100px}
+.card{padding:26px;border-radius:22px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);
+  transition:transform .15s,border-color .3s,box-shadow .3s;transform-style:preserve-3d;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,0%),rgba(77,240,200,.18),transparent 55%);opacity:0;transition:.3s}
+.card:hover{border-color:rgba(77,240,200,.5);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.card:hover::before{opacity:1}
+.card .ico{font-size:34px;margin-bottom:12px;transform:translateZ(40px);display:inline-block}
+.card h3{font-size:19px;margin-bottom:8px;transform:translateZ(30px)}
+.card p{color:var(--mute);font-size:14.5px;transform:translateZ(20px)}
+.more{margin-top:26px}
 
-  /* focus visibility */
-  a:focus-visible, button:focus-visible{
-    outline:2px solid var(--cyan);
-    outline-offset:3px;
-    border-radius:4px;
-  }
+/* ---------- EXTRAS ---------- */
+.codewin{margin-top:26px;border-radius:18px;overflow:hidden;background:#0a0f26;border:1px solid var(--line);max-width:760px}
+.codewin .bar{display:flex;gap:7px;padding:12px 16px;background:#0f1633}
+.codewin .bar i{width:12px;height:12px;border-radius:50%}
+.codewin pre{padding:20px;font:13.5px/1.7 Consolas,monospace;color:#b6f5e4;min-height:220px;white-space:pre-wrap}
+.timeline{margin-top:30px;border-left:2px solid var(--line);padding-left:30px;max-width:700px}
+.tl{position:relative;margin-bottom:26px}
+.tl::before{content:"";position:absolute;left:-39px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--a);box-shadow:0 0 16px var(--a)}
+.tl b{color:var(--a)}
+.tl p{color:var(--mute);font-size:14.5px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:30px}
+.gallery div{aspect-ratio:1;border-radius:18px;overflow:hidden;border:1px solid var(--line);transition:.5s}
+.gallery div:hover{transform:scale(1.07) rotate(-2deg);z-index:2;box-shadow:0 20px 50px rgba(123,108,255,.4)}
+.gallery svg{width:100%;height:100%;display:block}
+#arena{position:relative;height:280px;margin-top:26px;border-radius:22px;background:var(--panel);border:1px solid var(--line);overflow:hidden}
+#arena .hud{position:absolute;top:12px;left:18px;z-index:3;font-weight:700}
+.bug{position:absolute;width:46px;height:46px;border-radius:50%;cursor:pointer;
+  background:radial-gradient(circle at 30% 30%,#ffb3c9,var(--c) 55%,#7a1238);box-shadow:0 0 22px var(--c);animation:pop .4s}
+@keyframes pop{from{transform:scale(0)}}
 
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
-  }
+footer{padding:50px 8vw;text-align:center;color:var(--mute);border-top:1px solid var(--line);background:rgba(5,8,22,.7);font-size:14px}
 
-  /* ================= BACKGROUND SYSTEM ================= */
-  .bg-system{
-    position:fixed;
-    inset:0;
-    z-index:-2;
-    overflow:hidden;
-    background:
-      radial-gradient(ellipse 1200px 800px at 20% -10%, rgba(0,230,184,0.08), transparent 60%),
-      radial-gradient(ellipse 1000px 700px at 100% 10%, rgba(139,107,255,0.08), transparent 60%),
-      var(--bg);
-  }
-
-  .grid-mesh{
-    position:absolute;
-    inset:-2px;
-    background-size:56px 56px;
-    background-image:
-      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-    mask-image:radial-gradient(circle at 50% 30%, black 40%, transparent 85%);
-    -webkit-mask-image:radial-gradient(circle at 50% 30%, black 40%, transparent 85%);
-    animation:gridDrift 40s linear infinite;
-  }
-
-  @keyframes gridDrift{
-    0%{ background-position:0 0; }
-    100%{ background-position:56px 112px; }
-  }
-
-  .orb{
-    position:absolute;
-    border-radius:50%;
-    filter:blur(120px);
-    opacity:0.32;
-    mix-blend-mode:screen;
-    pointer-events:none;
-  }
-  .orb-cyan{
-    top:-8%; left:8%; width:620px; height:620px;
-    background:radial-gradient(circle, var(--cyan), transparent 70%);
-    animation:floatOrb 18s ease-in-out infinite alternate;
-  }
-  .orb-violet{
-    bottom:-12%; right:6%; width:700px; height:700px;
-    background:radial-gradient(circle, var(--violet), transparent 70%);
-    animation:floatOrb 24s ease-in-out infinite alternate-reverse;
-  }
-  @keyframes floatOrb{
-    0%{ transform:translate(0,0) scale(1); }
-    100%{ transform:translate(60px,40px) scale(1.1); }
-  }
-
-  .noise-veil{
-    position:absolute; inset:0;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
-    mix-blend-mode:overlay;
-  }
-
-  /* ================= HEADER ================= */
-  header{
-    position:fixed; top:0; left:0; width:100%;
-    z-index:1000;
-    background:rgba(5,7,12,0.7);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    border-bottom:1px solid var(--border);
-  }
-  .header-inner{
-    max-width:1360px; margin:0 auto;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:18px 32px;
-  }
-  .brand{
-    font-family:var(--f-display);
-    font-size:20px; font-weight:700; letter-spacing:0.3px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .brand-mark{
-    width:26px; height:26px; border-radius:8px;
-    background:linear-gradient(135deg, var(--cyan), var(--violet));
-    display:inline-block;
-  }
-
-  nav{ display:flex; align-items:center; gap:36px; }
-  nav ul{ display:flex; gap:32px; }
-  nav > ul > li{ position:relative; }
-  nav > ul > li > a{
-    font-size:14.5px; color:var(--muted); font-weight:500;
-    padding:10px 0; display:flex; align-items:center; gap:6px;
-    transition:color 0.25s;
-  }
-  nav > ul > li > a:hover{ color:var(--text); }
-  nav > ul > li > a .caret{
-    width:8px; height:8px;
-    border-right:1.5px solid currentColor;
-    border-bottom:1.5px solid currentColor;
-    transform:rotate(45deg);
-    margin-top:-3px;
-    opacity:0.6;
-  }
-
-  .mega{
-    position:absolute; top:100%; left:50%;
-    transform:translate(-50%,10px);
-    width:300px;
-    background:var(--card-solid);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:18px;
-    opacity:0; visibility:hidden;
-    transition:all 0.25s cubic-bezier(.4,0,.2,1);
-    box-shadow:0 30px 60px rgba(0,0,0,0.5);
-  }
-  nav > ul > li:hover .mega{
-    opacity:1; visibility:visible;
-    transform:translate(-50%,4px);
-    border-color:var(--border-glow);
-  }
-  .mega-label{
-    font-family:var(--f-mono);
-    font-size:10.5px; text-transform:uppercase; letter-spacing:1.5px;
-    color:var(--cyan); margin-bottom:10px; padding-left:8px;
-  }
-  .mega{ width:320px; }
-  .mega-item{
-    display:flex; flex-direction:column; gap:6px;
-    padding:11px 10px; border-radius:10px;
-    color:var(--muted); font-size:13.5px;
-    transition:all 0.2s;
-    border:1px solid transparent;
-  }
-  .mega-item .mega-item-top{ display:flex; justify-content:space-between; align-items:center; }
-  .mega-item .mega-item-top b{ color:var(--text); font-weight:600; font-size:13.5px; }
-  .mega-item small{ color:var(--muted-dim); font-size:11.5px; }
-  .mega-params{
-    display:flex; gap:8px; flex-wrap:wrap;
-    max-height:0; opacity:0; overflow:hidden;
-    transition:all 0.25s ease;
-  }
-  .mega-item:hover{ background:rgba(0,230,184,0.06); border-color:rgba(0,230,184,0.2); }
-  .mega-item:hover .mega-params{ max-height:60px; opacity:1; margin-top:2px; }
-  .param-chip{
-    font-family:var(--f-mono); font-size:10px; letter-spacing:0.3px;
-    color:var(--cyan); background:rgba(0,230,184,0.08);
-    border:1px solid rgba(0,230,184,0.25);
-    padding:3px 8px; border-radius:100px;
-    white-space:nowrap;
-  }
-
-  .nav-cta{
-    background:linear-gradient(90deg, var(--cyan), #00c2ff);
-    color:#02110d;
-    font-weight:600; font-size:13.5px;
-    padding:10px 22px; border-radius:100px;
-    box-shadow:0 4px 18px rgba(0,230,184,0.22);
-    transition:transform 0.25s, box-shadow 0.25s;
-  }
-  .nav-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,230,184,0.35); }
-
-  .nav-toggle{ display:none; }
-
-  /* ================= HERO ================= */
-  .hero{
-    max-width:1360px; margin:0 auto;
-    padding:180px 32px 100px;
-    display:grid; grid-template-columns:1.1fr 0.9fr;
-    align-items:center; gap:60px;
-  }
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:8px;
-    font-family:var(--f-mono); font-size:12px; letter-spacing:1px;
-    color:var(--cyan);
-    border:1px solid rgba(0,230,184,0.25);
-    background:rgba(0,230,184,0.06);
-    padding:6px 14px; border-radius:100px;
-    margin-bottom:26px;
-  }
-  .eyebrow::before{
-    content:""; width:6px; height:6px; border-radius:50%;
-    background:var(--cyan);
-    box-shadow:0 0 8px var(--cyan);
-    animation:pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.3; } }
-
-  .hero h1{
-    font-family:var(--f-display);
-    font-size:58px; font-weight:700;
-    letter-spacing:-1.5px; line-height:1.08;
-    margin-bottom:24px;
-  }
-  .hero h1 .grad{
-    background:linear-gradient(90deg, var(--cyan), var(--violet));
-    -webkit-background-clip:text; background-clip:text;
-    -webkit-text-fill-color:transparent;
-  }
-  .hero p{
-    font-size:18px; color:var(--muted);
-    max-width:520px; margin-bottom:38px;
-  }
-  .hero-actions{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
-  .btn-primary{
-    background:linear-gradient(90deg, var(--cyan), #00c2ff);
-    color:#02110d; font-weight:600; font-size:14.5px;
-    padding:14px 28px; border-radius:100px;
-    box-shadow:0 4px 20px rgba(0,230,184,0.25);
-    transition:transform 0.25s, box-shadow 0.25s;
-  }
-  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,230,184,0.4); }
-  .btn-ghost{
-    border:1px solid var(--border);
-    color:var(--text); font-size:14.5px; font-weight:500;
-    padding:13px 26px; border-radius:100px;
-    transition:all 0.25s;
-  }
-  .btn-ghost:hover{ border-color:var(--border-glow); background:rgba(0,230,184,0.05); }
-
-  .hero-stats{
-    display:flex; gap:36px; margin-top:56px;
-    padding-top:32px; border-top:1px solid var(--border);
-  }
-  .hero-stats div strong{
-    display:block; font-family:var(--f-display);
-    font-size:26px; font-weight:700;
-  }
-  .hero-stats div span{
-    font-size:12.5px; color:var(--muted-dim);
-    font-family:var(--f-mono); letter-spacing:0.4px;
-  }
-
-  /* hero visual — signature element: live molecular network canvas */
-  .hero-panel{
-    position:relative;
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:28px;
-    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-    box-shadow:0 40px 90px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-    padding:20px;
-    animation:floatPanel 7s ease-in-out infinite;
-  }
-  @keyframes floatPanel{
-    0%,100%{ transform:translateY(0); }
-    50%{ transform:translateY(-14px); }
-  }
-  .hero-panel-head{
-    display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:14px; padding:0 6px;
-  }
-  .hero-panel-head span{
-    font-family:var(--f-mono); font-size:11px; color:var(--muted-dim); letter-spacing:0.5px;
-  }
-  .dot-row{ display:flex; gap:6px; }
-  .dot-row i{ width:8px; height:8px; border-radius:50%; background:var(--border); display:block; }
-  #networkCanvas{
-    width:100%; height:420px;
-    border-radius:18px;
-    background:radial-gradient(circle at 50% 40%, rgba(0,230,184,0.06), transparent 70%), #070a12;
-  }
-
-  /* ================= SECTION SHELL ================= */
-  section{ position:relative; }
-  .section-inner{ max-width:1360px; margin:0 auto; padding:0 32px; }
-  .section-head{ text-align:center; max-width:640px; margin:0 auto 64px; }
-  .section-head .eyebrow{ margin-bottom:18px; }
-  .section-head h2{
-    font-family:var(--f-display); font-size:38px; font-weight:700;
-    letter-spacing:-0.8px; margin-bottom:14px;
-  }
-  .section-head p{ color:var(--muted); font-size:16px; }
-
-  /* ================= PROCESS FLOW ================= */
-  .flow{ padding:130px 0; }
-  .flow-track{
-    display:grid; grid-template-columns:repeat(5,1fr);
-    gap:18px; position:relative;
-  }
-  .flow-track::before{
-    content:"";
-    position:absolute; top:38px; left:5%; right:5%; height:1px;
-    background:linear-gradient(90deg, transparent, var(--border-glow), transparent);
-    z-index:0;
-  }
-  .flow-node{
-    position:relative; z-index:1;
-    background:var(--card); border:1px solid var(--border);
-    border-radius:18px; padding:28px 20px;
-    transition:all 0.3s;
-  }
-  .flow-node:hover{ border-color:var(--border-glow); transform:translateY(-6px); }
-  .flow-num{
-    font-family:var(--f-mono); font-size:12px; color:var(--cyan);
-    background:rgba(0,230,184,0.08); border:1px solid rgba(0,230,184,0.2);
-    width:30px; height:30px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    margin-bottom:18px;
-  }
-  .flow-node h4{ font-size:15.5px; font-weight:600; margin-bottom:10px; }
-  .flow-node p{ font-size:13px; color:var(--muted); }
-
-  /* ================= INTEGRATION / DIAGRAM ================= */
-  .integrate{ padding:100px 0 130px; }
-  .integrate-grid{
-    display:grid; grid-template-columns:0.95fr 1.05fr;
-    gap:80px; align-items:center;
-  }
-  .integrate-copy .eyebrow{ margin-bottom:22px; }
-  .integrate-copy h3{
-    font-family:var(--f-display); font-size:34px; font-weight:700;
-    letter-spacing:-0.6px; margin-bottom:20px; line-height:1.2;
-  }
-  .integrate-copy p{ color:var(--muted); font-size:15.5px; margin-bottom:28px; }
-  .check-list{ display:flex; flex-direction:column; gap:14px; }
-  .check-list li{ display:flex; gap:12px; align-items:flex-start; font-size:14.5px; color:var(--text); }
-  .check-list i{
-    flex-shrink:0; width:20px; height:20px; border-radius:6px;
-    background:rgba(0,230,184,0.1); border:1px solid rgba(0,230,184,0.3);
-    position:relative; margin-top:2px;
-  }
-  .check-list i::after{
-    content:""; position:absolute; left:5px; top:3px;
-    width:5px; height:9px; border-right:1.5px solid var(--cyan); border-bottom:1.5px solid var(--cyan);
-    transform:rotate(45deg);
-  }
-
-  .diagram-panel{
-    background:var(--card); border:1px solid var(--border);
-    border-radius:26px; padding:30px;
-    box-shadow:0 30px 70px rgba(0,0,0,0.45);
-  }
-  #diagramCanvas{ width:100%; height:340px; border-radius:16px; background:#070a12; }
-
-  /* ================= NEURAL NET SHOWCASE ================= */
-  .neural-showcase{ padding:0 0 130px; }
-  .neural-panel{
-    background:var(--card); border:1px solid var(--border);
-    border-radius:28px; padding:8px;
-    box-shadow:0 40px 90px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-  }
-  .neural-panel-head{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:18px 22px 10px;
-  }
-  .neural-panel-head span{
-    font-family:var(--f-mono); font-size:11px; color:var(--muted-dim); letter-spacing:0.5px;
-  }
-  .legend{ display:flex; gap:16px; }
-  .legend span{ display:flex; align-items:center; gap:6px; }
-  .legend i{ width:7px; height:7px; border-radius:50%; display:block; }
-  #neuralCanvas{ width:100%; height:460px; border-radius:20px; background:#070a12; }
-
-  /* ================= CHART GRID ================= */
-  .charts{ padding:0 0 140px; }
-  .chart-grid{
-    display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:22px;
-  }
-  .chart-card{
-    background:var(--card); border:1px solid var(--border);
-    border-radius:20px; padding:24px;
-    transition:border-color 0.3s;
-  }
-  .chart-card:hover{ border-color:var(--border-glow); }
-  .chart-card-head{
-    display:flex; justify-content:space-between; align-items:flex-start;
-    margin-bottom:16px;
-  }
-  .chart-card-head h5{ font-size:14.5px; font-weight:600; margin-bottom:4px; }
-  .chart-card-head span{ font-size:12px; color:var(--muted-dim); font-family:var(--f-mono); }
-  .chart-metric{ text-align:right; }
-  .chart-metric strong{ font-family:var(--f-display); font-size:22px; display:block; }
-  .chart-metric small{ font-size:11px; color:var(--cyan); font-family:var(--f-mono); }
-  .chart-card canvas{ width:100%; }
-
-  /* ================= APPLICATIONS ================= */
-  .applications{ padding:0 0 140px; }
-  .app-grid{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
-  }
-  .app-card{
-    background:var(--card); border:1px solid var(--border);
-    border-radius:20px; overflow:hidden;
-    transition:all 0.3s;
-  }
-  .app-card:hover{ border-color:var(--border-glow); transform:translateY(-6px); box-shadow:0 24px 50px rgba(0,230,184,0.06); }
-  .app-visual{
-    height:150px; position:relative; overflow:hidden;
-  }
-  .app-visual svg{ width:100%; height:100%; }
-  .app-body{ padding:24px; }
-  .app-tag{
-    font-family:var(--f-mono); font-size:10.5px; letter-spacing:1px;
-    color:var(--cyan); text-transform:uppercase; margin-bottom:10px; display:block;
-  }
-  .app-body h4{ font-size:17px; font-weight:600; margin-bottom:8px; }
-  .app-body p{ font-size:13.5px; color:var(--muted); }
-
-  /* ================= CONTACT ================= */
-  .contact{ padding:0 0 140px; }
-  .contact-panel{
-    max-width:1360px; margin:0 auto; padding:0 32px;
-  }
-  .contact-inner{
-    background:linear-gradient(135deg, rgba(0,230,184,0.05), rgba(139,107,255,0.05));
-    border:1px solid var(--border);
-    border-radius:30px; padding:80px 40px; text-align:center;
-    position:relative; overflow:hidden;
-  }
-  .contact-inner h2{
-    font-family:var(--f-display); font-size:38px; font-weight:700;
-    letter-spacing:-0.6px; margin-bottom:16px;
-  }
-  .contact-inner p{ color:var(--muted); font-size:16px; margin-bottom:34px; }
-
-  /* ================= FOOTER ================= */
-  footer{ border-top:1px solid var(--border); background:#040609; }
-  .footer-inner{
-    max-width:1360px; margin:0 auto; padding:56px 32px 32px;
-    display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:40px;
-  }
-  .footer-brand p{ color:var(--muted-dim); font-size:13.5px; margin-top:14px; max-width:260px; }
-  .footer-col h5{
-    font-family:var(--f-mono); font-size:11px; letter-spacing:1px; text-transform:uppercase;
-    color:var(--muted-dim); margin-bottom:16px;
-  }
-  .footer-col a{
-    display:block; font-size:13.5px; color:var(--muted); margin-bottom:11px;
-    transition:color 0.2s;
-  }
-  .footer-col a:hover{ color:var(--cyan); }
-  .footer-bottom{
-    max-width:1360px; margin:0 auto; padding:24px 32px;
-    border-top:1px solid var(--border);
-    display:flex; justify-content:space-between; align-items:center;
-    font-size:12.5px; color:var(--muted-dim); font-family:var(--f-mono);
-  }
-
-  /* ================= RESPONSIVE ================= */
-  @media (max-width:1080px){
-    .hero{ grid-template-columns:1fr; padding-top:150px; text-align:center; }
-    .hero p{ margin-left:auto; margin-right:auto; }
-    .hero-actions{ justify-content:center; }
-    .hero-stats{ justify-content:center; }
-    .flow-track{ grid-template-columns:repeat(2,1fr); }
-    .flow-track::before{ display:none; }
-    .integrate-grid{ grid-template-columns:1fr; }
-    .app-grid{ grid-template-columns:repeat(2,1fr); }
-    .footer-inner{ grid-template-columns:1fr 1fr; }
-    .chart-grid{ grid-template-columns:1fr; }
-    #neuralCanvas{ height:360px; }
-  }
-  @media (max-width:700px){
-    nav{ display:none; }
-    .hero h1{ font-size:38px; }
-    .flow-track{ grid-template-columns:1fr; }
-    .app-grid{ grid-template-columns:1fr; }
-    .chart-grid{ grid-template-columns:1fr; }
-    #neuralCanvas{ height:300px; }
-    .footer-inner{ grid-template-columns:1fr; }
-    .footer-bottom{ flex-direction:column; gap:10px; text-align:center; }
-  }
+/* ---------- MOBILE ---------- */
+@media(max-width:1020px){
+  #burger{display:block}
+  nav{position:fixed;top:70px;left:0;right:0;max-height:0;overflow:hidden;background:rgba(5,8,22,.97);transition:.4s}
+  nav.show{max-height:calc(100vh - 70px);overflow-y:auto}
+  nav ul{flex-direction:column;padding:10px 20px}
+  nav li>a{padding:14px}
+  .drop{position:static;opacity:1;visibility:visible;transform:none;display:none;box-shadow:none}
+  nav li.open .drop{display:block}
+  .slide{grid-template-columns:1fr;text-align:center;align-content:center}
+  .slide .art{order:-1;height:200px}
+  .slide p{margin-inline:auto}
+  .slider{height:auto;min-height:560px}
+  header{padding:0 18px}
+}
 </style>
 </head>
 <body>
-
-<div class="bg-system">
-  <div class="grid-mesh"></div>
-  <div class="orb orb-cyan"></div>
-  <div class="orb orb-violet"></div>
-  <div class="noise-veil"></div>
-</div>
+<div id="progress"></div>
+<canvas id="bg"></canvas>
 
 <header>
-  <div class="header-inner">
-    <a href="#" class="brand"><span class="brand-mark"></span>Helix Atlas</a>
-    <nav>
-      <ul>
-        <li>
-          <a href="#platform">Platform <span class="caret"></span></a>
-          <div class="mega">
-            <div class="mega-label">Core Engine</div>
-            <a href="#flow" class="mega-item">
-              <div class="mega-item-top"><b>Target Discovery</b></div>
-              <small>Score genetic targets at scale</small>
-              <div class="mega-params">
-                <span class="param-chip">Targets/mo: 4.8k</span>
-                <span class="param-chip">Precision: 91%</span>
-              </div>
-            </a>
-            <a href="#flow" class="mega-item">
-              <div class="mega-item-top"><b>Molecular Design</b></div>
-              <small>Generative candidate structures</small>
-              <div class="mega-params">
-                <span class="param-chip">Params: 2.1B</span>
-                <span class="param-chip">Latency: 340ms</span>
-              </div>
-            </a>
-            <a href="#integrate" class="mega-item">
-              <div class="mega-item-top"><b>Simulation Lab</b></div>
-              <small>Physics-informed folding models</small>
-              <div class="mega-params">
-                <span class="param-chip">Layers: 48</span>
-                <span class="param-chip">RMSD: 0.9Å</span>
-              </div>
-            </a>
-          </div>
-        </li>
-        <li>
-          <a href="#charts">Model <span class="caret"></span></a>
-          <div class="mega">
-            <div class="mega-label">Live Performance</div>
-            <a href="#charts" class="mega-item">
-              <div class="mega-item-top"><b>Training Curve</b></div>
-              <small>Validation accuracy over epochs</small>
-              <div class="mega-params">
-                <span class="param-chip">Epochs: 300</span>
-                <span class="param-chip">Acc: 94.2%</span>
-              </div>
-            </a>
-            <a href="#charts" class="mega-item">
-              <div class="mega-item-top"><b>Screening Throughput</b></div>
-              <small>Candidates processed weekly</small>
-              <div class="mega-params">
-                <span class="param-chip">Peak: 12.4k/wk</span>
-                <span class="param-chip">Uptime: 99.6%</span>
-              </div>
-            </a>
-            <a href="#charts" class="mega-item">
-              <div class="mega-item-top"><b>Network Depth</b></div>
-              <small>Layer-wise activation map</small>
-              <div class="mega-params">
-                <span class="param-chip">Layers: 12</span>
-                <span class="param-chip">Nodes: 512</span>
-              </div>
-            </a>
-          </div>
-        </li>
-        <li>
-          <a href="#applications">Solutions <span class="caret"></span></a>
-          <div class="mega">
-            <div class="mega-label">By Therapeutic Area</div>
-            <a href="#applications" class="mega-item">
-              <div class="mega-item-top"><b>Oncology</b></div>
-              <small>Tumor pathway mapping</small>
-              <div class="mega-params">
-                <span class="param-chip">Pathways: 340</span>
-                <span class="param-chip">Confidence: 88%</span>
-              </div>
-            </a>
-            <a href="#applications" class="mega-item">
-              <div class="mega-item-top"><b>Immunology</b></div>
-              <small>Antibody optimisation</small>
-              <div class="mega-params">
-                <span class="param-chip">Variants: 1.2k</span>
-                <span class="param-chip">Affinity: +38%</span>
-              </div>
-            </a>
-            <a href="#applications" class="mega-item">
-              <div class="mega-item-top"><b>Neurology</b></div>
-              <small>Blood-brain barrier modelling</small>
-              <div class="mega-params">
-                <span class="param-chip">BBB score: 0.81</span>
-                <span class="param-chip">Assays: 460</span>
-              </div>
-            </a>
-          </div>
-        </li>
-        <li><a href="#integrate">Research</a></li>
-        <li><a href="#contact">Company</a></li>
-      </ul>
-    </nav>
-    <a href="#contact" class="nav-cta">Book a demo</a>
-  </div>
+  <a href="#home" class="logo"><i></i>ImmunoVerse</a>
+  <button id="burger" aria-label="Menu">☰</button>
+  <nav id="nav"><ul id="menu"></ul></nav>
 </header>
 
 <main>
+  <!-- HOME / HERO -->
+  <section id="home">
+    <div class="slider" id="slider"></div>
+    <div class="dots" id="dots"></div>
+    <div class="timer"><i id="timerbar"></i></div>
+    <div class="scrollhint">SCROLL TO EXPLORE<b></b></div>
+  </section>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-info">
-      <span class="eyebrow">AI-NATIVE R&D PLATFORM</span>
-      <h1>Compressing a decade of<br><span class="grad">drug discovery</span> into months</h1>
-      <p>Helix Atlas pairs generative molecular design with wet-lab validation loops, so research teams can move from target hypothesis to lead candidate without the usual years of trial and error.</p>
-      <div class="hero-actions">
-        <a href="#contact" class="btn-primary">Book a demo</a>
-        <a href="#flow" class="btn-ghost">See how it works</a>
-      </div>
-      <div class="hero-stats">
-        <div><strong>4.2×</strong><span>FASTER TARGET ID</span></div>
-        <div><strong>180+</strong><span>CANDIDATES SCREENED</span></div>
-        <div><strong>12</strong><span>RESEARCH PARTNERS</span></div>
-      </div>
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="reveal">
+      <span class="tag">Overview</span>
+      <h2>Harnessing the body's <span>own defenses</span></h2>
+      <p class="lead">Immunotherapy teaches immune cells to recognise and destroy cancer. Dive into research, tools, stories and play — everything in one 3D universe.</p>
     </div>
-
-    <div class="hero-panel">
-      <div class="hero-panel-head">
-        <span>LIVE_MOLECULAR_GRAPH.sim</span>
-        <div class="dot-row"><i></i><i></i><i></i></div>
-      </div>
-      <canvas id="networkCanvas"></canvas>
+    <div class="stats reveal">
+      <div class="stat"><b data-n="14">0</b><span>Approved checkpoint drugs</span></div>
+      <div class="stat"><b data-n="500">0</b><span>Active CAR-T trials</span></div>
+      <div class="stat"><b data-n="92">0</b><span>% response in some leukemias</span></div>
+      <div class="stat"><b data-n="1200">0</b><span>Papers in our library</span></div>
     </div>
   </section>
 
-  <!-- PROCESS FLOW -->
-  <section class="flow" id="flow">
-    <div class="section-inner">
-      <div class="section-head">
-        <span class="eyebrow">THE PIPELINE</span>
-        <h2>One platform, five stages</h2>
-        <p>Every candidate moves through the same disciplined sequence — from raw biological signal to a molecule ready for the bench.</p>
-      </div>
-      <div class="flow-track">
-        <div class="flow-node">
-          <div class="flow-num">01</div>
-          <h4>Signal Mining</h4>
-          <p>Ingest omics, literature and assay data to surface disease-relevant targets.</p>
-        </div>
-        <div class="flow-node">
-          <div class="flow-num">02</div>
-          <h4>Target Scoring</h4>
-          <p>Rank targets by druggability, novelty and safety signal in one model.</p>
-        </div>
-        <div class="flow-node">
-          <div class="flow-num">03</div>
-          <h4>Generative Design</h4>
-          <p>Propose candidate molecules constrained by binding and ADMET criteria.</p>
-        </div>
-        <div class="flow-node">
-          <div class="flow-num">04</div>
-          <h4>In-Silico Validation</h4>
-          <p>Simulate folding, binding affinity and toxicity before synthesis.</p>
-        </div>
-        <div class="flow-node">
-          <div class="flow-num">05</div>
-          <h4>Lab Handoff</h4>
-          <p>Ship a ranked shortlist with full reasoning trace to the wet lab.</p>
-        </div>
-      </div>
+  <!-- BLOG -->
+  <section id="blog">
+    <div class="reveal">
+      <span class="tag">Blog</span>
+      <h2>Latest <span>stories</span></h2>
+      <p class="lead">Fresh posts from the lab and the clinic. Drag, scroll, or let them drift by.</p>
     </div>
+    <div class="blog-wrap reveal"><div class="blog-scroll" id="blogScroll"></div></div>
   </section>
 
-  <!-- INTEGRATION -->
-  <section class="integrate" id="integrate">
-    <div class="section-inner integrate-grid">
-      <div class="integrate-copy">
-        <span class="eyebrow">SYSTEM ARCHITECTURE</span>
-        <h3>Biology and machine learning, running on the same loop</h3>
-        <p>Wet-lab results feed back into the model within days, not quarters. Every assay outcome retrains the scoring engine, so the platform gets sharper with each experiment your team runs.</p>
-        <ul class="check-list">
-          <li><i></i>Closed-loop retraining from assay results</li>
-          <li><i></i>Full audit trail for every generated candidate</li>
-          <li><i></i>API access for existing LIMS and ELN tools</li>
-        </ul>
-      </div>
-      <div class="diagram-panel">
-        <canvas id="diagramCanvas"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <!-- NEURAL NETWORK SHOWCASE -->
-  <section class="neural-showcase" id="neural">
-    <div class="section-inner">
-      <div class="section-head">
-        <span class="eyebrow">MODEL ARCHITECTURE</span>
-        <h2>Inside the scoring network</h2>
-        <p>A live view of the network that ranks every candidate — signal flows left to right, layer by layer, in real time.</p>
-      </div>
-      <div class="neural-panel">
-        <div class="neural-panel-head">
-          <span>SCORING_NET.arch — 4 layers / 512 nodes</span>
-          <div class="legend">
-            <span><i style="background:var(--cyan)"></i><small style="color:var(--muted-dim); font-family:var(--f-mono); font-size:11px;">active</small></span>
-            <span><i style="background:var(--violet)"></i><small style="color:var(--muted-dim); font-family:var(--f-mono); font-size:11px;">signal</small></span>
-          </div>
-        </div>
-        <canvas id="neuralCanvas"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <!-- CHARTS -->
-  <section class="charts" id="charts">
-    <div class="section-inner">
-      <div class="section-head">
-        <span class="eyebrow">LIVE METRICS</span>
-        <h2>Numbers the model watches</h2>
-        <p>A snapshot of the same telemetry our research partners see in their own dashboards.</p>
-      </div>
-      <div class="chart-grid">
-        <div class="chart-card">
-          <div class="chart-card-head">
-            <div>
-              <h5>Validation Accuracy</h5>
-              <span>300 epochs · rolling</span>
-            </div>
-            <div class="chart-metric"><strong>94.2%</strong><small>▲ 1.8% / wk</small></div>
-          </div>
-          <canvas id="lineChart" height="160"></canvas>
-        </div>
-        <div class="chart-card">
-          <div class="chart-card-head">
-            <div>
-              <h5>Screening Throughput</h5>
-              <span>candidates / week</span>
-            </div>
-            <div class="chart-metric"><strong>12.4k</strong><small>▲ 6%</small></div>
-          </div>
-          <canvas id="barChart" height="160"></canvas>
-        </div>
-        <div class="chart-card">
-          <div class="chart-card-head">
-            <div>
-              <h5>Model Confidence</h5>
-              <span>composite score</span>
-            </div>
-            <div class="chart-metric"><strong>0.91</strong><small>stable</small></div>
-          </div>
-          <canvas id="radialChart" height="160"></canvas>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- APPLICATIONS -->
-  <section class="applications" id="applications">
-    <div class="section-inner">
-      <div class="section-head">
-        <span class="eyebrow">THERAPEUTIC AREAS</span>
-        <h2>Built for the hardest biology</h2>
-        <p>Teams use Helix Atlas across therapeutic areas where target complexity has historically slowed discovery down.</p>
-      </div>
-      <div class="app-grid" id="appGrid"></div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="contact" id="contact">
-    <div class="contact-panel">
-      <div class="contact-inner">
-        <h2>Ready to see it on your own targets?</h2>
-        <p>Bring a target list and we'll walk through a live scoring run in your first session.</p>
-        <a href="mailto:hello@helixatlas.example" class="btn-primary">Book a demo</a>
-      </div>
-    </div>
-  </section>
-
+  <div id="sections"></div>
 </main>
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <a href="#" class="brand"><span class="brand-mark"></span>Helix Atlas</a>
-      <p>AI-native drug discovery infrastructure for research teams who move fast and verify everything.</p>
-    </div>
-    <div class="footer-col">
-      <h5>Platform</h5>
-      <a href="#flow">Target Discovery</a>
-      <a href="#flow">Molecular Design</a>
-      <a href="#integrate">Simulation Lab</a>
-    </div>
-    <div class="footer-col">
-      <h5>Company</h5>
-      <a href="#contact">About</a>
-      <a href="#contact">Careers</a>
-      <a href="#contact">Contact</a>
-    </div>
-    <div class="footer-col">
-      <h5>Resources</h5>
-      <a href="#applications">Case Studies</a>
-      <a href="#flow">Documentation</a>
-      <a href="#contact">Research Papers</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Helix Atlas, Inc.</span>
-    <span>PLACEHOLDER BUILD — EDIT FREELY</span>
-  </div>
-</footer>
+<footer>© 2026 ImmunoVerse — Educational demo. Not medical advice.</footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* ---------- Mobile nav guard (menu simply hides via CSS breakpoint) ---------- */
+/* =====================  DATA  ===================== */
+const SECTIONS = [
+  {key:"lab",title:"Lab",tag:"Research Bench",
+   lead:"Peek inside our virtual laboratory: protocols, cell cultures and the experiments that move the field forward.",
+   items:[["🧪","T-Cell Expansion Protocol","Step-by-step workflow for growing tumor-infiltrating lymphocytes."],
+          ["🔬","Flow Cytometry Panels","Marker panels to profile exhausted vs. active T cells."],
+          ["🧬","CRISPR Edits for CAR-T","Knocking out PD-1 to make engineered cells more persistent."]]},
+  {key:"article",title:"Article",tag:"Peer-Reviewed Reads",
+   lead:"Plain-language summaries of landmark papers, so you can decide which ones deserve a deep read.",
+   items:[["📄","Checkpoint Blockade at 15","What a decade and a half of PD-1 therapy taught us."],
+          ["📈","Neoantigen Burden & Response","Why mutation-rich tumors often respond better."],
+          ["🧫","Tumor Microenvironment Review","How cancers build walls against immune cells."]]},
+  {key:"book",title:"Book",tag:"Library",
+   lead:"Curated books and chapters — from beginner primers to graduate-level immuno-oncology.",
+   items:[["📘","Immunology Made Visual","A beginner-friendly illustrated guide."],
+          ["📗","The Cancer Immunotherapy Handbook","Clinical practice, dosing and toxicity management."],
+          ["📙","Stories From the Clinic","Patient journeys that humanise the science."]]},
+  {key:"ai",title:"AI",tag:"Artificial Intelligence",
+   lead:"Machine learning is predicting neoantigens, designing antibodies and matching patients to trials.",
+   items:[["🤖","Neoantigen Prediction","Deep nets rank mutations most likely to trigger T cells."],
+          ["🧠","Protein Design Models","Generative models propose novel binders in hours."],
+          ["📊","Response Biomarkers","Predicting who benefits from therapy before treatment starts."]]},
+  {key:"code",title:"Code",tag:"Open Source",
+   lead:"Notebooks, pipelines and tiny scripts for analysing immune repertoire and single-cell data.",
+   items:[["💻","TCR Repertoire Toolkit","Clone-tracking and diversity metrics in Python."],
+          ["⚙️","Single-Cell Pipeline","From raw counts to annotated immune clusters."],
+          ["🧮","Dose-Response Simulator","ODE models of T cell vs. tumor dynamics."]]},
+  {key:"experience",title:"Experience",tag:"Journey",
+   lead:"Milestones, collaborations and real-world experience that shaped our approach to immunotherapy.",
+   items:[["🏥","Clinical Collaborations","Joint studies with leading cancer centers."],
+          ["🎓","Training Programs","Workshops for students and young clinicians."],
+          ["🌍","Global Network","Partners across 30+ countries sharing data."]]},
+  {key:"gallery",title:"Gallery",tag:"Visuals",
+   lead:"Microscopy, 3D renders and artistic interpretations of immune cells in action.",
+   items:[["🖼️","Confocal Microscopy","Glowing T cells attacking a tumor spheroid."],
+          ["🎨","Scientific Illustrations","Hand-crafted art explaining complex pathways."],
+          ["🎞️","Time-Lapse Reels","Hours of cell killing compressed into seconds."]]},
+  {key:"fun",title:"Fun",tag:"Play & Learn",
+   lead:"Learning sticks better with play. Quizzes, mini-games and curiosities about the immune system.",
+   items:[["🎮","Cell Defender Game","Pop the tumor cells before time runs out."],
+          ["❓","Weekly Immuno Quiz","Test yourself with five fresh questions."],
+          ["🤯","Did You Know?","Your body makes billions of T cells every day."]]}
+];
 
-/* ---------- Signature hero visual: animated molecular network ---------- */
-(function(){
-  const canvas = document.getElementById('networkCanvas');
-  const ctx = canvas.getContext('2d');
-  let w,h,nodes=[];
-  const NODE_COUNT = 60;
+const SLIDES = [
+  {k:"Immunotherapy 101",t:"Training the Immune System to Hunt Cancer",p:"Instead of attacking tumors directly, immunotherapy unleashes the body's own soldiers against them.",c:["#4df0c8","#7b6cff","#ff5d8f"],s:3},
+  {k:"Cell Therapy",t:"CAR-T Cells: Living Drugs Built in the Lab",p:"Patient T cells are engineered with receptors that lock onto cancer — and keep fighting for years.",c:["#ffb347","#ff5d8f","#7b6cff"],s:7},
+  {k:"Checkpoint Inhibitors",t:"Releasing the Brakes on T Cells",p:"PD-1 and CTLA-4 blockers let exhausted T cells wake up and attack again.",c:["#5cc8ff","#4df0c8","#7b6cff"],s:11},
+  {k:"Vaccines",t:"Personalised mRNA Cancer Vaccines Advance",p:"Custom-made for each patient's tumor mutations, new vaccines are entering late-stage trials.",c:["#c77dff","#ff5d8f","#ffb347"],s:15},
+  {k:"AI + Biology",t:"Artificial Intelligence Designs Smarter Therapies",p:"Algorithms now spot targets, design binders and predict patient response in record time.",c:["#4df0c8","#5cc8ff","#c77dff"],s:19}
+];
 
-  function resize(){
-    const rect = canvas.getBoundingClientRect();
-    w = canvas.width = rect.width * devicePixelRatio;
-    h = canvas.height = rect.height * devicePixelRatio;
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+const POSTS = [
+  ["How CAR-T Therapy Is Moving Beyond Blood Cancers","Nov 12, 2026","09:30",21],
+  ["5 Myths About Checkpoint Inhibitors, Debunked","Nov 10, 2026","14:15",5],
+  ["Inside the Lab: A Day Growing Tumor-Infiltrating Cells","Nov 07, 2026","11:00",33],
+  ["Gut Microbiome: The Hidden Ally of Immunotherapy","Nov 04, 2026","18:45",44],
+  ["Can AI Predict Who Will Respond to Treatment?","Oct 31, 2026","08:20",52],
+  ["Managing Side Effects: A Patient's Practical Guide","Oct 28, 2026","16:05",61]
+];
+
+const NAV = {
+  "Home":[["Top stories","#home"],["Overview","#overview"],["Latest blog posts","#blog"]],
+  "Lab":[["Lab overview","#lab"],...SECTIONS[0].items.map((x,i)=>[x[1],`#lab-${i}`])],
+  "Article":[["All articles","#article"],...SECTIONS[1].items.map((x,i)=>[x[1],`#article-${i}`])],
+  "Blog":[["Latest posts","#blog"],["Most read","#blog"],["Patient stories","#blog"]],
+  "Book":[["Library","#book"],...SECTIONS[2].items.map((x,i)=>[x[1],`#book-${i}`])],
+  "AI":[["AI overview","#ai"],...SECTIONS[3].items.map((x,i)=>[x[1],`#ai-${i}`])],
+  "Code":[["Code overview","#code"],...SECTIONS[4].items.map((x,i)=>[x[1],`#code-${i}`]),["Live demo","#codedemo"]],
+  "Experience":[["Journey","#experience"],["Timeline","#timeline"],...SECTIONS[5].items.map((x,i)=>[x[1],`#experience-${i}`])],
+  "Gallery":[["Gallery overview","#gallery"],["Image grid","#gridpics"],...SECTIONS[6].items.map((x,i)=>[x[1],`#gallery-${i}`])],
+  "Fun":[["Fun overview","#fun"],["Play the game","#arena"],...SECTIONS[7].items.map((x,i)=>[x[1],`#fun-${i}`])]
+};
+
+/* =====================  SVG ART GENERATOR  ===================== */
+function rnd(seed){let s=seed*9301+49297;return()=>{s=(s*9301+49297)%233280;return s/233280}}
+function art(seed,cols,w=600,h=500){
+  const r=rnd(seed),[c1,c2,c3]=cols,id="g"+seed+Math.floor(Math.random()*1e5);
+  let spikes="",cx=w/2,cy=h/2,R=110;
+  for(let i=0;i<36;i++){
+    const a=i/36*Math.PI*2,x1=cx+Math.cos(a)*R,y1=cy+Math.sin(a)*R,x2=cx+Math.cos(a)*(R+26+r()*18),y2=cy+Math.sin(a)*(R+26+r()*18);
+    spikes+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c3}" stroke-width="5" stroke-linecap="round"/><circle cx="${x2}" cy="${y2}" r="6" fill="${c3}"/>`;
+  }
+  let sat="";
+  for(let i=0;i<9;i++){
+    const a=r()*Math.PI*2,d=170+r()*90,x=cx+Math.cos(a)*d,y=cy+Math.sin(a)*d*0.8,rad=14+r()*24;
+    sat+=`<circle cx="${x}" cy="${y}" r="${rad}" fill="url(#${id}b)" opacity=".92"/><circle cx="${x-rad*.3}" cy="${y-rad*.3}" r="${rad*.28}" fill="#fff" opacity=".45"/>`;
+  }
+  let dust="";
+  for(let i=0;i<40;i++)dust+=`<circle cx="${r()*w}" cy="${r()*h}" r="${r()*2.5+.5}" fill="#fff" opacity="${.15+r()*.5}"/>`;
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+   <radialGradient id="${id}a" cx="35%" cy="30%"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".25" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient>
+   <radialGradient id="${id}b" cx="35%" cy="30%"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient>
+   <radialGradient id="${id}c" cx="50%" cy="50%"><stop offset="0" stop-color="${c2}" stop-opacity=".45"/><stop offset="1" stop-color="${c2}" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="#070c24"/>
+  <circle cx="${cx}" cy="${cy}" r="${h*.62}" fill="url(#${id}c)"/>
+  ${dust}${sat}${spikes}
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#${id}a)"/>
+  <circle cx="${cx+20}" cy="${cy-10}" r="38" fill="${c3}" opacity=".35"/>
+  <circle cx="${cx-30}" cy="${cy+30}" r="18" fill="#fff" opacity=".25"/>
+  </svg>`;
+}
+const PAL=[["#4df0c8","#7b6cff","#ff5d8f"],["#ffb347","#ff5d8f","#7b6cff"],["#5cc8ff","#4df0c8","#7b6cff"],["#c77dff","#ff5d8f","#ffb347"]];
+
+/* =====================  BUILD NAV  ===================== */
+const menu=document.getElementById("menu");
+Object.entries(NAV).forEach(([name,links])=>{
+  const li=document.createElement("li");
+  li.innerHTML=`<a href="${links[0][1]}">${name}</a><div class="drop">${links.map(l=>`<a href="${l[1]}">${l[0]}</a>`).join("")}</div>`;
+  menu.appendChild(li);
+  li.querySelector("li>a").addEventListener("click",e=>{
+    if(innerWidth<=1020){ if(!li.classList.contains("open")){e.preventDefault();document.querySelectorAll("#menu li.open").forEach(x=>x.classList.remove("open"));li.classList.add("open")} }
+  });
+});
+menu.addEventListener("click",e=>{ if(e.target.closest(".drop a")) document.getElementById("nav").classList.remove("show") });
+document.getElementById("burger").onclick=()=>document.getElementById("nav").classList.toggle("show");
+
+/* =====================  HERO SLIDER  ===================== */
+const slider=document.getElementById("slider"),dots=document.getElementById("dots"),bar=document.getElementById("timerbar");
+SLIDES.forEach((s,i)=>{
+  const d=document.createElement("div");d.className="slide"+(i?"":" active");
+  d.innerHTML=`<div><div class="kicker">${s.k}</div><h1 class="grad">${s.t}</h1><p>${s.p}</p><a class="btn" href="#overview">Learn more</a> <a class="btn ghost" href="#blog">Read the blog</a></div><div class="art">${art(s.s,s.c)}</div>`;
+  slider.appendChild(d);
+  const b=document.createElement("button");b.className=i?"":"active";b.setAttribute("aria-label","Slide "+(i+1));
+  b.onclick=()=>go(i);dots.appendChild(b);
+});
+let cur=0,start=performance.now();const DUR=15000;
+function go(n){
+  const sl=slider.children,db=dots.children;
+  sl[cur].classList.remove("active");db[cur].classList.remove("active");
+  cur=(n+SLIDES.length)%SLIDES.length; // wraps back to the first slide
+  sl[cur].classList.add("active");db[cur].classList.add("active");
+  start=performance.now();
+}
+(function tick(now){
+  const p=Math.min((now-start)/DUR,1);
+  bar.style.width=(p*100)+"%";
+  if(p>=1)go(cur+1);
+  requestAnimationFrame(tick);
+})(performance.now());
+
+/* =====================  BLOG  ===================== */
+const bs=document.getElementById("blogScroll");
+const mk=(p,i)=>`<article class="post"><div class="img">${art(p[3],PAL[i%4],400,260)}</div><div class="body"><h3>${p[0]}</h3><time>${p[1]} · ${p[2]}</time></div></article>`;
+bs.innerHTML=POSTS.map(mk).join("")+POSTS.map(mk).join(""); // duplicated for endless loop
+let paused=false,drag=false,sx=0,sl0=0,half=0;
+function measure(){half=bs.scrollWidth/2}
+addEventListener("load",measure);addEventListener("resize",measure);
+bs.addEventListener("mouseenter",()=>paused=true);
+bs.addEventListener("mouseleave",()=>{paused=false;drag=false});
+bs.addEventListener("touchstart",()=>paused=true,{passive:true});
+bs.addEventListener("touchend",()=>setTimeout(()=>paused=false,1500));
+bs.addEventListener("mousedown",e=>{drag=true;sx=e.pageX;sl0=bs.scrollLeft;bs.style.cursor="grabbing"});
+addEventListener("mouseup",()=>{drag=false;bs.style.cursor="grab"});
+bs.addEventListener("mousemove",e=>{if(drag){bs.scrollLeft=sl0-(e.pageX-sx)}});
+let pos=0;
+(function mv(){
+  if(!paused&&!drag){pos=bs.scrollLeft+0.7;bs.scrollLeft=pos} // titles drift to the left
+  if(half){ if(bs.scrollLeft>=half)bs.scrollLeft-=half; else if(bs.scrollLeft<=0&&drag)bs.scrollLeft+=half }
+  requestAnimationFrame(mv);
+})();
+
+/* =====================  SECTIONS  ===================== */
+const host=document.getElementById("sections");
+SECTIONS.forEach((s,si)=>{
+  const sec=document.createElement("section");sec.id=s.key;
+  sec.innerHTML=`<div class="reveal"><span class="tag">${s.tag}</span><h2>${s.title} <span>highlights</span></h2><p class="lead">${s.lead}</p></div>
+  <div class="cards reveal">${s.items.map((it,i)=>`<div class="card" id="${s.key}-${i}"><div class="ico">${it[0]}</div><h3>${it[1]}</h3><p>${it[2]}</p></div>`).join("")}</div>
+  <div class="more reveal"><a class="btn" href="#${s.key}">Explore all ${s.title} →</a></div>`;
+  host.appendChild(sec);
+  if(s.key==="code"){
+    sec.insertAdjacentHTML("beforeend",`<div class="codewin reveal" id="codedemo"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div><pre id="codeout"></pre></div>`);
+  }
+  if(s.key==="experience"){
+    sec.insertAdjacentHTML("beforeend",`<div class="timeline reveal" id="timeline">
+     <div class="tl"><b>2019</b><p>First TIL expansion lab opens with 4 researchers.</p></div>
+     <div class="tl"><b>2021</b><p>Launch of the open TCR repertoire database.</p></div>
+     <div class="tl"><b>2024</b><p>Joint CAR-T solid tumor trial with 6 hospitals.</p></div>
+     <div class="tl"><b>2026</b><p>AI-assisted neoantigen platform goes live worldwide.</p></div></div>`);
+  }
+  if(s.key==="gallery"){
+    let g="";for(let i=0;i<8;i++)g+=`<div>${art(100+i*7,PAL[i%4],300,300)}</div>`;
+    sec.insertAdjacentHTML("beforeend",`<div class="gallery reveal" id="gridpics">${g}</div>`);
+  }
+  if(s.key==="fun"){
+    sec.insertAdjacentHTML("beforeend",`<div class="reveal"><div id="arena"><div class="hud">Score: <span id="score">0</span> &nbsp;|&nbsp; Time: <span id="time">20</span>s</div></div><p style="margin-top:14px"><button class="btn" id="startGame">Start game</button></p></div>`);
+  }
+});
+
+/* typing code demo */
+const codeTxt=`# Rank tumor mutations by predicted T-cell response
+import numpy as np
+
+def neoantigen_score(binding, expression, clonality):
+    return 0.5*binding + 0.3*expression + 0.2*clonality
+
+mutations = {"KRAS_G12D": (0.92, 0.80, 0.95),
+             "TP53_R175H": (0.71, 0.88, 0.90),
+             "BRAF_V600E": (0.85, 0.77, 0.99)}
+
+for name, v in sorted(mutations.items(),
+        key=lambda kv: -neoantigen_score(*kv[1])):
+    print(f"{name:12s} -> {neoantigen_score(*v):.3f}")`;
+let ci=0,typed=false;
+function typeCode(){if(typed)return;typed=true;const o=document.getElementById("codeout");
+  (function t(){o.textContent=codeTxt.slice(0,ci++);if(ci<=codeTxt.length)setTimeout(t,18)})()}
+
+/* mini game */
+let score=0,tl=20,gi,gt,running=false;
+document.getElementById("startGame").onclick=()=>{
+  if(running)return;running=true;score=0;tl=20;
+  document.getElementById("score").textContent=0;
+  const ar=document.getElementById("arena");
+  gi=setInterval(()=>{
+    const b=document.createElement("div");b.className="bug";
+    b.style.left=Math.random()*(ar.clientWidth-50)+"px";b.style.top=40+Math.random()*(ar.clientHeight-90)+"px";
+    b.onclick=()=>{score++;document.getElementById("score").textContent=score;b.remove()};
+    ar.appendChild(b);setTimeout(()=>b.remove(),1600);
+  },550);
+  gt=setInterval(()=>{tl--;document.getElementById("time").textContent=tl;
+    if(tl<=0){clearInterval(gi);clearInterval(gt);running=false;document.getElementById("time").textContent="Done! Final score "+score}},1000);
+};
+
+/* =====================  REVEAL / COUNTERS / TILT / PROGRESS  ===================== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add("in");
+    if(e.target.id==="codedemo")typeCode();
+    e.target.querySelectorAll&&e.target.querySelectorAll("[data-n]").forEach(c=>{
+      const n=+c.dataset.n;let v=0;const st=n/60;(function u(){v+=st;if(v>=n){c.textContent=n;return}c.textContent=Math.floor(v);requestAnimationFrame(u)})()});
+    io.unobserve(e.target)}
+}),{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+document.addEventListener("mousemove",e=>{
+  const c=e.target.closest&&e.target.closest(".card");
+  document.querySelectorAll(".card").forEach(x=>{if(x!==c)x.style.transform=""});
+  if(!c)return;
+  const r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+  c.style.transform=`rotateY(${(px-.5)*14}deg) rotateX(${(.5-py)*14}deg) translateZ(8px)`;
+  c.style.setProperty("--mx",px*100+"%");c.style.setProperty("--my",py*100+"%");
+});
+addEventListener("scroll",()=>{
+  const h=document.documentElement;
+  document.getElementById("progress").style.width=(scrollY/(h.scrollHeight-innerHeight)*100)+"%";
+},{passive:true});
+
+/* =====================  3D BACKGROUND (Three.js)  ===================== */
+if(window.THREE){
+  const cv=document.getElementById("bg");
+  const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x050816,0.035);
+  const cam=new THREE.PerspectiveCamera(60,1,0.1,200);cam.position.z=14;
+  scene.add(new THREE.AmbientLight(0x6677aa,.8));
+  const l1=new THREE.PointLight(0x4df0c8,2.2,60);l1.position.set(8,6,10);scene.add(l1);
+  const l2=new THREE.PointLight(0xff5d8f,2,60);l2.position.set(-9,-5,8);scene.add(l2);
+
+  // central "tumor cell" with spikes
+  const core=new THREE.Group();scene.add(core);
+  const geo=new THREE.IcosahedronGeometry(2.6,3);
+  const base=geo.attributes.position.array.slice();
+  const cell=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0x7b6cff,emissive:0x1a1060,shininess:90,flatShading:false}));
+  core.add(cell);
+  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(2.75,2),new THREE.MeshBasicMaterial({color:0x4df0c8,wireframe:true,transparent:true,opacity:.18}));
+  core.add(wire);
+  for(let i=0;i<70;i++){
+    const v=new THREE.Vector3().randomDirection();
+    const s=new THREE.Mesh(new THREE.CylinderGeometry(.03,.07,.9,6),new THREE.MeshPhongMaterial({color:0xff5d8f,emissive:0x40102a}));
+    s.position.copy(v.clone().multiplyScalar(3.05));s.lookAt(v.clone().multiplyScalar(10));s.rotateX(Math.PI/2);core.add(s);
+    const tip=new THREE.Mesh(new THREE.SphereGeometry(.12,8,8),new THREE.MeshBasicMaterial({color:0xffb3c9}));
+    tip.position.copy(v.clone().multiplyScalar(3.55));core.add(tip);
   }
 
-  function init(){
-    resize();
-    nodes = Array.from({length:NODE_COUNT}, () => ({
-      x: Math.random() * (w/devicePixelRatio),
-      y: Math.random() * (h/devicePixelRatio),
-      vx: (Math.random()-0.5)*0.25,
-      vy: (Math.random()-0.5)*0.25,
-      r: Math.random()*1.6 + 1.4
-    }));
+  // orbiting "T cells"
+  const tcells=[];
+  for(let i=0;i<22;i++){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.28+Math.random()*.25,20,20),
+      new THREE.MeshPhongMaterial({color:i%2?0x4df0c8:0x5cc8ff,emissive:0x0a3a30,shininess:100}));
+    m.userData={r:5+Math.random()*4,sp:.15+Math.random()*.35,a:Math.random()*6.28,y:(Math.random()-.5)*5,t:Math.random()*6.28};
+    scene.add(m);tcells.push(m);
   }
+  // floating particles
+  const N=1600,pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*70;pos[i*3+1]=(Math.random()-.5)*70;pos[i*3+2]=(Math.random()-.5)*70}
+  const pg=new THREE.BufferGeometry();pg.setAttribute("position",new THREE.BufferAttribute(pos,3));
+  const pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0x9bb4ff,size:.08,transparent:true,opacity:.75}));
+  scene.add(pts);
 
-  function step(){
-    const cw = w/devicePixelRatio, ch = h/devicePixelRatio;
-    ctx.clearRect(0,0,cw,ch);
+  function resize(){renderer.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+  addEventListener("resize",resize);resize();
 
-    nodes.forEach(n=>{
-      n.x += n.vx; n.y += n.vy;
-      if(n.x < 0 || n.x > cw) n.vx *= -1;
-      if(n.y < 0 || n.y > ch) n.vy *= -1;
-    });
-
-    for(let i=0;i<nodes.length;i++){
-      for(let j=i+1;j<nodes.length;j++){
-        const a = nodes[i], b = nodes[j];
-        const dx = a.x-b.x, dy = a.y-b.y;
-        const dist = Math.sqrt(dx*dx+dy*dy);
-        if(dist < 120){
-          ctx.strokeStyle = `rgba(0,230,184,${0.16 * (1 - dist/120)})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x,a.y);
-          ctx.lineTo(b.x,b.y);
-          ctx.stroke();
-        }
-      }
+  let mx=0,my=0,sp=0;
+  addEventListener("mousemove",e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5)});
+  addEventListener("scroll",()=>{sp=scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight)},{passive:true});
+  const c1=new THREE.Color(0x7b6cff),c2=new THREE.Color(0xff5d8f),c3=new THREE.Color(0x4df0c8),tmp=new THREE.Color();
+  const clock=new THREE.Clock();
+  (function loop(){
+    const t=clock.getElapsedTime();
+    // wobble the membrane
+    const p=geo.attributes.position;
+    for(let i=0;i<p.count;i++){
+      const x=base[i*3],y=base[i*3+1],z=base[i*3+2];
+      const k=1+.06*Math.sin(x*1.6+t*1.4)*Math.cos(y*1.6+t*1.1)+.04*Math.sin(z*2+t);
+      p.setXYZ(i,x*k,y*k,z*k);
     }
-
-    nodes.forEach(n=>{
-      ctx.beginPath();
-      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-      ctx.fillStyle = 'rgba(0,230,184,0.85)';
-      ctx.shadowColor = 'rgba(0,230,184,0.6)';
-      ctx.shadowBlur = 6;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    });
-
-    requestAnimationFrame(step);
-  }
-
-  window.addEventListener('resize', resize);
-  init();
-  step();
-})();
-
-/* ---------- Integration diagram: pulsing pipeline ---------- */
-(function(){
-  const canvas = document.getElementById('diagramCanvas');
-  const ctx = canvas.getContext('2d');
-  let w,h,t=0;
-
-  function resize(){
-    const rect = canvas.getBoundingClientRect();
-    w = canvas.width = rect.width * devicePixelRatio;
-    h = canvas.height = rect.height * devicePixelRatio;
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  }
-
-  function draw(){
-    const cw = w/devicePixelRatio, ch = h/devicePixelRatio;
-    ctx.clearRect(0,0,cw,ch);
-    t += 0.02;
-
-    const stages = 4;
-    const gap = cw / (stages+1);
-    const y = ch/2;
-
-    // connecting line
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(gap, y);
-    ctx.lineTo(cw-gap, y);
-    ctx.stroke();
-
-    for(let i=0;i<stages;i++){
-      const x = gap*(i+1);
-      ctx.beginPath();
-      ctx.arc(x,y,22,0,Math.PI*2);
-      ctx.fillStyle = '#0c111c';
-      ctx.strokeStyle = 'rgba(0,230,184,0.35)';
-      ctx.lineWidth = 1.5;
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(x,y,7,0,Math.PI*2);
-      ctx.fillStyle = 'rgba(0,230,184,0.9)';
-      ctx.fill();
-    }
-
-    // traveling pulse
-    const pulseX = gap + (Math.sin(t) * 0.5 + 0.5) * (cw - gap*2);
-    const grad = ctx.createRadialGradient(pulseX,y,0,pulseX,y,50);
-    grad.addColorStop(0, 'rgba(139,107,255,0.55)');
-    grad.addColorStop(1, 'rgba(139,107,255,0)');
-    ctx.beginPath();
-    ctx.arc(pulseX,y,50,0,Math.PI*2);
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(pulseX,y,5,0,Math.PI*2);
-    ctx.fillStyle = '#8b6bff';
-    ctx.fill();
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-})();
-
-/* ---------- Layered neural network showcase ---------- */
-(function(){
-  const canvas = document.getElementById('neuralCanvas');
-  const ctx = canvas.getContext('2d');
-  let w,h,t=0;
-  const layerSizes = [5,8,8,6,3];
-  let layers = [];
-
-  function resize(){
-    const rect = canvas.getBoundingClientRect();
-    w = canvas.width = rect.width * devicePixelRatio;
-    h = canvas.height = rect.height * devicePixelRatio;
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-    buildLayers();
-  }
-
-  function buildLayers(){
-    const cw = w/devicePixelRatio, ch = h/devicePixelRatio;
-    const padX = 70, padY = 40;
-    const colGap = (cw - padX*2) / (layerSizes.length - 1);
-    layers = layerSizes.map((count, li) => {
-      const rowGap = (ch - padY*2) / (count - 1 || 1);
-      return Array.from({length:count}, (_, ni) => ({
-        x: padX + colGap*li,
-        y: count === 1 ? ch/2 : padY + rowGap*ni,
-        pulse: Math.random()*Math.PI*2
-      }));
-    });
-  }
-
-  function draw(){
-    const cw = w/devicePixelRatio, ch = h/devicePixelRatio;
-    ctx.clearRect(0,0,cw,ch);
-    t += 0.015;
-
-    // edges
-    for(let li=0; li<layers.length-1; li++){
-      const from = layers[li], to = layers[li+1];
-      from.forEach((a,ai)=>{
-        to.forEach((b,bi)=>{
-          const flow = (Math.sin(t*1.4 + ai*0.7 + bi*0.4 + li) + 1)/2;
-          ctx.strokeStyle = `rgba(0,230,184,${0.04 + flow*0.12})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x,a.y);
-          ctx.lineTo(b.x,b.y);
-          ctx.stroke();
-        });
-      });
-    }
-
-    // traveling pulses along edges
-    for(let li=0; li<layers.length-1; li++){
-      const from = layers[li], to = layers[li+1];
-      const pulseCount = 6;
-      for(let p=0;p<pulseCount;p++){
-        const a = from[(p*3) % from.length];
-        const b = to[(p*5) % to.length];
-        const prog = (t*0.6 + p/pulseCount + li*0.3) % 1;
-        const px = a.x + (b.x-a.x)*prog;
-        const py = a.y + (b.y-a.y)*prog;
-        ctx.beginPath();
-        ctx.arc(px,py,2,0,Math.PI*2);
-        ctx.fillStyle = 'rgba(139,107,255,0.9)';
-        ctx.shadowColor = 'rgba(139,107,255,0.8)';
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-    }
-
-    // nodes
-    layers.forEach((layer, li)=>{
-      layer.forEach(n=>{
-        const glow = (Math.sin(t*2 + n.pulse) + 1)/2;
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, 5 + glow*1.5, 0, Math.PI*2);
-        ctx.fillStyle = li===0 || li===layers.length-1
-          ? `rgba(0,230,184,${0.7+glow*0.3})`
-          : `rgba(242,245,249,${0.5+glow*0.25})`;
-        ctx.shadowColor = 'rgba(0,230,184,0.5)';
-        ctx.shadowBlur = 6;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, 5+glow*1.5, 0, Math.PI*2);
-        ctx.strokeStyle = 'rgba(0,230,184,0.35)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      });
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-})();
-
-/* ---------- Chart: validation accuracy line chart ---------- */
-(function(){
-  const canvas = document.getElementById('lineChart');
-  const ctx = canvas.getContext('2d');
-  let w,h,t=0;
-  const points = Array.from({length:40}, (_,i)=> 0.55 + 0.35*(1-Math.exp(-i/14)) );
-
-  function resize(){
-    const rect = canvas.getBoundingClientRect();
-    w = canvas.width = rect.width * devicePixelRatio;
-    h = 160 * devicePixelRatio;
-    canvas.style.height = '160px';
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  }
-
-  function draw(){
-    const cw = w/devicePixelRatio, ch = h/devicePixelRatio;
-    ctx.clearRect(0,0,cw,ch);
-    t += 0.02;
-
-    // grid
-    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-    ctx.lineWidth = 1;
-    for(let i=0;i<=4;i++){
-      const y = (ch-20) * (i/4) + 10;
-      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(cw,y); ctx.stroke();
-    }
-
-    const stepX = cw / (points.length-1);
-    const wobble = points.map((p,i)=> p + Math.sin(t + i*0.4)*0.015);
-
-    // area
-    const grad = ctx.createLinearGradient(0,0,0,ch);
-    grad.addColorStop(0, 'rgba(0,230,184,0.25)');
-    grad.addColorStop(1, 'rgba(0,230,184,0)');
-    ctx.beginPath();
-    ctx.moveTo(0, ch - wobble[0]*(ch-20) - 10);
-    wobble.forEach((p,i)=> ctx.lineTo(i*stepX, ch - p*(ch-20) - 10));
-    ctx.lineTo(cw, ch); ctx.lineTo(0, ch); ctx.closePath();
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    // line
-    ctx.beginPath();
-    wobble.forEach((p,i)=>{
-      const x = i*stepX, y = ch - p*(ch-20) - 10;
-      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    });
-    ctx.strokeStyle = '#00e6b8';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // leading dot
-    const lastX = (points.length-1)*stepX;
-    const lastY = ch - wobble[wobble.length-1]*(ch-20) - 10;
-    ctx.beginPath();
-    ctx.arc(lastX,lastY,4,0,Math.PI*2);
-    ctx.fillStyle = '#00e6b8';
-    ctx.shadowColor = '#00e6b8';
-    ctx.shadowBlur = 10;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-})();
-
-/* ---------- Chart: screening throughput bar chart ---------- */
-(function(){
-  const canvas = document.getElementById('barChart');
-  const ctx = canvas.getContext('2d');
-  let w,h,t=0;
-  const bars = [0.4,0.55,0.5,0.7,0.65,0.85,1.0];
-
-  function resize(){
-    const rect = canvas.getBoundingClientRect();
-    w = canvas.width = rect.width * devicePixelRatio;
-    h = 160 * devicePixelRatio;
-    canvas.style.height = '160px';
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  }
-
-  function draw(){
-    const cw = w/devicePixelRatio, ch = h/devicePixelRatio;
-    ctx.clearRect(0,0,cw,ch);
-    t += 0.02;
-
-    const barW = cw / bars.length * 0.5;
-    const gap = cw / bars.length;
-
-    bars.forEach((b,i)=>{
-      const bump = b + Math.sin(t + i)*0.02;
-      const barH = bump * (ch-20);
-      const x = gap*i + (gap-barW)/2;
-      const y = ch - barH;
-
-      const grad = ctx.createLinearGradient(0,y,0,ch);
-      grad.addColorStop(0, i===bars.length-1 ? '#8b6bff' : 'rgba(0,230,184,0.85)');
-      grad.addColorStop(1, 'rgba(0,230,184,0.15)');
-
-      ctx.fillStyle = grad;
-      const r = 6;
-      ctx.beginPath();
-      ctx.moveTo(x, y+r);
-      ctx.arcTo(x,y,x+r,y,r);
-      ctx.lineTo(x+barW-r, y);
-      ctx.arcTo(x+barW,y,x+barW,y+r,r);
-      ctx.lineTo(x+barW, ch);
-      ctx.lineTo(x, ch);
-      ctx.closePath();
-      ctx.fill();
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-})();
-
-/* ---------- Chart: model confidence radial gauge ---------- */
-(function(){
-  const canvas = document.getElementById('radialChart');
-  const ctx = canvas.getContext('2d');
-  let w,h,t=0;
-  const target = 0.91;
-
-  function resize(){
-    const rect = canvas.getBoundingClientRect();
-    w = canvas.width = rect.width * devicePixelRatio;
-    h = 160 * devicePixelRatio;
-    canvas.style.height = '160px';
-    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  }
-
-  function draw(){
-    const cw = w/devicePixelRatio, ch = h/devicePixelRatio;
-    ctx.clearRect(0,0,cw,ch);
-    t += 0.02;
-
-    const cx = cw/2, cy = ch/2 + 6, radius = Math.min(cw,ch)/2 - 14;
-    const start = Math.PI*0.75, full = Math.PI*1.5;
-
-    ctx.lineWidth = 10;
-    ctx.lineCap = 'round';
-
-    ctx.beginPath();
-    ctx.arc(cx,cy,radius,start,start+full);
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-    ctx.stroke();
-
-    const wobble = target + Math.sin(t)*0.01;
-    ctx.beginPath();
-    ctx.arc(cx,cy,radius,start,start+full*wobble);
-    const grad = ctx.createLinearGradient(0,0,cw,ch);
-    grad.addColorStop(0,'#00e6b8');
-    grad.addColorStop(1,'#8b6bff');
-    ctx.strokeStyle = grad;
-    ctx.shadowColor = 'rgba(0,230,184,0.5)';
-    ctx.shadowBlur = 10;
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = '#f2f5f9';
-    ctx.font = "600 22px 'Space Grotesk', sans-serif";
-    ctx.textAlign = 'center';
-    ctx.fillText((wobble).toFixed(2), cx, cy+2);
-
-    ctx.fillStyle = '#5b6478';
-    ctx.font = "11px 'JetBrains Mono', monospace";
-    ctx.fillText('CONFIDENCE', cx, cy+20);
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-})();
-
-/* ---------- Application cards (generated inline, no external images) ---------- */
-(function(){
-  const data = [
-    { tag:'Oncology', title:'Tumor Pathway Mapping', desc:'Identify resistance mechanisms across solid tumor targets.', c1:'#00e6b8', c2:'#0c111c' },
-    { tag:'Immunology', title:'Antibody Optimisation', desc:'Refine binding affinity and developability in parallel.', c1:'#8b6bff', c2:'#0c111c' },
-    { tag:'Neurology', title:'BBB Permeability Modelling', desc:'Predict blood-brain barrier crossing before synthesis.', c1:'#00c2ff', c2:'#0c111c' },
-    { tag:'Rare Disease', title:'Orphan Target Scoring', desc:'Surface viable targets from thin, noisy datasets.', c1:'#00e6b8', c2:'#8b6bff' },
-    { tag:'Infectious Disease', title:'Resistance Forecasting', desc:'Model pathogen mutation pathways ahead of resistance.', c1:'#ff6b81', c2:'#0c111c' },
-    { tag:'Cardiometabolic', title:'Multi-Target Screening', desc:'Screen candidates against polygenic risk pathways.', c1:'#ffb020', c2:'#0c111c' },
-  ];
-
-  const grid = document.getElementById('appGrid');
-  grid.innerHTML = data.map(d => `
-    <div class="app-card">
-      <div class="app-visual">
-        <svg viewBox="0 0 300 150" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="g-${d.tag.replace(/\s/g,'')}" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="${d.c1}" stop-opacity="0.35"/>
-              <stop offset="100%" stop-color="${d.c2}" stop-opacity="0.05"/>
-            </linearGradient>
-          </defs>
-          <rect width="300" height="150" fill="url(#g-${d.tag.replace(/\s/g,'')})"/>
-          ${Array.from({length:5}).map(()=>{
-            const x1=Math.random()*300, y1=Math.random()*150;
-            const x2=Math.random()*300, y2=Math.random()*150;
-            return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${d.c1}" stroke-opacity="0.25" stroke-width="1"/>`;
-          }).join('')}
-          ${Array.from({length:6}).map(()=>{
-            const cx=Math.random()*300, cy=Math.random()*150;
-            return `<circle cx="${cx}" cy="${cy}" r="2.4" fill="${d.c1}" fill-opacity="0.8"/>`;
-          }).join('')}
-        </svg>
-      </div>
-      <div class="app-body">
-        <span class="app-tag">${d.tag}</span>
-        <h4>${d.title}</h4>
-        <p>${d.desc}</p>
-      </div>
-    </div>
-  `).join('');
-})();
+    p.needsUpdate=true;geo.computeVertexNormals();
+    core.rotation.y=t*.12+sp*8;core.rotation.x=sp*3+my*.4;
+    // scroll-driven scene motion
+    core.position.x=Math.sin(sp*Math.PI*3)*5;
+    core.position.y=-sp*6+Math.cos(sp*9)*1.2;
+    const sc=1+Math.sin(sp*Math.PI)*.35;core.scale.setScalar(sc);
+    cam.position.z=14-sp*5;
+    cam.position.x+=((mx*4)-cam.position.x)*.04;
+    cam.position.y+=((-my*3-sp*2)-cam.position.y)*.04;
+    cam.lookAt(core.position.x*.3,core.position.y*.5,0);
+    tmp.copy(c1).lerp(c2,Math.min(1,sp*2)).lerp(c3,Math.max(0,sp*2-1));
+    cell.material.color.copy(tmp);
+    tcells.forEach(m=>{const d=m.userData;d.a+=d.sp*.01;
+      m.position.set(core.position.x+Math.cos(d.a)*d.r,core.position.y+d.y+Math.sin(t+d.t)*.6,Math.sin(d.a)*d.r)});
+    pts.rotation.y=t*.01+sp*1.5;pts.rotation.x=sp*.6;
+    renderer.render(scene,cam);
+    requestAnimationFrame(loop);
+  })();
+}
 </script>
-
 </body>
 </html>
