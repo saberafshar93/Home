@@ -64,10 +64,14 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 .slide .kicker{color:var(--a);letter-spacing:3px;font-size:12px;text-transform:uppercase;margin-bottom:14px}
 .slide h1{font-size:clamp(34px,5.2vw,70px);line-height:1.06;margin-bottom:18px}
 .slide p{color:var(--mute);max-width:520px;margin-bottom:26px}
+/* standard image frame: whole image always visible (no crop), blurred copy fills the rest */
+.frame{position:relative;width:100%;height:100%;overflow:hidden;background:#070c24}
+.frame .fbg{position:absolute;inset:-14%;background-size:cover;background-position:center;filter:blur(28px) saturate(1.25) brightness(.7)}
+.frame img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block;-webkit-user-drag:none}
+.frame svg{position:relative;z-index:1;width:100%;height:100%;display:block}
 .slide .art{height:100%;max-height:480px;perspective:1000px;display:flex;align-items:center;justify-content:center}
-.slide .art svg,.slide .art img{width:100%;height:100%;animation:floaty 7s ease-in-out infinite;transform-style:preserve-3d}
-.slide .art svg{filter:drop-shadow(0 30px 60px rgba(123,108,255,.35))}
-.slide .art img{object-fit:cover;border-radius:28px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(123,108,255,.35),0 0 0 6px rgba(77,240,200,.06)}
+.slide .art .frame{height:100%;width:auto;max-width:100%;aspect-ratio:4/3;border-radius:28px;border:1px solid var(--line);
+  box-shadow:0 30px 80px rgba(123,108,255,.35),0 0 0 6px rgba(77,240,200,.06);animation:floaty 7s ease-in-out infinite;transform-style:preserve-3d}
 @keyframes floaty{50%{transform:translateY(-14px) rotateY(8deg) rotateX(3deg)}}
 .dots{display:flex;justify-content:center;gap:14px;margin-top:26px}
 .dots button{width:16px;height:16px;border-radius:50%;border:2px solid var(--mute);background:transparent;cursor:pointer;transition:.3s}
@@ -94,8 +98,8 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
   transition:transform .4s,box-shadow .4s;user-select:none;-webkit-user-drag:none}
 .post:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 24px 60px rgba(77,240,200,.18)}
 .post .img{height:200px;overflow:hidden}
-.post .img svg,.post .img img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .8s;-webkit-user-drag:none}
-.post:hover .img svg,.post:hover .img img{transform:scale(1.12) rotate(2deg)}
+.post .img .frame img,.post .img .frame svg{transition:transform .8s}
+.post:hover .img .frame img,.post:hover .img .frame svg{transform:scale(1.06)}
 .post .body{padding:20px}
 .post h3{font-size:18px;line-height:1.3;margin-bottom:12px}
 .post time{color:var(--mute);font-size:13px;display:flex;gap:8px;align-items:center}
@@ -137,11 +141,31 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-top:34px}
 .gallery a{display:block;aspect-ratio:1;border-radius:18px;overflow:hidden;border:1px solid var(--line);transition:.5s;background:var(--panel)}
 .gallery a:hover{transform:scale(1.07) rotate(-2deg);z-index:2;box-shadow:0 20px 50px rgba(123,108,255,.4)}
-.gallery svg,.gallery img{width:100%;height:100%;display:block;object-fit:cover}
+.gallery .frame{height:100%}
 
 /* ---------- FOOTER ---------- */
 footer{border-top:1px solid var(--line);background:rgba(5,8,22,.86);color:var(--mute);font-size:14px}
-.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.1fr;gap:40px;padding:60px 8vw 40px}
+.fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;padding:60px 8vw 30px}
+/* visitor statistics */
+.visitors{padding:10px 8vw 44px}
+.visitors h4{display:flex;align-items:center}
+.vgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.vt{position:relative;padding:24px 14px 20px;border-radius:20px;text-align:center;overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(77,240,200,.10),rgba(123,108,255,.10) 60%,rgba(255,93,143,.08));transition:.4s}
+.vt:hover{transform:translateY(-6px);border-color:rgba(77,240,200,.5);box-shadow:0 18px 50px rgba(77,240,200,.15)}
+.vt::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--a),var(--b),var(--c));transform:scaleX(.3);transform-origin:left;transition:.6s}
+.vt:hover::after{transform:scaleX(1)}
+.vt .ic{display:block;font-size:20px;margin-bottom:6px;color:var(--a)}
+.vt b{display:block;font-size:clamp(24px,2.6vw,36px);font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums;
+  background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.vt span.l{font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--mute)}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#3dff9a;margin-left:10px;animation:ping 1.8s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(61,255,154,.6)}70%,100%{box-shadow:0 0 0 10px rgba(61,255,154,0)}}
+@media(max-width:900px){.vgrid{grid-template-columns:repeat(2,1fr)}.vt:last-child{grid-column:span 2}}
+/* page background images (very faint, scroll with the page) */
+#bgimgs{position:absolute;top:0;left:0;width:100%;z-index:0;pointer-events:none;overflow:hidden}
+.bgi{position:absolute;left:0;width:100%;background-size:cover;background-position:center;opacity:.12;filter:saturate(.8);will-change:transform;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent)}
 footer h4{color:#fff;font-size:14px;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;position:relative;padding-bottom:10px}
 footer h4::after{content:"";position:absolute;left:0;bottom:0;width:34px;height:2px;background:linear-gradient(90deg,var(--a),var(--b))}
 footer ul{list-style:none}
@@ -174,12 +198,13 @@ footer li a:hover{color:var(--a);padding-left:5px}
 </head>
 <body>
 <div id="progress"></div>
+<div id="bgimgs"></div>
 <canvas id="bg"></canvas>
 
 <header>
   <button id="burger" aria-label="Menu">☰</button>
   <nav id="nav"><ul id="menu"></ul></nav>
-  <div class="logo"><i></i><span><a class="im" href="https://saberafshar93.github.io/Website/#home">Immuno</a>Afshar</span></div>
+  <a class="logo" href="https://saberafshar93.github.io/Home/"><i></i><span><span class="im">Immuno</span>Afshar</span></a>
 </header>
 
 <main>
@@ -193,10 +218,10 @@ footer li a:hover{color:var(--a);padding-left:5px}
   <section id="overview">
     <div class="reveal">
       <span class="tag">Overview</span>
-      <h2>Harnessing the body's <span>own defenses</span></h2>
-      <p class="lead">Immunotherapy teaches immune cells to recognise and destroy cancer. Dive into research, tools, stories and play — everything in one 3D universe.</p>
+      <h2 id="ovTitle">Harnessing the body's <span>own defenses</span></h2>
+      <p class="lead" id="ovLead">Immunotherapy teaches immune cells to recognise and destroy cancer. Dive into research, tools, stories and play — everything in one 3D universe.</p>
     </div>
-    <div class="stats reveal">
+    <div class="stats reveal" id="ovStats">
       <div class="stat"><b data-n="14">0</b><span>Approved checkpoint drugs</span></div>
       <div class="stat"><b data-n="500">0</b><span>Active CAR-T trials</span></div>
       <div class="stat"><b data-n="92">0</b><span>% response in some leukemias</span></div>
@@ -221,7 +246,7 @@ footer li a:hover{color:var(--a);padding-left:5px}
 <footer>
   <div class="fgrid">
     <div class="fbrand">
-      <div class="logo"><i></i><span><a class="im" href="https://saberafshar93.github.io/Website/#home">Immuno</a>Afshar</span></div>
+      <a class="logo" href="https://saberafshar93.github.io/Home/"><i></i><span><span class="im">Immuno</span>Afshar</span></a>
       <p>A 3D hub for immunotherapy research, articles, books, code and experience — built to make complex science feel alive.</p>
     </div>
     <div>
@@ -232,14 +257,15 @@ footer li a:hover{color:var(--a);padding-left:5px}
       <h4>Contact</h4>
       <ul id="contact"></ul>
     </div>
-    <div>
-      <h4>Visitor Statistics</h4>
-      <ul class="vstats">
-        <li><span>Today</span><b id="v-day">…</b></li>
-        <li><span>This month</span><b id="v-month">…</b></li>
-        <li><span>This year</span><b id="v-year">…</b></li>
-        <li><span>Total</span><b id="v-total">…</b></li>
-      </ul>
+  </div>
+  <div class="visitors">
+    <h4>Visitor Statistics <i class="live"></i></h4>
+    <div class="vgrid">
+      <div class="vt"><span class="ic">◉</span><b id="v-day">…</b><span class="l">Today</span></div>
+      <div class="vt"><span class="ic">▤</span><b id="v-week">…</b><span class="l">Week</span></div>
+      <div class="vt"><span class="ic">◐</span><b id="v-month">…</b><span class="l">Month</span></div>
+      <div class="vt"><span class="ic">✦</span><b id="v-year">…</b><span class="l">Year</span></div>
+      <div class="vt"><span class="ic">∞</span><b id="v-total">…</b><span class="l">Total</span></div>
     </div>
   </div>
   <div class="fbottom"><span>© 2026 ImmunoAfshar. All rights reserved.</span><span>Educational content — not medical advice.</span></div>
@@ -261,7 +287,7 @@ const CONFIG={
   SLIDE_MS:15000,
   EMAIL:"",                         // put your email here to show it in the footer
   GITHUB:"https://github.com/saberafshar93",
-  WEBSITE:"https://saberafshar93.github.io/Website/#home",
+  WEBSITE:"https://saberafshar93.github.io/Home/",
   COUNTER_NS:"immunoafshar-saberafshar93" // visitor counter namespace
 };
 const NAV_NAMES=["Home","Lab","Article","Blog","Book","AI","Code","Experience","Gallery","Fun"];
@@ -324,14 +350,15 @@ const PAL=[["#4df0c8","#7b6cff","#ff5d8f"],["#ffb347","#ff5d8f","#7b6cff"],["#5c
 const hash=s=>[...String(s)].reduce((a,c)=>(a*31+c.charCodeAt(0))%9973,7);
 
 /* image tag with generated-art fallback */
+const cssUrl=u=>String(u).replace(/['"()\s\\]/g,c=>encodeURIComponent(c));
 function imgOrArt(src,seed,w,h){
   const fb=art(seed,PAL[seed%4],w,h);
-  if(!src)return fb;
-  return `<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" draggable="false" data-fb="${esc(fb)}">`;
+  if(!src)return `<div class="frame">${fb}</div>`;
+  return `<div class="frame"><div class="fbg" style="background-image:url('${cssUrl(src)}')"></div><img src="${esc(src)}" alt="" decoding="async" referrerpolicy="no-referrer" draggable="false" data-fb="${esc(fb)}"></div>`;
 }
 document.addEventListener("error",e=>{
   const t=e.target;
-  if(t&&t.tagName==="IMG"&&t.dataset.fb){const d=document.createElement("div");d.style.cssText="width:100%;height:100%";d.innerHTML=t.dataset.fb;t.replaceWith(d.firstElementChild)}
+  if(t&&t.tagName==="IMG"&&t.dataset.fb){const f=t.closest(".frame");if(f)f.innerHTML=t.dataset.fb}
 },true);
 
 /* =====================================================================
@@ -460,34 +487,54 @@ function go(n){
    BLOG (Home Management/Blog.txt)  title /$/ link /$/ image
    ===================================================================== */
 const bs=$("#blogScroll");
-let paused=false,drag=false,moved=false,sx=0,sl0=0,half=0;
+let paused=false,drag=false,moved=false,sx=0,sl0=0,half=0,pos=0,nPosts=0,lastT=performance.now();
+function measureBlog(){
+  if(!nPosts||bs.children.length<=nPosts)return;
+  half=bs.children[nPosts].offsetLeft-bs.children[0].offsetLeft;      // exact width of one full set of cards
+}
 function renderBlog(lines){
   const posts=lines.filter(l=>l.length>=2).slice(-6).reverse();     // newest (bottom of file) first
   if(!posts.length){bs.innerHTML=`<div class="empty">No posts yet — add lines to Blog.txt.</div>`;half=0;return}
   const mk=(p,i)=>`<a class="post" href="${esc(safeUrl(p[1]))}" target="_blank" rel="noopener" draggable="false">
     <div class="img">${imgOrArt(p[2],hash(p[0]),400,260)}</div>
     <div class="body"><h3>${esc(p[0])}</h3><time data-link="${esc(p[1])}">Loading date…</time></div></a>`;
-  bs.innerHTML=posts.map(mk).join("")+posts.map(mk).join("");        // duplicated for endless loop
-  requestAnimationFrame(()=>half=bs.scrollWidth/2);
+  nPosts=posts.length;
+  const copies=Math.max(3,Math.ceil(innerWidth*2/(nPosts*366))+2);   // repeated sets → endless loop in both directions
+  let html="";for(let c=0;c<copies;c++)html+=posts.map(mk).join("");
+  bs.innerHTML=html;
+  requestAnimationFrame(()=>{measureBlog();pos=half;bs.scrollLeft=pos});
   posts.forEach(async p=>{
     const r=await resolveDate(p[1],CONFIG.MGMT+"Blog.txt");
     bs.querySelectorAll("time").forEach(t=>{if(t.dataset.link===p[1])t.textContent=fmtFull(r)});
   });
 }
-addEventListener("resize",()=>half=bs.scrollWidth/2);
+addEventListener("resize",measureBlog);
 bs.addEventListener("mouseenter",()=>paused=true);
-bs.addEventListener("mouseleave",()=>{paused=false;drag=false});
-bs.addEventListener("touchstart",()=>paused=true,{passive:true});
-bs.addEventListener("touchend",()=>setTimeout(()=>paused=false,1500));
+bs.addEventListener("mouseleave",()=>{paused=false;drag=false;bs.style.cursor="grab"});
+let touchT;
+bs.addEventListener("touchstart",()=>{paused=true;clearTimeout(touchT)},{passive:true});
+bs.addEventListener("touchend",()=>{touchT=setTimeout(()=>paused=false,1800)});
 bs.addEventListener("mousedown",e=>{drag=true;moved=false;sx=e.pageX;sl0=bs.scrollLeft;bs.style.cursor="grabbing"});
 addEventListener("mouseup",()=>{drag=false;bs.style.cursor="grab"});
 bs.addEventListener("mousemove",e=>{if(drag){if(Math.abs(e.pageX-sx)>5)moved=true;bs.scrollLeft=sl0-(e.pageX-sx)}});
 bs.addEventListener("click",e=>{if(moved){e.preventDefault();moved=false}},true);
-(function mv(){
-  if(!paused&&!drag&&half)bs.scrollLeft=bs.scrollLeft+0.7;           // titles drift to the left
-  if(half){if(bs.scrollLeft>=half)bs.scrollLeft-=half;else if(bs.scrollLeft<=0&&drag)bs.scrollLeft+=half}
+/* keep our float position in sync when the user scrolls/drags/uses the scrollbar, and wrap seamlessly */
+bs.addEventListener("scroll",()=>{
+  if(Math.abs(bs.scrollLeft-pos)>1.5){
+    pos=bs.scrollLeft;
+    if(half){if(pos>=2*half){pos-=half;bs.scrollLeft=pos}else if(pos<half){pos+=half;bs.scrollLeft=pos}}
+  }
+},{passive:true});
+/* browsers round scrollLeft to whole pixels, so we keep the exact position in `pos` ourselves */
+(function mv(now){
+  const dt=Math.min(50,(now||performance.now())-lastT)||16;lastT=now||performance.now();
+  if(half&&!paused&&!drag){
+    pos+=0.045*dt;                                                    // ~45 px/s to the left
+    if(pos>=2*half)pos-=half;
+    bs.scrollLeft=pos;
+  }
   requestAnimationFrame(mv);
-})();
+})(performance.now());
 
 /* =====================================================================
    HIGHLIGHT SECTIONS  domain /$/ title /$/ description /$/ link
@@ -527,7 +574,7 @@ async function renderGallery(v,file){
   const items=v.slice(-10).reverse();                                  // last 10 images
   const g=$("#gridpics");
   if(!items.length){g.innerHTML="";return}
-  g.innerHTML=items.map((l,i)=>`<a href="${esc(safeUrl(l[3]))}" target="_blank" rel="noopener" data-i="${i}">${art(hash(l[1])+i,PAL[i%4],300,300)}</a>`).join("");
+  g.innerHTML=items.map((l,i)=>`<a href="${esc(safeUrl(l[3]))}" target="_blank" rel="noopener" data-i="${i}">${imgOrArt("",hash(l[1])+i,300,300)}</a>`).join("");
   items.forEach(async(l,i)=>{
     const info=await pageInfo(l[3]||"");
     if(info.img){const a=g.querySelector(`a[data-i="${i}"]`);if(a)a.innerHTML=imgOrArt(info.img,hash(l[1])+i,300,300)}
@@ -562,6 +609,8 @@ async function refresh(){
   const jobs=[];
   jobs.push(getLines(CONFIG.MGMT,"First.txt").then(l=>{if(changed("first",l))renderSlides(l)}));
   jobs.push(getLines(CONFIG.MGMT,"Blog.txt").then(l=>{if(changed("blog",l))renderBlog(l)}));
+  jobs.push(getLines(CONFIG.MGMT,"Overview.txt").then(l=>{if(changed("overview",l))renderOverview(l)}));
+  jobs.push(getLines(CONFIG.MGMT,"Backgrounds.txt").then(l=>{if(changed("bgs",l))renderBg(l)}));
   HIGHLIGHTS.forEach(([key,title,file])=>jobs.push(getLines(CONFIG.MGMT,file).then(l=>{store[key]=l;if(changed(key,l))renderHighlights(key,title,file,l)})));
   jobs.push(Promise.all(NAV_NAMES.map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
   await Promise.all(jobs);route();
@@ -589,7 +638,7 @@ function typeCode(){if(typed)return;typed=true;const o=$("#codeout");(function t
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add("in");
     if(e.target.id==="codedemo")typeCode();
-    e.target.querySelectorAll("[data-n]").forEach(c=>{const n=+c.dataset.n;let v=0;const st=n/60;(function u(){v+=st;if(v>=n){c.textContent=n;return}c.textContent=Math.floor(v);requestAnimationFrame(u)})()});
+    e.target.querySelectorAll("[data-n]").forEach(countUp);
     io.unobserve(e.target)}
 }),{threshold:.12});
 function observeAll(){document.querySelectorAll(".reveal:not(.in)").forEach(el=>io.observe(el))}
@@ -615,17 +664,95 @@ $("#contact").innerHTML=
   `<li><a href="${CONFIG.GITHUB}" target="_blank" rel="noopener">⌥ GitHub</a></li>
    <li><a href="${CONFIG.WEBSITE}" target="_blank" rel="noopener">🌐 Main website</a></li>`;
 
-(async function visits(){
-  const n=new Date(),Y=n.getFullYear(),M=`${Y}-${pad(n.getMonth()+1)}`,D=`${M}-${pad(n.getDate())}`;
-  const keys={total:"total",year:"y"+Y,month:"m"+M,day:"d"+D};
-  const first=!sessionStorage.getItem("counted");
-  try{sessionStorage.setItem("counted","1")}catch{}
-  const call=async k=>{
-    try{const r=await fetch(`https://abacus.jasoncameron.dev/${first?"hit":"get"}/${CONFIG.COUNTER_NS}/${k}`);
-      if(!r.ok)return first?"—":0;const j=await r.json();return (j.value??0).toLocaleString("en-US")}catch{return "—"}};
-  const [d,m,y,t]=await Promise.all([call(keys.day),call(keys.month),call(keys.year),call(keys.total)]);
-  $("#v-day").textContent=d;$("#v-month").textContent=m;$("#v-year").textContent=y;$("#v-total").textContent=t;
-})();
+/* every page load / refresh counts as a visit. Keys use UTC dates so the GitHub workflow reads the same counters. */
+function isoWeek(d){
+  const t=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));
+  t.setUTCDate(t.getUTCDate()+4-(t.getUTCDay()||7));
+  const y=t.getUTCFullYear(),w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);
+  return `${y}-W${pad(w)}`;
+}
+const VK=["day","week","month","year","total"],shown={};
+function setV(k,val){
+  const el=$("#v-"+k);
+  if(typeof val!=="number"||isNaN(val)){if(shown[k]===undefined)el.textContent="—";return}
+  const from=shown[k]||0;shown[k]=val;const t0=performance.now();
+  (function s(now){const p=Math.min((now-t0)/1000,1),e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(from+(val-from)*e).toLocaleString("en-US");if(p<1)requestAnimationFrame(s)})(t0);
+}
+async function ab(key,hit){
+  const r=await fetch(`https://abacus.jasoncameron.dev/${hit?"hit":"get"}/${CONFIG.COUNTER_NS}/${key}`);
+  if(!r.ok){if(!hit&&r.status===404)return 0;throw new Error("counter")}
+  return +(await r.json()).value||0;
+}
+async function visits(hit){
+  const n=new Date(),Y=n.getUTCFullYear(),M=`${Y}-${pad(n.getUTCMonth()+1)}`,D=`${M}-${pad(n.getUTCDate())}`;
+  const keys={day:"d"+D,week:"w"+isoWeek(n),month:"m"+M,year:"y"+Y,total:"total"};
+  let vals=null;
+  try{
+    const res=await Promise.all(VK.map(k=>ab(keys[k],hit)));
+    vals=Object.fromEntries(VK.map((k,i)=>[k,res[i]]));lsSet("vstats",JSON.stringify(vals));
+  }catch{
+    /* counter unreachable → use the numbers stored in Home Management/Visitor Statistics, then the last cached ones */
+    const f=await getLines(CONFIG.MGMT,"Visitor Statistics");
+    const nums=f.map(l=>parseInt(String(l[0]).replace(/\D/g,""),10));
+    if(nums.length>=5&&nums.slice(0,5).every(x=>!isNaN(x)))vals=Object.fromEntries(VK.map((k,i)=>[k,nums[i]]));
+    else{try{vals=JSON.parse(lsGet("vstats")||"null")}catch{}}
+  }
+  VK.forEach(k=>setV(k,vals?vals[k]:NaN));
+}
+visits(true);setInterval(()=>visits(false),60000);
+
+/* =====================================================================
+   OVERVIEW (Home Management/Overview.txt)
+   line 1 = big title, line 2 = description, next lines = "number /$/ caption"
+   ===================================================================== */
+function countUp(c){
+  const n=+c.dataset.n,dec=+c.dataset.dec||0,fmt=c.dataset.fmt==="1";
+  const out=x=>{const y=dec?+x.toFixed(dec):Math.floor(x);return fmt||dec?y.toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec,useGrouping:fmt}):String(y)};
+  const t0=performance.now(),D=1600;
+  (function u(now){const p=Math.min((now-t0)/D,1),e=1-Math.pow(1-p,3);c.textContent=out(n*e);if(p<1)requestAnimationFrame(u);else c.textContent=out(n)})(t0);
+}
+function renderOverview(lines){
+  const L=lines.filter(l=>l[0]);if(!L.length)return;
+  const words=L[0][0].split(/\s+/),k=Math.max(1,words.length-2);
+  $("#ovTitle").innerHTML=esc(words.slice(0,k).join(" "))+(words.length>1?` <span>${esc(words.slice(k).join(" "))}</span>`:"");
+  if(L[1])$("#ovLead").textContent=L[1][0];
+  const st=$("#ovStats");
+  st.innerHTML=L.slice(2).filter(l=>l.length>=2).map(l=>{
+    const m=l[0].match(/^([^\d.-]*)(-?[\d,]*\.?\d+)(.*)$/);
+    if(!m)return `<div class="stat"><b>${esc(l[0])}</b><span>${esc(l[1])}</span></div>`;
+    const raw=m[2],num=parseFloat(raw.replace(/,/g,"")),dec=(raw.split(".")[1]||"").length;
+    return `<div class="stat"><b>${esc(m[1])}<span data-n="${num}" data-dec="${dec}" data-fmt="${/,/.test(raw)?1:0}">0</span>${esc(m[3])}</b><span>${esc(l[1])}</span></div>`;
+  }).join("");
+  if(st.classList.contains("in"))st.querySelectorAll("[data-n]").forEach(countUp);   // already visible → animate right away
+}
+
+/* =====================================================================
+   PAGE BACKGROUNDS (Home Management/Backgrounds.txt) — one image URL per line
+   very faint, full width, they scroll up with the page with a gap between them
+   ===================================================================== */
+let bgList=[];
+function layoutBg(){
+  const box=$("#bgimgs"),n=bgList.length;if(!n)return;
+  const H=Math.max(document.documentElement.scrollHeight,innerHeight);
+  box.style.height=H+"px";
+  const slot=H/n,h=Math.min(innerHeight*1.15,slot*.8);
+  Array.from(box.children).forEach((el,i)=>{el.style.height=h+"px";el.style.top=(i*slot+(slot-h)/2)+"px";el.dataset.c=i*slot+slot/2});
+  parallaxBg();
+}
+function parallaxBg(){
+  const y=scrollY+innerHeight/2;
+  document.querySelectorAll(".bgi").forEach(el=>{el.style.transform=`translateY(${((y-(+el.dataset.c||0))*0.12).toFixed(1)}px)`});
+}
+function renderBg(lines){
+  bgList=lines.map(l=>l.find(x=>/^https?:\/\//i.test(x))).filter(Boolean);
+  $("#bgimgs").innerHTML=bgList.map(u=>`<div class="bgi" style="background-image:url('${cssUrl(u)}')"></div>`).join("");
+  layoutBg();
+}
+let bgTick=false;
+addEventListener("scroll",()=>{if(!bgTick){bgTick=true;requestAnimationFrame(()=>{parallaxBg();bgTick=false})}},{passive:true});
+addEventListener("resize",layoutBg);
+new ResizeObserver(layoutBg).observe(document.body);
 
 /* =====================================================================
    3D BACKGROUND (Three.js)
