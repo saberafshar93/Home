@@ -1,0 +1,49 @@
+name: Update visitor statistics
+
+# Every 10 minutes: read the live counters and overwrite
+# "Bin/Data/Home/Home Management/Visitor Statistics" with the latest numbers only.
+# Line order: day, week, month, year, total
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch counters and write the file
+        run: |
+          NS="immunoafshar-saberafshar93"
+          F="Bin/Data/Home/Home Management/Visitor Statistics"
+          mkdir -p "$(dirname "$F")"
+          touch "$F"
+
+          # UTC keys — identical to the ones the website uses
+          KEYS=("d$(date -u +%Y-%m-%d)" "w$(date -u +%G-W%V)" "m$(date -u +%Y-%m)" "y$(date -u +%Y)" "total")
+
+          # previous values are kept if a counter cannot be read
+          mapfile -t OLD < <(sed 's/\xEF\xBB\xBF//; s/[^0-9]//g' "$F")
+
+          OUT=""
+          for i in 0 1 2 3 4; do
+            VAL=$(curl -fsS "https://abacus.jasoncameron.dev/get/$NS/${KEYS[$i]}" | jq -r '.value // empty' 2>/dev/null || true)
+            if [ -z "$VAL" ]; then VAL="${OLD[$i]:-0}"; fi
+            OUT+="$VAL"$'\n'
+          done
+          printf "%s" "$OUT" > "$F"
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "visitor-stats-bot"
+          git config user.email "visitor-stats-bot@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "Update visitor statistics"
+          git push
