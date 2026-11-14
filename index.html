@@ -86,8 +86,10 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 /* ---------- STATS ---------- */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;margin-top:30px}
 .stat{padding:26px;border-radius:20px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);text-align:center}
-.stat b{display:block;font-size:42px;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
-.stat span{color:var(--mute);font-size:13px}
+.stat{padding:34px 26px}
+.stat b{display:block;font-size:clamp(50px,5.8vw,72px);line-height:1.1;font-weight:800;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat b span{font-size:inherit;color:inherit;display:inline;margin:0}
+.stat>span{display:block;margin-top:8px;color:var(--mute);font-size:14px}
 
 /* ---------- BLOG ---------- */
 .blog-scroll{display:flex;gap:26px;overflow-x:auto;padding:10px 4px 26px;scrollbar-width:thin;scrollbar-color:var(--b) rgba(255,255,255,.08);cursor:grab}
@@ -145,7 +147,40 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 
 /* ---------- FOOTER ---------- */
 footer{border-top:1px solid var(--line);background:rgba(5,8,22,.86);color:var(--mute);font-size:14px}
-.fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;padding:60px 8vw 30px}
+.fgrid{display:grid;grid-template-columns:1.3fr .8fr 1.8fr .85fr;gap:36px;padding:60px 8vw 40px}
+.bgi:first-child{-webkit-mask-image:linear-gradient(to bottom,#000 65%,transparent);mask-image:linear-gradient(to bottom,#000 65%,transparent)}
+nav li>a.plain::after{content:none}
+/* contact list */
+.clist{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+.clist li{margin:0}
+.ci{display:flex;align-items:center;gap:10px;padding:5px 8px;border-radius:10px;font-size:13.5px;color:var(--mute);transition:.25s}
+footer .clist li a:hover{padding-left:8px}
+a.ci:hover{background:rgba(77,240,200,.1);color:#fff;transform:translateX(4px)}
+span.ci{opacity:.5;cursor:default}
+.ci .ico{flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:9px;font-size:14px;font-weight:700;color:var(--a);background:rgba(255,255,255,.06);border:1px solid var(--line);transition:.25s}
+.ci .ico img{width:15px;height:15px;filter:invert(1) opacity(.85)}
+a.ci:hover .ico{background:linear-gradient(135deg,var(--a),var(--b));border-color:transparent;color:#041022}
+a.ci:hover .ico img{filter:none}
+/* compact vertical visitor stats */
+.vcol{display:flex;flex-direction:column;gap:8px}
+.vr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(77,240,200,.09),rgba(123,108,255,.07));transition:.3s}
+.vr:hover{transform:translateX(-4px);border-color:rgba(77,240,200,.5);box-shadow:0 8px 24px rgba(77,240,200,.12)}
+.vr .l{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--mute)}
+.vr b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* code window */
+.codewin{max-width:980px}
+.codewin .bar{align-items:center}
+.ctitle{margin-left:12px;font:600 12.5px Consolas,monospace;color:var(--mute)}
+.copybtn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.05);
+  color:var(--txt);font:600 12px "Segoe UI",sans-serif;cursor:pointer;transition:.25s}
+.copybtn:hover{background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border-color:transparent}
+.codebody{max-height:480px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--b) transparent}
+.codewin pre{counter-reset:ln;padding:18px 0;min-height:0;white-space:pre;tab-size:4;font:13.5px/1.75 "JetBrains Mono",Consolas,"Courier New",monospace;color:#d6defa;width:max-content;min-width:100%}
+.cl{display:block;padding-right:20px}
+.cl::before{counter-increment:ln;content:counter(ln);display:inline-block;width:3em;margin-right:1.3em;text-align:right;color:#4a5683;user-select:none}
+.cl:hover{background:rgba(255,255,255,.04)}
+.tk{color:#c792ea}.ts{color:#c3e88d}.tn{color:#f78c6c}.tc{color:#637099;font-style:italic}.tf{color:#82aaff}
 /* visitor statistics */
 .visitors{padding:10px 8vw 44px}
 .visitors h4{display:flex;align-items:center}
@@ -175,7 +210,9 @@ footer li a:hover{color:var(--a);padding-left:5px}
 .fbrand .logo{order:0;margin-bottom:14px}
 .vstats li{display:flex;justify-content:space-between;padding:9px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);margin-bottom:8px}
 .vstats b{color:var(--a);font-variant-numeric:tabular-nums}
-.fbottom{border-top:1px solid var(--line);padding:20px 8vw;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px}
+.fbottom{position:relative;padding:28px 8vw;display:flex;justify-content:center;text-align:center;font-size:13.5px;letter-spacing:.8px;color:var(--mute)}
+.fbottom::before{content:"";position:absolute;top:0;left:8vw;right:8vw;height:1px;background:linear-gradient(90deg,transparent,var(--a),var(--b),var(--c),transparent)}
+.fbottom b{font-weight:800;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* ---------- MOBILE ---------- */
 @media(max-width:1020px){
@@ -243,7 +280,7 @@ footer li a:hover{color:var(--a);padding-left:5px}
 
 <div id="allview"><div id="allwrap"></div></div>
 
-<footer>
+<footer id="contact">
   <div class="fgrid">
     <div class="fbrand">
       <a class="logo" href="https://saberafshar93.github.io/Home/"><i></i><span><span class="im">Immuno</span>Afshar</span></a>
@@ -255,20 +292,20 @@ footer li a:hover{color:var(--a);padding-left:5px}
     </div>
     <div>
       <h4>Contact</h4>
-      <ul id="contact"></ul>
+      <ul id="contactList" class="clist"></ul>
+    </div>
+    <div>
+      <h4>Visitors <i class="live"></i></h4>
+      <div class="vcol">
+        <div class="vr"><span class="l">Today</span><b id="v-day">…</b></div>
+        <div class="vr"><span class="l">Week</span><b id="v-week">…</b></div>
+        <div class="vr"><span class="l">Month</span><b id="v-month">…</b></div>
+        <div class="vr"><span class="l">Year</span><b id="v-year">…</b></div>
+        <div class="vr"><span class="l">Total</span><b id="v-total">…</b></div>
+      </div>
     </div>
   </div>
-  <div class="visitors">
-    <h4>Visitor Statistics <i class="live"></i></h4>
-    <div class="vgrid">
-      <div class="vt"><span class="ic">◉</span><b id="v-day">…</b><span class="l">Today</span></div>
-      <div class="vt"><span class="ic">▤</span><b id="v-week">…</b><span class="l">Week</span></div>
-      <div class="vt"><span class="ic">◐</span><b id="v-month">…</b><span class="l">Month</span></div>
-      <div class="vt"><span class="ic">✦</span><b id="v-year">…</b><span class="l">Year</span></div>
-      <div class="vt"><span class="ic">∞</span><b id="v-total">…</b><span class="l">Total</span></div>
-    </div>
-  </div>
-  <div class="fbottom"><span>© 2026 ImmunoAfshar. All rights reserved.</span><span>Educational content — not medical advice.</span></div>
+  <div class="fbottom"><span>© 2026 <b>ImmunoAfshar</b>. All rights reserved.</span></div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -318,16 +355,18 @@ function parseLines(txt){
   return txt.replace(/^\uFEFF/,"").split(/\r?\n/).map(l=>l.replace(/\uFEFF/g,"").trim()).filter(Boolean)
     .map(l=>l.split(CONFIG.SEP).map(x=>x.trim()));
 }
-async function getLines(folder,file){
+/* raw text of a data file (cached copy is used if GitHub is unreachable) */
+async function getText(folder,file){
   const key="txt:"+folder+file;
   try{
     const r=await fetch(CONFIG.RAW+encodeURI(folder)+encodeURIComponent(file)+"?t="+Date.now(),{cache:"no-store"});
     if(!r.ok)throw 0;
-    const t=await r.text();lsSet(key,t);return parseLines(t);
+    const t=await r.text();lsSet(key,t);return t;
   }catch{
-    const c=lsGet(key);return c?parseLines(c):[];
+    return lsGet(key)||"";
   }
 }
+async function getLines(folder,file){return parseLines(await getText(folder,file))}
 
 /* generated artwork used when an image is missing or fails to load */
 function rnd(seed){let s=seed*9301+49297;return()=>{s=(s*9301+49297)%233280;return s/233280}}
@@ -358,7 +397,12 @@ function imgOrArt(src,seed,w,h){
 }
 document.addEventListener("error",e=>{
   const t=e.target;
-  if(t&&t.tagName==="IMG"&&t.dataset.fb){const f=t.closest(".frame");if(f)f.innerHTML=t.dataset.fb}
+  if(!t||t.tagName!=="IMG")return;
+  if(t.dataset.fb){const f=t.closest(".frame");if(f)f.innerHTML=t.dataset.fb}
+  else if(t.dataset.ico){                       /* contact icons: try the next CDN source, then a letter */
+    const list=t.dataset.ico.split(","),i=+t.dataset.i+1;
+    if(i<list.length){t.dataset.i=i;t.src=list[i]}else t.replaceWith(document.createTextNode(t.dataset.ltr||"•"));
+  }
 },true);
 
 /* =====================================================================
@@ -442,9 +486,11 @@ function renderNav(){
       if(innerWidth<=1020&&!li.classList.contains("open")){e.preventDefault();document.querySelectorAll("#menu li.open").forEach(x=>x.classList.remove("open"));li.classList.add("open")}
     });
   });
+  const ct=document.createElement("li");                               // Contact → jumps to the footer
+  ct.innerHTML='<a class="plain" href="#contact">Contact</a>';menu.appendChild(ct);
 }
 renderNav();
-menu.addEventListener("click",e=>{if(e.target.closest(".drop a"))$("#nav").classList.remove("show")});
+menu.addEventListener("click",e=>{if(e.target.closest(".drop a")||e.target.closest(".plain"))$("#nav").classList.remove("show")});
 $("#burger").onclick=()=>$("#nav").classList.toggle("show");
 
 /* =====================================================================
@@ -452,7 +498,7 @@ $("#burger").onclick=()=>$("#nav").classList.toggle("show");
    kicker /$/ title /$/ text /$/ link /$/ image
    ===================================================================== */
 const slider=$("#slider"),dots=$("#dots"),bar=$("#timerbar");
-let slideCount=0,cur=0,start=performance.now();
+let slideCount=0,cur=0,start=Date.now();
 function renderSlides(lines){
   const sl=lines.filter(l=>l.length>=2);
   slider.innerHTML="";dots.innerHTML="";slideCount=sl.length;
@@ -466,7 +512,7 @@ function renderSlides(lines){
     const b=document.createElement("button");b.className=i===cur?"active":"";b.setAttribute("aria-label","Slide "+(i+1));
     b.onclick=()=>go(i);dots.appendChild(b);
   });
-  start=performance.now();
+  start=Date.now();
 }
 function go(n){
   if(!slideCount)return;
@@ -474,14 +520,15 @@ function go(n){
   sl[cur]&&sl[cur].classList.remove("active");db[cur]&&db[cur].classList.remove("active");
   cur=(n+slideCount)%slideCount;               // after the last slide, start again
   sl[cur].classList.add("active");db[cur].classList.add("active");
-  start=performance.now();
+  start=Date.now();                            // picking a slide restarts the 15 s countdown from that slide
 }
-(function tick(now){
-  const p=Math.min((now-start)/CONFIG.SLIDE_MS,1);
+/* clock-based timer (setInterval + Date.now) so auto-advance never stops, even after clicking a dot */
+setInterval(()=>{
+  if(!slideCount)return;
+  const p=Math.min(Math.max((Date.now()-start)/CONFIG.SLIDE_MS,0),1);
   bar.style.width=(p*100)+"%";
   if(p>=1)go(cur+1);
-  requestAnimationFrame(tick);
-})(performance.now());
+},100);
 
 /* =====================================================================
    BLOG (Home Management/Blog.txt)  title /$/ link /$/ image
@@ -546,7 +593,7 @@ HIGHLIGHTS.forEach(([key,title,file,lead])=>{
   <div class="cards reveal" id="cards-${key}"><div class="empty">Loading…</div></div>
   <div class="more reveal"><a class="btn" href="#/all/${key}">Explore all ${title} →</a></div>`;
   host.appendChild(sec);
-  if(key==="code")sec.insertAdjacentHTML("beforeend",`<div class="codewin reveal" id="codedemo"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div><pre id="codeout"></pre></div>`);
+  if(key==="code")sec.insertAdjacentHTML("beforeend",`<div class="codewin reveal" id="codedemo"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="ctitle" id="codeTitle">(code)</span><button class="copybtn" id="copyBtn" type="button">⧉ Copy</button></div><div class="codebody"><pre id="codeout"></pre></div></div>`);
   if(key==="experience")sec.insertAdjacentHTML("beforeend",`<div class="timeline reveal" id="timeline"><h3>Experience chart</h3><div id="tlbody"></div></div>`);
   if(key==="gallery")sec.insertAdjacentHTML("beforeend",`<div class="gallery reveal" id="gridpics"></div>`);
 });
@@ -611,6 +658,8 @@ async function refresh(){
   jobs.push(getLines(CONFIG.MGMT,"Blog.txt").then(l=>{if(changed("blog",l))renderBlog(l)}));
   jobs.push(getLines(CONFIG.MGMT,"Overview.txt").then(l=>{if(changed("overview",l))renderOverview(l)}));
   jobs.push(getLines(CONFIG.MGMT,"Backgrounds.txt").then(l=>{if(changed("bgs",l))renderBg(l)}));
+  jobs.push(getText(CONFIG.MGMT,"Code.txt").then(t=>{if(changed("code",t))renderCodeFile(t)}));
+  jobs.push(getText(CONFIG.MGMT,"Contact.txt").then(t=>{if(changed("contact",t))renderContact(t)}));
   HIGHLIGHTS.forEach(([key,title,file])=>jobs.push(getLines(CONFIG.MGMT,file).then(l=>{store[key]=l;if(changed(key,l))renderHighlights(key,title,file,l)})));
   jobs.push(Promise.all(NAV_NAMES.map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
   await Promise.all(jobs);route();
@@ -636,9 +685,7 @@ for name, v in sorted(mutations.items(),
 let ci=0,typed=false;
 function typeCode(){if(typed)return;typed=true;const o=$("#codeout");(function t(){o.textContent=codeTxt.slice(0,ci++);if(ci<=codeTxt.length)setTimeout(t,18)})()}
 const io=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){e.target.classList.add("in");
-    if(e.target.id==="codedemo")typeCode();
-    e.target.querySelectorAll("[data-n]").forEach(countUp);
+  if(e.isIntersecting){e.target.classList.add("in");    e.target.querySelectorAll("[data-n]").forEach(countUp);
     io.unobserve(e.target)}
 }),{threshold:.12});
 function observeAll(){document.querySelectorAll(".reveal:not(.in)").forEach(el=>io.observe(el))}
@@ -709,8 +756,8 @@ visits(true);setInterval(()=>visits(false),60000);
 function countUp(c){
   const n=+c.dataset.n,dec=+c.dataset.dec||0,fmt=c.dataset.fmt==="1";
   const out=x=>{const y=dec?+x.toFixed(dec):Math.floor(x);return fmt||dec?y.toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec,useGrouping:fmt}):String(y)};
-  const t0=performance.now(),D=1600;
-  (function u(now){const p=Math.min((now-t0)/D,1),e=1-Math.pow(1-p,3);c.textContent=out(n*e);if(p<1)requestAnimationFrame(u);else c.textContent=out(n)})(t0);
+  const t0=Date.now(),D=10000;                                          // 10 seconds to reach the target
+  (function u(){const p=Math.min(Math.max((Date.now()-t0)/D,0),1),e=Math.sin(p*Math.PI/2);c.textContent=out(n*e);if(p<1)requestAnimationFrame(u);else c.textContent=out(n)})();
 }
 function renderOverview(lines){
   const L=lines.filter(l=>l[0]);if(!L.length)return;
@@ -737,12 +784,16 @@ function layoutBg(){
   const H=Math.max(document.documentElement.scrollHeight,innerHeight);
   box.style.height=H+"px";
   const slot=H/n,h=Math.min(innerHeight*1.15,slot*.8);
-  Array.from(box.children).forEach((el,i)=>{el.style.height=h+"px";el.style.top=(i*slot+(slot-h)/2)+"px";el.dataset.c=i*slot+slot/2});
+  Array.from(box.children).forEach((el,i)=>{el.style.height=h+"px";el.style.top=(i*slot)+"px";el.dataset.c=i*slot+h/2;el.dataset.i=i});   // first image starts at the very top
   parallaxBg();
 }
 function parallaxBg(){
   const y=scrollY+innerHeight/2;
-  document.querySelectorAll(".bgi").forEach(el=>{el.style.transform=`translateY(${((y-(+el.dataset.c||0))*0.12).toFixed(1)}px)`});
+  document.querySelectorAll(".bgi").forEach(el=>{
+    let o=(y-(+el.dataset.c||0))*0.12;
+    if(el.dataset.i==="0")o=Math.max(0,o);                            // never leave a gap above the first image
+    el.style.transform=`translateY(${o.toFixed(1)}px)`;
+  });
 }
 function renderBg(lines){
   bgList=lines.map(l=>l.find(x=>/^https?:\/\//i.test(x))).filter(Boolean);
