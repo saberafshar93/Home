@@ -706,10 +706,70 @@ addEventListener("scroll",()=>{const h=document.documentElement;$("#progress").s
    ===================================================================== */
 $("#quick").innerHTML=[["Home","#home"],["Overview","#overview"],["Blog","#blog"],...HIGHLIGHTS.map(h=>[h[1],"#"+h[0]])]
   .map(l=>`<li><a href="${l[1]}">${l[0]}</a></li>`).join("");
-$("#contact").innerHTML=
-  (CONFIG.EMAIL?`<li><a href="mailto:${esc(CONFIG.EMAIL)}">✉ ${esc(CONFIG.EMAIL)}</a></li>`:"")+
-  `<li><a href="${CONFIG.GITHUB}" target="_blank" rel="noopener">⌥ GitHub</a></li>
-   <li><a href="${CONFIG.WEBSITE}" target="_blank" rel="noopener">🌐 Main website</a></li>`;
+/* Contact.txt: line N = link for the N-th channel below. Empty line = shown without a link. */
+const CONTACTS=[
+  ["Email","✉"],["Phone","☎"],["WhatsApp","whatsapp"],["Telegram","telegram"],["Instagram","instagram"],
+  ["LinkedIn","linkedin"],["X (Twitter)","x"],["GitHub","github"],["YouTube","youtube"],["Facebook","facebook"],
+  ["Discord","discord"],["Medium","medium"],["ResearchGate","researchgate"],["ORCID","orcid"],["Google Scholar","googlescholar"],
+  ["Website","🌐"],["Reddit","reddit"],["Threads","threads"],["Bluesky","bluesky"],["TikTok","tiktok"]
+];
+function contactHref(v){
+  v=(v||"").trim();if(!v)return "";
+  if(/^(https?:|mailto:|tel:)/i.test(v))return v;
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))return "mailto:"+v;
+  if(/^\+?[\d\s()-]{6,}$/.test(v))return "tel:"+v.replace(/[^\d+]/g,"");
+  if(/^[\w.-]+\.[a-z]{2,}(\/\S*)?$/i.test(v))return "https://"+v;
+  return "";
+}
+function renderContact(text){
+  const rows=(text||"").replace(/^﻿/,"").split(/\r?\n/);
+  $("#contactList").innerHTML=CONTACTS.map(([name,ic],i)=>{
+    const href=contactHref(rows[i]);
+    let icon=ic;
+    if(/^[a-z]/.test(ic)){
+      const urls=["9.21.0","latest"].map(v=>`https://cdn.jsdelivr.net/npm/simple-icons@${v}/icons/${ic}.svg`);
+      icon=`<img src="${urls[0]}" alt="" data-ico="${urls.join(",")}" data-i="0" data-ltr="${esc(name[0])}">`;
+    }
+    const inner=`<span class="ico">${icon}</span>${esc(name)}`;
+    return `<li>${href?`<a class="ci" href="${esc(href)}"${/^https?:/i.test(href)?' target="_blank" rel="noopener"':""}>${inner}</a>`:`<span class="ci">${inner}</span>`}</li>`;
+  }).join("");
+}
+renderContact("");
+
+/* Code.txt: line 1 = what the code is based on (shown in brackets in the window bar), other lines = the code */
+const KW=new Set("def class return if elif else for while import from as try except finally with lambda pass break continue in not and or is None True False print yield async await function const let var new this typeof null undefined true false switch case default throw catch int float double char void static public private protected struct enum include using namespace package interface extends implements final do goto bool string end then local".split(" "));
+const HLRX=/(#.*$|\/\/.*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)(?=\s*\()|([A-Za-z_]\w*)/g;
+function hl(line){
+  let out="",last=0,m;HLRX.lastIndex=0;
+  while((m=HLRX.exec(line))){
+    out+=esc(line.slice(last,m.index));
+    const t=m[0];let c="";
+    if(m[1])c="c";else if(m[2])c="s";else if(m[3])c="n";else if(KW.has(t))c="k";else if(m[4])c="f";
+    out+=c?`<span class="t${c}">${esc(t)}</span>`:esc(t);
+    last=m.index+t.length;
+  }
+  return out+esc(line.slice(last));
+}
+let codeRaw="";
+function renderCode(title,code){
+  codeRaw=code;
+  $("#codeTitle").textContent=title?`(${title})`:"";
+  $("#codeout").innerHTML=code.split("\n").map(l=>`<span class="cl">${hl(l)}</span>`).join("");
+}
+function renderCodeFile(t){
+  const lines=t.replace(/^﻿/,"").replace(/\r/g,"").split("\n");
+  const title=(lines.shift()||"").trim();
+  while(lines.length&&!lines[lines.length-1].trim())lines.pop();
+  if(!title&&!lines.length)return;
+  renderCode(title,lines.join("\n"));
+}
+renderCode("Python",codeTxt);
+$("#copyBtn").onclick=async()=>{
+  const b=$("#copyBtn");let ok=false;
+  try{await navigator.clipboard.writeText(codeRaw);ok=true}
+  catch{const ta=document.createElement("textarea");ta.value=codeRaw;ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.select();try{ok=document.execCommand("copy")}catch{}ta.remove()}
+  b.textContent=ok?"✓ Copied":"Copy failed";setTimeout(()=>{b.textContent="⧉ Copy"},1800);
+};
 
 /* every page load / refresh counts as a visit. Keys use UTC dates so the GitHub workflow reads the same counters. */
 function isoWeek(d){
