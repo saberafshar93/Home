@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ImmunoVerse | 3D Immunotherapy Hub</title>
+<title>ImmunoAfshar | 3D Immunotherapy Hub</title>
 <style>
 :root{
   --bg:#050816; --panel:rgba(16,22,48,.62); --line:rgba(140,170,255,.18);
@@ -12,30 +12,34 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Inter,system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+body.lock{overflow:hidden}
 #bg{position:fixed;inset:0;z-index:0;width:100%;height:100%}
 #progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:1000;background:linear-gradient(90deg,var(--a),var(--b),var(--c))}
 main,footer{position:relative;z-index:2}
 a{color:inherit;text-decoration:none}
 
-/* ---------- HEADER ---------- */
+/* ---------- HEADER (menu LEFT, logo RIGHT) ---------- */
 header{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;
   padding:0 32px;height:70px;background:rgba(5,8,22,.55);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.5px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px;letter-spacing:.5px;order:2}
 .logo i{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--a) 35%,var(--b));box-shadow:0 0 18px var(--a);animation:pulse 3s infinite}
+.logo .im{background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo .im:hover{filter:brightness(1.3)}
 @keyframes pulse{50%{transform:scale(1.18)}}
-nav ul{display:flex;list-style:none;gap:4px}
+nav{order:1}
+nav ul{display:flex;list-style:none;gap:2px}
 nav li{position:relative}
-nav li>a{display:block;padding:24px 14px;font-size:14px;font-weight:600;letter-spacing:.4px;color:var(--mute);transition:.25s}
+nav li>a{display:block;padding:24px 13px;font-size:14px;font-weight:600;letter-spacing:.4px;color:var(--mute);transition:.25s}
 nav li:hover>a,nav li.open>a{color:#fff}
 nav li>a::after{content:"▾";margin-left:5px;font-size:10px}
-.drop{position:absolute;top:100%;left:0;min-width:230px;padding:10px;border-radius:0 0 16px 16px;
+.drop{position:absolute;top:100%;left:0;min-width:240px;padding:10px;border-radius:0 0 16px 16px;
   background:rgba(10,14,36,.94);border:1px solid var(--line);border-top:2px solid var(--a);
   opacity:0;visibility:hidden;transform:translateY(-10px) rotateX(-12deg);transform-origin:top;transition:.3s;
   box-shadow:0 20px 50px rgba(0,0,0,.5)}
 nav li:hover .drop,nav li.open .drop{opacity:1;visibility:visible;transform:none}
 .drop a{display:block;padding:10px 14px;border-radius:10px;font-size:13.5px;color:var(--mute);transition:.2s}
 .drop a:hover{background:linear-gradient(90deg,rgba(77,240,200,.15),transparent);color:#fff;padding-left:20px}
-#burger{display:none;background:none;border:1px solid var(--line);color:#fff;font-size:22px;border-radius:8px;padding:2px 10px;cursor:pointer}
+#burger{display:none;background:none;border:1px solid var(--line);color:#fff;font-size:22px;border-radius:8px;padding:2px 10px;cursor:pointer;order:0}
 
 /* ---------- LAYOUT ---------- */
 section{padding:110px 8vw 60px;position:relative}
@@ -49,6 +53,7 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
   background:linear-gradient(90deg,var(--a),var(--b));color:#041022;transition:.3s;box-shadow:0 8px 30px rgba(77,240,200,.25)}
 .btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(123,108,255,.45)}
 .btn.ghost{background:transparent;color:#fff;border:1px solid var(--line);box-shadow:none}
+.empty{color:var(--mute);padding:20px;border:1px dashed var(--line);border-radius:16px}
 
 /* ---------- HERO SLIDER ---------- */
 #home{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:100px}
@@ -59,11 +64,13 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 .slide .kicker{color:var(--a);letter-spacing:3px;font-size:12px;text-transform:uppercase;margin-bottom:14px}
 .slide h1{font-size:clamp(34px,5.2vw,70px);line-height:1.06;margin-bottom:18px}
 .slide p{color:var(--mute);max-width:520px;margin-bottom:26px}
-.slide .art{height:100%;max-height:480px;perspective:1000px}
-.slide .art svg{width:100%;height:100%;filter:drop-shadow(0 30px 60px rgba(123,108,255,.35));animation:floaty 7s ease-in-out infinite;transform-style:preserve-3d}
+.slide .art{height:100%;max-height:480px;perspective:1000px;display:flex;align-items:center;justify-content:center}
+.slide .art svg,.slide .art img{width:100%;height:100%;animation:floaty 7s ease-in-out infinite;transform-style:preserve-3d}
+.slide .art svg{filter:drop-shadow(0 30px 60px rgba(123,108,255,.35))}
+.slide .art img{object-fit:cover;border-radius:28px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(123,108,255,.35),0 0 0 6px rgba(77,240,200,.06)}
 @keyframes floaty{50%{transform:translateY(-14px) rotateY(8deg) rotateX(3deg)}}
 .dots{display:flex;justify-content:center;gap:14px;margin-top:26px}
-.dots button{width:16px;height:16px;border-radius:50%;border:2px solid var(--mute);background:transparent;cursor:pointer;position:relative;transition:.3s}
+.dots button{width:16px;height:16px;border-radius:50%;border:2px solid var(--mute);background:transparent;cursor:pointer;transition:.3s}
 .dots button.active{border-color:var(--a);background:var(--a);box-shadow:0 0 16px var(--a);transform:scale(1.25)}
 .timer{height:3px;max-width:240px;margin:16px auto 0;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
 .timer i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b))}
@@ -79,55 +86,72 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 .stat span{color:var(--mute);font-size:13px}
 
 /* ---------- BLOG ---------- */
-.blog-wrap{position:relative}
 .blog-scroll{display:flex;gap:26px;overflow-x:auto;padding:10px 4px 26px;scrollbar-width:thin;scrollbar-color:var(--b) rgba(255,255,255,.08);cursor:grab}
 .blog-scroll::-webkit-scrollbar{height:10px}
 .blog-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.07);border-radius:10px}
 .blog-scroll::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--a),var(--b));border-radius:10px}
-.post{flex:0 0 340px;border-radius:22px;overflow:hidden;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);
-  transition:transform .4s,box-shadow .4s;user-select:none}
+.post{flex:0 0 340px;display:block;border-radius:22px;overflow:hidden;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);
+  transition:transform .4s,box-shadow .4s;user-select:none;-webkit-user-drag:none}
 .post:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 24px 60px rgba(77,240,200,.18)}
 .post .img{height:200px;overflow:hidden}
-.post .img svg{width:100%;height:100%;display:block;transition:transform .8s}
-.post:hover .img svg{transform:scale(1.12) rotate(2deg)}
+.post .img svg,.post .img img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .8s;-webkit-user-drag:none}
+.post:hover .img svg,.post:hover .img img{transform:scale(1.12) rotate(2deg)}
 .post .body{padding:20px}
 .post h3{font-size:18px;line-height:1.3;margin-bottom:12px}
 .post time{color:var(--mute);font-size:13px;display:flex;gap:8px;align-items:center}
-.post time::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a)}
+.post time::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a);flex:none}
 
-/* ---------- CARDS ---------- */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;perspective:1100px}
-.card{padding:26px;border-radius:22px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);
+/* ---------- HIGHLIGHT CARDS ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;perspective:1100px}
+.card{display:block;padding:26px;border-radius:22px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);
   transition:transform .15s,border-color .3s,box-shadow .3s;transform-style:preserve-3d;position:relative;overflow:hidden}
-.card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,0%),rgba(77,240,200,.18),transparent 55%);opacity:0;transition:.3s}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,0%),rgba(77,240,200,.18),transparent 55%);opacity:0;transition:.3s;pointer-events:none}
 .card:hover{border-color:rgba(77,240,200,.5);box-shadow:0 20px 60px rgba(0,0,0,.4)}
 .card:hover::before{opacity:1}
-.card .ico{font-size:34px;margin-bottom:12px;transform:translateZ(40px);display:inline-block}
+.card .dom{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--c);
+  background:rgba(255,93,143,.12);border:1px solid rgba(255,93,143,.3);padding:3px 11px;border-radius:30px;margin-bottom:12px;transform:translateZ(40px)}
 .card h3{font-size:19px;margin-bottom:8px;transform:translateZ(30px)}
 .card p{color:var(--mute);font-size:14.5px;transform:translateZ(20px)}
+.card .go{display:inline-block;margin-top:14px;color:var(--a);font-size:13px;font-weight:700;transform:translateZ(20px)}
 .more{margin-top:26px}
+
+/* ---------- ALL-ITEMS VIEW ---------- */
+#allview{position:fixed;inset:0;z-index:850;background:rgba(5,8,22,.94);backdrop-filter:blur(8px);overflow-y:auto;padding:110px 8vw 80px;display:none}
+#allview.show{display:block;animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}}
+#allview .back{margin-bottom:26px}
 
 /* ---------- EXTRAS ---------- */
 .codewin{margin-top:26px;border-radius:18px;overflow:hidden;background:#0a0f26;border:1px solid var(--line);max-width:760px}
 .codewin .bar{display:flex;gap:7px;padding:12px 16px;background:#0f1633}
 .codewin .bar i{width:12px;height:12px;border-radius:50%}
 .codewin pre{padding:20px;font:13.5px/1.7 Consolas,monospace;color:#b6f5e4;min-height:220px;white-space:pre-wrap}
-.timeline{margin-top:30px;border-left:2px solid var(--line);padding-left:30px;max-width:700px}
-.tl{position:relative;margin-bottom:26px}
-.tl::before{content:"";position:absolute;left:-39px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--a);box-shadow:0 0 16px var(--a)}
-.tl b{color:var(--a)}
-.tl p{color:var(--mute);font-size:14.5px}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:30px}
-.gallery div{aspect-ratio:1;border-radius:18px;overflow:hidden;border:1px solid var(--line);transition:.5s}
-.gallery div:hover{transform:scale(1.07) rotate(-2deg);z-index:2;box-shadow:0 20px 50px rgba(123,108,255,.4)}
-.gallery svg{width:100%;height:100%;display:block}
-#arena{position:relative;height:280px;margin-top:26px;border-radius:22px;background:var(--panel);border:1px solid var(--line);overflow:hidden}
-#arena .hud{position:absolute;top:12px;left:18px;z-index:3;font-weight:700}
-.bug{position:absolute;width:46px;height:46px;border-radius:50%;cursor:pointer;
-  background:radial-gradient(circle at 30% 30%,#ffb3c9,var(--c) 55%,#7a1238);box-shadow:0 0 22px var(--c);animation:pop .4s}
-@keyframes pop{from{transform:scale(0)}}
+.timeline{margin-top:34px;border-left:2px solid var(--line);padding-left:30px;max-width:760px}
+.timeline h3{margin:0 0 18px -2px;font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--mute)}
+.tl{position:relative;margin-bottom:22px;display:block}
+.tl::before{content:"";position:absolute;left:-39px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--a);box-shadow:0 0 16px var(--a);transition:.3s}
+.tl:hover::before{background:var(--c);box-shadow:0 0 20px var(--c);transform:scale(1.25)}
+.tl b{display:inline-block;min-width:68px;color:var(--a);font-size:15px}
+.tl span{font-size:16px}
+.tl:hover span{color:#fff;text-decoration:underline}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-top:34px}
+.gallery a{display:block;aspect-ratio:1;border-radius:18px;overflow:hidden;border:1px solid var(--line);transition:.5s;background:var(--panel)}
+.gallery a:hover{transform:scale(1.07) rotate(-2deg);z-index:2;box-shadow:0 20px 50px rgba(123,108,255,.4)}
+.gallery svg,.gallery img{width:100%;height:100%;display:block;object-fit:cover}
 
-footer{padding:50px 8vw;text-align:center;color:var(--mute);border-top:1px solid var(--line);background:rgba(5,8,22,.7);font-size:14px}
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line);background:rgba(5,8,22,.86);color:var(--mute);font-size:14px}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.1fr;gap:40px;padding:60px 8vw 40px}
+footer h4{color:#fff;font-size:14px;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;position:relative;padding-bottom:10px}
+footer h4::after{content:"";position:absolute;left:0;bottom:0;width:34px;height:2px;background:linear-gradient(90deg,var(--a),var(--b))}
+footer ul{list-style:none}
+footer li{margin-bottom:10px}
+footer li a{transition:.2s}
+footer li a:hover{color:var(--a);padding-left:5px}
+.fbrand .logo{order:0;margin-bottom:14px}
+.vstats li{display:flex;justify-content:space-between;padding:9px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);margin-bottom:8px}
+.vstats b{color:var(--a);font-variant-numeric:tabular-nums}
+.fbottom{border-top:1px solid var(--line);padding:20px 8vw;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px}
 
 /* ---------- MOBILE ---------- */
 @media(max-width:1020px){
@@ -143,7 +167,9 @@ footer{padding:50px 8vw;text-align:center;color:var(--mute);border-top:1px solid
   .slide p{margin-inline:auto}
   .slider{height:auto;min-height:560px}
   header{padding:0 18px}
+  .fgrid{grid-template-columns:1fr 1fr}
 }
+@media(max-width:600px){.fgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -151,13 +177,12 @@ footer{padding:50px 8vw;text-align:center;color:var(--mute);border-top:1px solid
 <canvas id="bg"></canvas>
 
 <header>
-  <a href="#home" class="logo"><i></i>ImmunoVerse</a>
   <button id="burger" aria-label="Menu">☰</button>
   <nav id="nav"><ul id="menu"></ul></nav>
+  <div class="logo"><i></i><span><a class="im" href="https://saberafshar93.github.io/Website/#home">Immuno</a>Afshar</span></div>
 </header>
 
 <main>
-  <!-- HOME / HERO -->
   <section id="home">
     <div class="slider" id="slider"></div>
     <div class="dots" id="dots"></div>
@@ -165,7 +190,6 @@ footer{padding:50px 8vw;text-align:center;color:var(--mute);border-top:1px solid
     <div class="scrollhint">SCROLL TO EXPLORE<b></b></div>
   </section>
 
-  <!-- OVERVIEW -->
   <section id="overview">
     <div class="reveal">
       <span class="tag">Overview</span>
@@ -180,215 +204,373 @@ footer{padding:50px 8vw;text-align:center;color:var(--mute);border-top:1px solid
     </div>
   </section>
 
-  <!-- BLOG -->
   <section id="blog">
     <div class="reveal">
       <span class="tag">Blog</span>
       <h2>Latest <span>stories</span></h2>
       <p class="lead">Fresh posts from the lab and the clinic. Drag, scroll, or let them drift by.</p>
     </div>
-    <div class="blog-wrap reveal"><div class="blog-scroll" id="blogScroll"></div></div>
+    <div class="reveal"><div class="blog-scroll" id="blogScroll"></div></div>
   </section>
 
   <div id="sections"></div>
 </main>
 
-<footer>© 2026 ImmunoVerse — Educational demo. Not medical advice.</footer>
+<div id="allview"><div id="allwrap"></div></div>
+
+<footer>
+  <div class="fgrid">
+    <div class="fbrand">
+      <div class="logo"><i></i><span><a class="im" href="https://saberafshar93.github.io/Website/#home">Immuno</a>Afshar</span></div>
+      <p>A 3D hub for immunotherapy research, articles, books, code and experience — built to make complex science feel alive.</p>
+    </div>
+    <div>
+      <h4>Quick Access</h4>
+      <ul id="quick"></ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul id="contact"></ul>
+    </div>
+    <div>
+      <h4>Visitor Statistics</h4>
+      <ul class="vstats">
+        <li><span>Today</span><b id="v-day">…</b></li>
+        <li><span>This month</span><b id="v-month">…</b></li>
+        <li><span>This year</span><b id="v-year">…</b></li>
+        <li><span>Total</span><b id="v-total">…</b></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fbottom"><span>© 2026 ImmunoAfshar. All rights reserved.</span><span>Educational content — not medical advice.</span></div>
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* =====================  DATA  ===================== */
-const SECTIONS = [
-  {key:"lab",title:"Lab",tag:"Research Bench",
-   lead:"Peek inside our virtual laboratory: protocols, cell cultures and the experiments that move the field forward.",
-   items:[["🧪","T-Cell Expansion Protocol","Step-by-step workflow for growing tumor-infiltrating lymphocytes."],
-          ["🔬","Flow Cytometry Panels","Marker panels to profile exhausted vs. active T cells."],
-          ["🧬","CRISPR Edits for CAR-T","Knocking out PD-1 to make engineered cells more persistent."]]},
-  {key:"article",title:"Article",tag:"Peer-Reviewed Reads",
-   lead:"Plain-language summaries of landmark papers, so you can decide which ones deserve a deep read.",
-   items:[["📄","Checkpoint Blockade at 15","What a decade and a half of PD-1 therapy taught us."],
-          ["📈","Neoantigen Burden & Response","Why mutation-rich tumors often respond better."],
-          ["🧫","Tumor Microenvironment Review","How cancers build walls against immune cells."]]},
-  {key:"book",title:"Book",tag:"Library",
-   lead:"Curated books and chapters — from beginner primers to graduate-level immuno-oncology.",
-   items:[["📘","Immunology Made Visual","A beginner-friendly illustrated guide."],
-          ["📗","The Cancer Immunotherapy Handbook","Clinical practice, dosing and toxicity management."],
-          ["📙","Stories From the Clinic","Patient journeys that humanise the science."]]},
-  {key:"ai",title:"AI",tag:"Artificial Intelligence",
-   lead:"Machine learning is predicting neoantigens, designing antibodies and matching patients to trials.",
-   items:[["🤖","Neoantigen Prediction","Deep nets rank mutations most likely to trigger T cells."],
-          ["🧠","Protein Design Models","Generative models propose novel binders in hours."],
-          ["📊","Response Biomarkers","Predicting who benefits from therapy before treatment starts."]]},
-  {key:"code",title:"Code",tag:"Open Source",
-   lead:"Notebooks, pipelines and tiny scripts for analysing immune repertoire and single-cell data.",
-   items:[["💻","TCR Repertoire Toolkit","Clone-tracking and diversity metrics in Python."],
-          ["⚙️","Single-Cell Pipeline","From raw counts to annotated immune clusters."],
-          ["🧮","Dose-Response Simulator","ODE models of T cell vs. tumor dynamics."]]},
-  {key:"experience",title:"Experience",tag:"Journey",
-   lead:"Milestones, collaborations and real-world experience that shaped our approach to immunotherapy.",
-   items:[["🏥","Clinical Collaborations","Joint studies with leading cancer centers."],
-          ["🎓","Training Programs","Workshops for students and young clinicians."],
-          ["🌍","Global Network","Partners across 30+ countries sharing data."]]},
-  {key:"gallery",title:"Gallery",tag:"Visuals",
-   lead:"Microscopy, 3D renders and artistic interpretations of immune cells in action.",
-   items:[["🖼️","Confocal Microscopy","Glowing T cells attacking a tumor spheroid."],
-          ["🎨","Scientific Illustrations","Hand-crafted art explaining complex pathways."],
-          ["🎞️","Time-Lapse Reels","Hours of cell killing compressed into seconds."]]},
-  {key:"fun",title:"Fun",tag:"Play & Learn",
-   lead:"Learning sticks better with play. Quizzes, mini-games and curiosities about the immune system.",
-   items:[["🎮","Cell Defender Game","Pop the tumor cells before time runs out."],
-          ["❓","Weekly Immuno Quiz","Test yourself with five fresh questions."],
-          ["🤯","Did You Know?","Your body makes billions of T cells every day."]]}
-];
-
-const SLIDES = [
-  {k:"Immunotherapy 101",t:"Training the Immune System to Hunt Cancer",p:"Instead of attacking tumors directly, immunotherapy unleashes the body's own soldiers against them.",c:["#4df0c8","#7b6cff","#ff5d8f"],s:3},
-  {k:"Cell Therapy",t:"CAR-T Cells: Living Drugs Built in the Lab",p:"Patient T cells are engineered with receptors that lock onto cancer — and keep fighting for years.",c:["#ffb347","#ff5d8f","#7b6cff"],s:7},
-  {k:"Checkpoint Inhibitors",t:"Releasing the Brakes on T Cells",p:"PD-1 and CTLA-4 blockers let exhausted T cells wake up and attack again.",c:["#5cc8ff","#4df0c8","#7b6cff"],s:11},
-  {k:"Vaccines",t:"Personalised mRNA Cancer Vaccines Advance",p:"Custom-made for each patient's tumor mutations, new vaccines are entering late-stage trials.",c:["#c77dff","#ff5d8f","#ffb347"],s:15},
-  {k:"AI + Biology",t:"Artificial Intelligence Designs Smarter Therapies",p:"Algorithms now spot targets, design binders and predict patient response in record time.",c:["#4df0c8","#5cc8ff","#c77dff"],s:19}
-];
-
-const POSTS = [
-  ["How CAR-T Therapy Is Moving Beyond Blood Cancers","Nov 12, 2026","09:30",21],
-  ["5 Myths About Checkpoint Inhibitors, Debunked","Nov 10, 2026","14:15",5],
-  ["Inside the Lab: A Day Growing Tumor-Infiltrating Cells","Nov 07, 2026","11:00",33],
-  ["Gut Microbiome: The Hidden Ally of Immunotherapy","Nov 04, 2026","18:45",44],
-  ["Can AI Predict Who Will Respond to Treatment?","Oct 31, 2026","08:20",52],
-  ["Managing Side Effects: A Patient's Practical Guide","Oct 28, 2026","16:05",61]
-];
-
-const NAV = {
-  "Home":[["Top stories","#home"],["Overview","#overview"],["Latest blog posts","#blog"]],
-  "Lab":[["Lab overview","#lab"],...SECTIONS[0].items.map((x,i)=>[x[1],`#lab-${i}`])],
-  "Article":[["All articles","#article"],...SECTIONS[1].items.map((x,i)=>[x[1],`#article-${i}`])],
-  "Blog":[["Latest posts","#blog"],["Most read","#blog"],["Patient stories","#blog"]],
-  "Book":[["Library","#book"],...SECTIONS[2].items.map((x,i)=>[x[1],`#book-${i}`])],
-  "AI":[["AI overview","#ai"],...SECTIONS[3].items.map((x,i)=>[x[1],`#ai-${i}`])],
-  "Code":[["Code overview","#code"],...SECTIONS[4].items.map((x,i)=>[x[1],`#code-${i}`]),["Live demo","#codedemo"]],
-  "Experience":[["Journey","#experience"],["Timeline","#timeline"],...SECTIONS[5].items.map((x,i)=>[x[1],`#experience-${i}`])],
-  "Gallery":[["Gallery overview","#gallery"],["Image grid","#gridpics"],...SECTIONS[6].items.map((x,i)=>[x[1],`#gallery-${i}`])],
-  "Fun":[["Fun overview","#fun"],["Play the game","#arena"],...SECTIONS[7].items.map((x,i)=>[x[1],`#fun-${i}`])]
+/* =====================================================================
+   CONFIG — edit here
+   ===================================================================== */
+const CONFIG={
+  RAW:"https://raw.githubusercontent.com/saberafshar93/Home/main/Bin/Data/Home/",
+  MGMT:"Home Management/",          // slides, blog, highlights files
+  BAR:"Home Bar/",                  // dropdown menu files
+  REPO_PATH:"Bin/Data/Home/",       // used for fallback "updated" dates
+  API:"https://api.github.com/repos/saberafshar93/Home/commits",
+  SEP:"/$/",
+  REFRESH_MS:60000,                 // re-read all text files every 60 s
+  SLIDE_MS:15000,
+  EMAIL:"",                         // put your email here to show it in the footer
+  GITHUB:"https://github.com/saberafshar93",
+  WEBSITE:"https://saberafshar93.github.io/Website/#home",
+  COUNTER_NS:"immunoafshar-saberafshar93" // visitor counter namespace
 };
+const NAV_NAMES=["Home","Lab","Article","Blog","Book","AI","Code","Experience","Gallery","Fun"];
+const HIGHLIGHTS=[
+  ["lab","Lab","Lab highlights.txt","Protocols, cell cultures and the experiments that move the field forward."],
+  ["article","Article","Article highlights.txt","Plain-language summaries of landmark papers worth a deep read."],
+  ["book","Book","Book highlights.txt","Curated books and chapters, from beginner primers to graduate level."],
+  ["ai","AI","AI highlights.txt","Machine learning that predicts neoantigens and designs antibodies."],
+  ["code","Code","Code highlights.txt","Notebooks, pipelines and scripts for immune repertoire and single-cell data."],
+  ["experience","Experience","Experience highlights.txt","Milestones, collaborations and real-world experience."],
+  ["gallery","Gallery","Gallery highlights.txt","Microscopy, 3D renders and art of immune cells in action."],
+  ["fun","Fun","Fun highlights.txt","Quizzes, curiosities and play to make learning stick."]
+];
 
-/* =====================  SVG ART GENERATOR  ===================== */
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl=u=>/^https?:\/\//i.test((u||"").trim())?u.trim():"#";
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const pad=n=>String(n).padStart(2,"0");
+const lsGet=k=>{try{return localStorage.getItem(k)}catch{return null}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+
+/* parse "a /$/ b /$/ c" lines */
+function parseLines(txt){
+  return txt.replace(/^\uFEFF/,"").split(/\r?\n/).map(l=>l.replace(/\uFEFF/g,"").trim()).filter(Boolean)
+    .map(l=>l.split(CONFIG.SEP).map(x=>x.trim()));
+}
+async function getLines(folder,file){
+  const key="txt:"+folder+file;
+  try{
+    const r=await fetch(CONFIG.RAW+encodeURI(folder)+encodeURIComponent(file)+"?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok)throw 0;
+    const t=await r.text();lsSet(key,t);return parseLines(t);
+  }catch{
+    const c=lsGet(key);return c?parseLines(c):[];
+  }
+}
+
+/* generated artwork used when an image is missing or fails to load */
 function rnd(seed){let s=seed*9301+49297;return()=>{s=(s*9301+49297)%233280;return s/233280}}
 function art(seed,cols,w=600,h=500){
   const r=rnd(seed),[c1,c2,c3]=cols,id="g"+seed+Math.floor(Math.random()*1e5);
-  let spikes="",cx=w/2,cy=h/2,R=110;
-  for(let i=0;i<36;i++){
-    const a=i/36*Math.PI*2,x1=cx+Math.cos(a)*R,y1=cy+Math.sin(a)*R,x2=cx+Math.cos(a)*(R+26+r()*18),y2=cy+Math.sin(a)*(R+26+r()*18);
-    spikes+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c3}" stroke-width="5" stroke-linecap="round"/><circle cx="${x2}" cy="${y2}" r="6" fill="${c3}"/>`;
-  }
-  let sat="";
-  for(let i=0;i<9;i++){
-    const a=r()*Math.PI*2,d=170+r()*90,x=cx+Math.cos(a)*d,y=cy+Math.sin(a)*d*0.8,rad=14+r()*24;
-    sat+=`<circle cx="${x}" cy="${y}" r="${rad}" fill="url(#${id}b)" opacity=".92"/><circle cx="${x-rad*.3}" cy="${y-rad*.3}" r="${rad*.28}" fill="#fff" opacity=".45"/>`;
-  }
-  let dust="";
-  for(let i=0;i<40;i++)dust+=`<circle cx="${r()*w}" cy="${r()*h}" r="${r()*2.5+.5}" fill="#fff" opacity="${.15+r()*.5}"/>`;
-  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-  <defs>
+  let spikes="",cx=w/2,cy=h/2,R=Math.min(w,h)*.22;
+  for(let i=0;i<36;i++){const a=i/36*Math.PI*2,x1=cx+Math.cos(a)*R,y1=cy+Math.sin(a)*R,x2=cx+Math.cos(a)*(R+R*.25+r()*R*.17),y2=cy+Math.sin(a)*(R+R*.25+r()*R*.17);
+    spikes+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c3}" stroke-width="4" stroke-linecap="round"/><circle cx="${x2}" cy="${y2}" r="5" fill="${c3}"/>`}
+  let sat="";for(let i=0;i<9;i++){const a=r()*Math.PI*2,d=R*1.6+r()*R*.8,x=cx+Math.cos(a)*d,y=cy+Math.sin(a)*d*.8,rad=R*.13+r()*R*.2;
+    sat+=`<circle cx="${x}" cy="${y}" r="${rad}" fill="url(#${id}b)" opacity=".92"/><circle cx="${x-rad*.3}" cy="${y-rad*.3}" r="${rad*.28}" fill="#fff" opacity=".45"/>`}
+  let dust="";for(let i=0;i<40;i++)dust+=`<circle cx="${r()*w}" cy="${r()*h}" r="${r()*2.5+.5}" fill="#fff" opacity="${.15+r()*.5}"/>`;
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><defs>
    <radialGradient id="${id}a" cx="35%" cy="30%"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".25" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient>
    <radialGradient id="${id}b" cx="35%" cy="30%"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient>
-   <radialGradient id="${id}c" cx="50%" cy="50%"><stop offset="0" stop-color="${c2}" stop-opacity=".45"/><stop offset="1" stop-color="${c2}" stop-opacity="0"/></radialGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#070c24"/>
-  <circle cx="${cx}" cy="${cy}" r="${h*.62}" fill="url(#${id}c)"/>
-  ${dust}${sat}${spikes}
-  <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#${id}a)"/>
-  <circle cx="${cx+20}" cy="${cy-10}" r="38" fill="${c3}" opacity=".35"/>
-  <circle cx="${cx-30}" cy="${cy+30}" r="18" fill="#fff" opacity=".25"/>
-  </svg>`;
+   <radialGradient id="${id}c"><stop offset="0" stop-color="${c2}" stop-opacity=".45"/><stop offset="1" stop-color="${c2}" stop-opacity="0"/></radialGradient></defs>
+  <rect width="${w}" height="${h}" fill="#070c24"/><circle cx="${cx}" cy="${cy}" r="${h*.62}" fill="url(#${id}c)"/>${dust}${sat}${spikes}
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#${id}a)"/><circle cx="${cx+R*.18}" cy="${cy-R*.09}" r="${R*.34}" fill="${c3}" opacity=".35"/></svg>`;
 }
 const PAL=[["#4df0c8","#7b6cff","#ff5d8f"],["#ffb347","#ff5d8f","#7b6cff"],["#5cc8ff","#4df0c8","#7b6cff"],["#c77dff","#ff5d8f","#ffb347"]];
+const hash=s=>[...String(s)].reduce((a,c)=>(a*31+c.charCodeAt(0))%9973,7);
 
-/* =====================  BUILD NAV  ===================== */
-const menu=document.getElementById("menu");
-Object.entries(NAV).forEach(([name,links])=>{
-  const li=document.createElement("li");
-  li.innerHTML=`<a href="${links[0][1]}">${name}</a><div class="drop">${links.map(l=>`<a href="${l[1]}">${l[0]}</a>`).join("")}</div>`;
-  menu.appendChild(li);
-  li.querySelector("li>a").addEventListener("click",e=>{
-    if(innerWidth<=1020){ if(!li.classList.contains("open")){e.preventDefault();document.querySelectorAll("#menu li.open").forEach(x=>x.classList.remove("open"));li.classList.add("open")} }
+/* image tag with generated-art fallback */
+function imgOrArt(src,seed,w,h){
+  const fb=art(seed,PAL[seed%4],w,h);
+  if(!src)return fb;
+  return `<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" draggable="false" data-fb="${esc(fb)}">`;
+}
+document.addEventListener("error",e=>{
+  const t=e.target;
+  if(t&&t.tagName==="IMG"&&t.dataset.fb){const d=document.createElement("div");d.style.cssText="width:100%;height:100%";d.innerHTML=t.dataset.fb;t.replaceWith(d.firstElementChild)}
+},true);
+
+/* =====================================================================
+   DATES — read from the linked page; fall back to "added/updated" date
+   ===================================================================== */
+const MRX="(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\\.?";
+function parseInfo(html,base){
+  const doc=new DOMParser().parseFromString(html,"text/html");
+  const out={date:null,t:false,img:""};
+  /* image */
+  const og=doc.querySelector('meta[property="og:image"],meta[name="twitter:image"]');
+  let im=og&&og.content;
+  if(!im){const i=doc.querySelector("img[src]");im=i&&i.getAttribute("src")}
+  if(im&&!/^data:/i.test(im)){try{out.img=new URL(im,base).href}catch{}}
+  /* date: meta → <time> → JSON-LD → visible text */
+  const metas=['meta[property="article:published_time"]','meta[name="date"]','meta[name="pubdate"]','meta[itemprop="datePublished"]','meta[name="DC.date.issued"]'];
+  for(const s of metas){const m=doc.querySelector(s);if(m&&m.content){const d=new Date(m.content);if(!isNaN(d)){out.date=d;out.t=/T\d\d:\d\d/.test(m.content);return out}}}
+  const tm=doc.querySelector("time[datetime]");
+  if(tm){const d=new Date(tm.getAttribute("datetime"));if(!isNaN(d)){out.date=d;out.t=/T\d\d:\d\d/.test(tm.getAttribute("datetime"));return out}}
+  const jl=html.match(/"datePublished"\s*:\s*"([^"]+)"/);
+  if(jl){const d=new Date(jl[1]);if(!isNaN(d)){out.date=d;out.t=/T\d\d:\d\d/.test(jl[1]);return out}}
+  const txt=(doc.body?doc.body.textContent:"").replace(/\s+/g," ");
+  const pats=[
+    [new RegExp("\\b(\\d{4})[-/.](\\d{1,2})[-/.](\\d{1,2})\\b"),m=>[+m[1],+m[2]-1,+m[3]]],
+    [new RegExp("\\b"+MRX+"\\s+(\\d{1,2})(?:st|nd|rd|th)?,?\\s+(\\d{4})","i"),m=>[+m[3],MON.indexOf(m[1].slice(0,3).replace(/^./,c=>c.toUpperCase())),+m[2]]],
+    [new RegExp("\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+"+MRX+",?\\s+(\\d{4})","i"),m=>[+m[3],MON.indexOf(m[2].slice(0,3).replace(/^./,c=>c.toUpperCase())),+m[1]]]
+  ];
+  for(const [rx,f] of pats){
+    const m=txt.match(rx);
+    if(m){const [y,mo,d]=f(m);if(mo>=0){
+      const dt=new Date(y,mo,d);
+      const after=txt.slice(m.index+m[0].length,m.index+m[0].length+25).match(/(\d{1,2}):(\d{2})/);
+      if(after&&+after[1]<24){dt.setHours(+after[1],+after[2]);out.t=true}
+      out.date=dt;return out}}
+  }
+  return out;
+}
+const infoMem={};
+function pageInfo(link){
+  if(infoMem[link])return infoMem[link];
+  return infoMem[link]=(async()=>{
+    try{const c=JSON.parse(lsGet("pi:"+link)||"null");if(c&&Date.now()-c.ts<216e5)return {date:c.iso?new Date(c.iso):null,t:c.t,img:c.img}}catch{}
+    let res={date:null,t:false,img:""};
+    try{const r=await fetch(link);if(r.ok)res=parseInfo(await r.text(),link)}catch{}
+    lsSet("pi:"+link,JSON.stringify({iso:res.date?res.date.toISOString():"",t:res.t,img:res.img,ts:Date.now()}));
+    return res;
+  })();
+}
+const commitMem={};
+function commitDate(path){
+  if(commitMem[path])return commitMem[path];
+  return commitMem[path]=(async()=>{
+    try{const r=await fetch(CONFIG.API+"?path="+encodeURIComponent(CONFIG.REPO_PATH+path)+"&per_page=1");
+      const j=await r.json();return new Date(j[0].commit.committer.date)}catch{return null}
+  })();
+}
+/* returns {date, t, updated}  — updated=true means the page had no date */
+async function resolveDate(link,path){
+  const info=await pageInfo(link);
+  if(info.date)return {date:info.date,t:info.t,updated:false,img:info.img};
+  const k="pf:"+link;let v=lsGet(k);let d;
+  if(v)d=new Date(v);else{d=(await commitDate(path))||new Date();lsSet(k,d.toISOString())}
+  return {date:d,t:true,updated:true,img:info.img};
+}
+const fmtFull=r=>(r.updated?"Updated ":"")+`${MON[r.date.getMonth()]} ${pad(r.date.getDate())}, ${r.date.getFullYear()}`+(r.t?` · ${pad(r.date.getHours())}:${pad(r.date.getMinutes())}`:"");
+const fmtDM=r=>`${pad(r.date.getDate())} ${MON[r.date.getMonth()]}`;
+
+/* =====================================================================
+   NAVIGATION (dropdowns from Home Bar/*.txt)
+   ===================================================================== */
+const menu=$("#menu"),navData={};
+function renderNav(){
+  menu.innerHTML="";
+  NAV_NAMES.forEach(name=>{
+    let lines=(navData[name]||[]).filter(l=>l[0]);
+    if(!lines.length)lines=[[name,"#"+name.toLowerCase()==="#home"?"#home":"#"+name.toLowerCase()]];
+    const li=document.createElement("li");
+    li.innerHTML=`<a href="${esc(safeUrl(lines[0][1])!=="#"?lines[0][1]:lines[0][1])}">${esc(name)}</a><div class="drop">${lines.map(l=>`<a href="${esc(l[1]||"#")}">${esc(l[0])}</a>`).join("")}</div>`;
+    menu.appendChild(li);
+    li.querySelector("li>a").addEventListener("click",e=>{
+      if(innerWidth<=1020&&!li.classList.contains("open")){e.preventDefault();document.querySelectorAll("#menu li.open").forEach(x=>x.classList.remove("open"));li.classList.add("open")}
+    });
   });
-});
-menu.addEventListener("click",e=>{ if(e.target.closest(".drop a")) document.getElementById("nav").classList.remove("show") });
-document.getElementById("burger").onclick=()=>document.getElementById("nav").classList.toggle("show");
+}
+renderNav();
+menu.addEventListener("click",e=>{if(e.target.closest(".drop a"))$("#nav").classList.remove("show")});
+$("#burger").onclick=()=>$("#nav").classList.toggle("show");
 
-/* =====================  HERO SLIDER  ===================== */
-const slider=document.getElementById("slider"),dots=document.getElementById("dots"),bar=document.getElementById("timerbar");
-SLIDES.forEach((s,i)=>{
-  const d=document.createElement("div");d.className="slide"+(i?"":" active");
-  d.innerHTML=`<div><div class="kicker">${s.k}</div><h1 class="grad">${s.t}</h1><p>${s.p}</p><a class="btn" href="#overview">Learn more</a> <a class="btn ghost" href="#blog">Read the blog</a></div><div class="art">${art(s.s,s.c)}</div>`;
-  slider.appendChild(d);
-  const b=document.createElement("button");b.className=i?"":"active";b.setAttribute("aria-label","Slide "+(i+1));
-  b.onclick=()=>go(i);dots.appendChild(b);
-});
-let cur=0,start=performance.now();const DUR=15000;
+/* =====================================================================
+   HERO SLIDER (from Home Management/First.txt)
+   kicker /$/ title /$/ text /$/ link /$/ image
+   ===================================================================== */
+const slider=$("#slider"),dots=$("#dots"),bar=$("#timerbar");
+let slideCount=0,cur=0,start=performance.now();
+function renderSlides(lines){
+  const sl=lines.filter(l=>l.length>=2);
+  slider.innerHTML="";dots.innerHTML="";slideCount=sl.length;
+  if(!sl.length){slider.innerHTML=`<div class="empty">No slides yet — add lines to First.txt.</div>`;return}
+  if(cur>=sl.length)cur=0;
+  sl.forEach((s,i)=>{
+    const [k,t,p,link,image]=s;const seed=hash(t);
+    const d=document.createElement("div");d.className="slide"+(i===cur?" active":"");
+    d.innerHTML=`<div><div class="kicker">${esc(k)}</div><h1 class="grad">${esc(t)}</h1><p>${esc(p||"")}</p>${link?`<a class="btn" href="${esc(safeUrl(link))}" target="_blank" rel="noopener">Learn more</a>`:""}</div><div class="art">${imgOrArt(image,seed,600,500)}</div>`;
+    slider.appendChild(d);
+    const b=document.createElement("button");b.className=i===cur?"active":"";b.setAttribute("aria-label","Slide "+(i+1));
+    b.onclick=()=>go(i);dots.appendChild(b);
+  });
+  start=performance.now();
+}
 function go(n){
+  if(!slideCount)return;
   const sl=slider.children,db=dots.children;
-  sl[cur].classList.remove("active");db[cur].classList.remove("active");
-  cur=(n+SLIDES.length)%SLIDES.length; // wraps back to the first slide
+  sl[cur]&&sl[cur].classList.remove("active");db[cur]&&db[cur].classList.remove("active");
+  cur=(n+slideCount)%slideCount;               // after the last slide, start again
   sl[cur].classList.add("active");db[cur].classList.add("active");
   start=performance.now();
 }
 (function tick(now){
-  const p=Math.min((now-start)/DUR,1);
+  const p=Math.min((now-start)/CONFIG.SLIDE_MS,1);
   bar.style.width=(p*100)+"%";
   if(p>=1)go(cur+1);
   requestAnimationFrame(tick);
 })(performance.now());
 
-/* =====================  BLOG  ===================== */
-const bs=document.getElementById("blogScroll");
-const mk=(p,i)=>`<article class="post"><div class="img">${art(p[3],PAL[i%4],400,260)}</div><div class="body"><h3>${p[0]}</h3><time>${p[1]} · ${p[2]}</time></div></article>`;
-bs.innerHTML=POSTS.map(mk).join("")+POSTS.map(mk).join(""); // duplicated for endless loop
-let paused=false,drag=false,sx=0,sl0=0,half=0;
-function measure(){half=bs.scrollWidth/2}
-addEventListener("load",measure);addEventListener("resize",measure);
+/* =====================================================================
+   BLOG (Home Management/Blog.txt)  title /$/ link /$/ image
+   ===================================================================== */
+const bs=$("#blogScroll");
+let paused=false,drag=false,moved=false,sx=0,sl0=0,half=0;
+function renderBlog(lines){
+  const posts=lines.filter(l=>l.length>=2).slice(-6).reverse();     // newest (bottom of file) first
+  if(!posts.length){bs.innerHTML=`<div class="empty">No posts yet — add lines to Blog.txt.</div>`;half=0;return}
+  const mk=(p,i)=>`<a class="post" href="${esc(safeUrl(p[1]))}" target="_blank" rel="noopener" draggable="false">
+    <div class="img">${imgOrArt(p[2],hash(p[0]),400,260)}</div>
+    <div class="body"><h3>${esc(p[0])}</h3><time data-link="${esc(p[1])}">Loading date…</time></div></a>`;
+  bs.innerHTML=posts.map(mk).join("")+posts.map(mk).join("");        // duplicated for endless loop
+  requestAnimationFrame(()=>half=bs.scrollWidth/2);
+  posts.forEach(async p=>{
+    const r=await resolveDate(p[1],CONFIG.MGMT+"Blog.txt");
+    bs.querySelectorAll("time").forEach(t=>{if(t.dataset.link===p[1])t.textContent=fmtFull(r)});
+  });
+}
+addEventListener("resize",()=>half=bs.scrollWidth/2);
 bs.addEventListener("mouseenter",()=>paused=true);
 bs.addEventListener("mouseleave",()=>{paused=false;drag=false});
 bs.addEventListener("touchstart",()=>paused=true,{passive:true});
 bs.addEventListener("touchend",()=>setTimeout(()=>paused=false,1500));
-bs.addEventListener("mousedown",e=>{drag=true;sx=e.pageX;sl0=bs.scrollLeft;bs.style.cursor="grabbing"});
+bs.addEventListener("mousedown",e=>{drag=true;moved=false;sx=e.pageX;sl0=bs.scrollLeft;bs.style.cursor="grabbing"});
 addEventListener("mouseup",()=>{drag=false;bs.style.cursor="grab"});
-bs.addEventListener("mousemove",e=>{if(drag){bs.scrollLeft=sl0-(e.pageX-sx)}});
-let pos=0;
+bs.addEventListener("mousemove",e=>{if(drag){if(Math.abs(e.pageX-sx)>5)moved=true;bs.scrollLeft=sl0-(e.pageX-sx)}});
+bs.addEventListener("click",e=>{if(moved){e.preventDefault();moved=false}},true);
 (function mv(){
-  if(!paused&&!drag){pos=bs.scrollLeft+0.7;bs.scrollLeft=pos} // titles drift to the left
-  if(half){ if(bs.scrollLeft>=half)bs.scrollLeft-=half; else if(bs.scrollLeft<=0&&drag)bs.scrollLeft+=half }
+  if(!paused&&!drag&&half)bs.scrollLeft=bs.scrollLeft+0.7;           // titles drift to the left
+  if(half){if(bs.scrollLeft>=half)bs.scrollLeft-=half;else if(bs.scrollLeft<=0&&drag)bs.scrollLeft+=half}
   requestAnimationFrame(mv);
 })();
 
-/* =====================  SECTIONS  ===================== */
-const host=document.getElementById("sections");
-SECTIONS.forEach((s,si)=>{
-  const sec=document.createElement("section");sec.id=s.key;
-  sec.innerHTML=`<div class="reveal"><span class="tag">${s.tag}</span><h2>${s.title} <span>highlights</span></h2><p class="lead">${s.lead}</p></div>
-  <div class="cards reveal">${s.items.map((it,i)=>`<div class="card" id="${s.key}-${i}"><div class="ico">${it[0]}</div><h3>${it[1]}</h3><p>${it[2]}</p></div>`).join("")}</div>
-  <div class="more reveal"><a class="btn" href="#${s.key}">Explore all ${s.title} →</a></div>`;
+/* =====================================================================
+   HIGHLIGHT SECTIONS  domain /$/ title /$/ description /$/ link
+   ===================================================================== */
+const host=$("#sections");
+HIGHLIGHTS.forEach(([key,title,file,lead])=>{
+  const sec=document.createElement("section");sec.id=key;
+  sec.innerHTML=`<div class="reveal"><span class="tag">${title}</span><h2>${title} <span>highlights</span></h2><p class="lead">${lead}</p></div>
+  <div class="cards reveal" id="cards-${key}"><div class="empty">Loading…</div></div>
+  <div class="more reveal"><a class="btn" href="#/all/${key}">Explore all ${title} →</a></div>`;
   host.appendChild(sec);
-  if(s.key==="code"){
-    sec.insertAdjacentHTML("beforeend",`<div class="codewin reveal" id="codedemo"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div><pre id="codeout"></pre></div>`);
-  }
-  if(s.key==="experience"){
-    sec.insertAdjacentHTML("beforeend",`<div class="timeline reveal" id="timeline">
-     <div class="tl"><b>2019</b><p>First TIL expansion lab opens with 4 researchers.</p></div>
-     <div class="tl"><b>2021</b><p>Launch of the open TCR repertoire database.</p></div>
-     <div class="tl"><b>2024</b><p>Joint CAR-T solid tumor trial with 6 hospitals.</p></div>
-     <div class="tl"><b>2026</b><p>AI-assisted neoantigen platform goes live worldwide.</p></div></div>`);
-  }
-  if(s.key==="gallery"){
-    let g="";for(let i=0;i<8;i++)g+=`<div>${art(100+i*7,PAL[i%4],300,300)}</div>`;
-    sec.insertAdjacentHTML("beforeend",`<div class="gallery reveal" id="gridpics">${g}</div>`);
-  }
-  if(s.key==="fun"){
-    sec.insertAdjacentHTML("beforeend",`<div class="reveal"><div id="arena"><div class="hud">Score: <span id="score">0</span> &nbsp;|&nbsp; Time: <span id="time">20</span>s</div></div><p style="margin-top:14px"><button class="btn" id="startGame">Start game</button></p></div>`);
-  }
+  if(key==="code")sec.insertAdjacentHTML("beforeend",`<div class="codewin reveal" id="codedemo"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div><pre id="codeout"></pre></div>`);
+  if(key==="experience")sec.insertAdjacentHTML("beforeend",`<div class="timeline reveal" id="timeline"><h3>Experience chart</h3><div id="tlbody"></div></div>`);
+  if(key==="gallery")sec.insertAdjacentHTML("beforeend",`<div class="gallery reveal" id="gridpics"></div>`);
 });
+const cardHTML=(l,id)=>`<a class="card" ${id?`id="${id}"`:""} href="${esc(safeUrl(l[3]))}" target="_blank" rel="noopener">
+  ${l[0]?`<span class="dom">${esc(l[0])}</span>`:""}<h3>${esc(l[1]||"")}</h3><p>${esc(l[2]||"")}</p><span class="go">Open →</span></a>`;
+const valid=lines=>lines.filter(l=>l.length>=2);
 
-/* typing code demo */
+function renderHighlights(key,title,file,lines){
+  const v=valid(lines),last3=v.slice(-3).reverse();                   // last 3 lines of the file, newest first
+  $("#cards-"+key).innerHTML=last3.length?last3.map((l,i)=>cardHTML(l,`${key}-${i}`)).join(""):`<div class="empty">Nothing here yet — add lines to ${esc(file)}.</div>`;
+  observeAll();
+  if(key==="experience")renderTimeline(v,file);
+  if(key==="gallery")renderGallery(v,file);
+  if(location.hash==="#/all/"+key)showAll(key);
+}
+async function renderTimeline(v,file){
+  const items=v.slice(-6).reverse();
+  const body=$("#tlbody");
+  if(!items.length){body.innerHTML=`<div class="empty">No entries yet.</div>`;return}
+  const res=await Promise.all(items.map(async l=>({l,r:await resolveDate(l[3]||"",CONFIG.MGMT+file)})));
+  res.sort((a,b)=>b.r.date-a.r.date);
+  body.innerHTML=res.map(({l,r})=>`<a class="tl" href="${esc(safeUrl(l[3]))}" target="_blank" rel="noopener"><b>${fmtDM(r)}</b><span>${esc(l[1])}</span></a>`).join("");
+}
+async function renderGallery(v,file){
+  const items=v.slice(-10).reverse();                                  // last 10 images
+  const g=$("#gridpics");
+  if(!items.length){g.innerHTML="";return}
+  g.innerHTML=items.map((l,i)=>`<a href="${esc(safeUrl(l[3]))}" target="_blank" rel="noopener" data-i="${i}">${art(hash(l[1])+i,PAL[i%4],300,300)}</a>`).join("");
+  items.forEach(async(l,i)=>{
+    const info=await pageInfo(l[3]||"");
+    if(info.img){const a=g.querySelector(`a[data-i="${i}"]`);if(a)a.innerHTML=imgOrArt(info.img,hash(l[1])+i,300,300)}
+  });
+}
+
+/* =====================================================================
+   "EXPLORE ALL" PAGE  (#/all/<key>)
+   ===================================================================== */
+const store={};
+function showAll(key){
+  const h=HIGHLIGHTS.find(x=>x[0]===key);if(!h)return;
+  const v=valid(store[key]||[]).slice().reverse();
+  $("#allwrap").innerHTML=`<a class="btn ghost back" href="#${key}">← Back</a>
+    <span class="tag">${h[1]}</span><h2>${h[1]} <span>highlights</span></h2><p class="lead">${h[3]}</p>
+    <div class="cards">${v.length?v.map(l=>cardHTML(l)).join(""):`<div class="empty">Nothing here yet.</div>`}</div>`;
+  $("#allview").classList.add("show");$("#allview").scrollTop=0;document.body.classList.add("lock");
+}
+function route(){
+  const m=location.hash.match(/^#\/all\/(\w+)/);
+  if(m)showAll(m[1]);else{$("#allview").classList.remove("show");document.body.classList.remove("lock")}
+}
+addEventListener("hashchange",route);
+addEventListener("keydown",e=>{if(e.key==="Escape"&&location.hash.startsWith("#/all/"))location.hash="#home"});
+
+/* =====================================================================
+   LOAD + AUTO-UPDATE (every minute, only re-renders what changed)
+   ===================================================================== */
+const last={};
+function changed(k,lines){const s=JSON.stringify(lines);if(last[k]===s)return false;last[k]=s;return true}
+async function refresh(){
+  const jobs=[];
+  jobs.push(getLines(CONFIG.MGMT,"First.txt").then(l=>{if(changed("first",l))renderSlides(l)}));
+  jobs.push(getLines(CONFIG.MGMT,"Blog.txt").then(l=>{if(changed("blog",l))renderBlog(l)}));
+  HIGHLIGHTS.forEach(([key,title,file])=>jobs.push(getLines(CONFIG.MGMT,file).then(l=>{store[key]=l;if(changed(key,l))renderHighlights(key,title,file,l)})));
+  jobs.push(Promise.all(NAV_NAMES.map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
+  await Promise.all(jobs);route();
+}
+refresh();setInterval(refresh,CONFIG.REFRESH_MS);
+
+/* =====================================================================
+   REVEAL / COUNTERS / TILT / PROGRESS / CODE DEMO
+   ===================================================================== */
 const codeTxt=`# Rank tumor mutations by predicted T-cell response
 import numpy as np
 
@@ -403,34 +585,15 @@ for name, v in sorted(mutations.items(),
         key=lambda kv: -neoantigen_score(*kv[1])):
     print(f"{name:12s} -> {neoantigen_score(*v):.3f}")`;
 let ci=0,typed=false;
-function typeCode(){if(typed)return;typed=true;const o=document.getElementById("codeout");
-  (function t(){o.textContent=codeTxt.slice(0,ci++);if(ci<=codeTxt.length)setTimeout(t,18)})()}
-
-/* mini game */
-let score=0,tl=20,gi,gt,running=false;
-document.getElementById("startGame").onclick=()=>{
-  if(running)return;running=true;score=0;tl=20;
-  document.getElementById("score").textContent=0;
-  const ar=document.getElementById("arena");
-  gi=setInterval(()=>{
-    const b=document.createElement("div");b.className="bug";
-    b.style.left=Math.random()*(ar.clientWidth-50)+"px";b.style.top=40+Math.random()*(ar.clientHeight-90)+"px";
-    b.onclick=()=>{score++;document.getElementById("score").textContent=score;b.remove()};
-    ar.appendChild(b);setTimeout(()=>b.remove(),1600);
-  },550);
-  gt=setInterval(()=>{tl--;document.getElementById("time").textContent=tl;
-    if(tl<=0){clearInterval(gi);clearInterval(gt);running=false;document.getElementById("time").textContent="Done! Final score "+score}},1000);
-};
-
-/* =====================  REVEAL / COUNTERS / TILT / PROGRESS  ===================== */
+function typeCode(){if(typed)return;typed=true;const o=$("#codeout");(function t(){o.textContent=codeTxt.slice(0,ci++);if(ci<=codeTxt.length)setTimeout(t,18)})()}
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add("in");
     if(e.target.id==="codedemo")typeCode();
-    e.target.querySelectorAll&&e.target.querySelectorAll("[data-n]").forEach(c=>{
-      const n=+c.dataset.n;let v=0;const st=n/60;(function u(){v+=st;if(v>=n){c.textContent=n;return}c.textContent=Math.floor(v);requestAnimationFrame(u)})()});
+    e.target.querySelectorAll("[data-n]").forEach(c=>{const n=+c.dataset.n;let v=0;const st=n/60;(function u(){v+=st;if(v>=n){c.textContent=n;return}c.textContent=Math.floor(v);requestAnimationFrame(u)})()});
     io.unobserve(e.target)}
-}),{threshold:.15});
-document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+}),{threshold:.12});
+function observeAll(){document.querySelectorAll(".reveal:not(.in)").forEach(el=>io.observe(el))}
+observeAll();
 
 document.addEventListener("mousemove",e=>{
   const c=e.target.closest&&e.target.closest(".card");
@@ -440,14 +603,35 @@ document.addEventListener("mousemove",e=>{
   c.style.transform=`rotateY(${(px-.5)*14}deg) rotateX(${(.5-py)*14}deg) translateZ(8px)`;
   c.style.setProperty("--mx",px*100+"%");c.style.setProperty("--my",py*100+"%");
 });
-addEventListener("scroll",()=>{
-  const h=document.documentElement;
-  document.getElementById("progress").style.width=(scrollY/(h.scrollHeight-innerHeight)*100)+"%";
-},{passive:true});
+addEventListener("scroll",()=>{const h=document.documentElement;$("#progress").style.width=(scrollY/Math.max(1,h.scrollHeight-innerHeight)*100)+"%"},{passive:true});
 
-/* =====================  3D BACKGROUND (Three.js)  ===================== */
+/* =====================================================================
+   FOOTER: quick access, contact, visitor statistics
+   ===================================================================== */
+$("#quick").innerHTML=[["Home","#home"],["Overview","#overview"],["Blog","#blog"],...HIGHLIGHTS.map(h=>[h[1],"#"+h[0]])]
+  .map(l=>`<li><a href="${l[1]}">${l[0]}</a></li>`).join("");
+$("#contact").innerHTML=
+  (CONFIG.EMAIL?`<li><a href="mailto:${esc(CONFIG.EMAIL)}">✉ ${esc(CONFIG.EMAIL)}</a></li>`:"")+
+  `<li><a href="${CONFIG.GITHUB}" target="_blank" rel="noopener">⌥ GitHub</a></li>
+   <li><a href="${CONFIG.WEBSITE}" target="_blank" rel="noopener">🌐 Main website</a></li>`;
+
+(async function visits(){
+  const n=new Date(),Y=n.getFullYear(),M=`${Y}-${pad(n.getMonth()+1)}`,D=`${M}-${pad(n.getDate())}`;
+  const keys={total:"total",year:"y"+Y,month:"m"+M,day:"d"+D};
+  const first=!sessionStorage.getItem("counted");
+  try{sessionStorage.setItem("counted","1")}catch{}
+  const call=async k=>{
+    try{const r=await fetch(`https://abacus.jasoncameron.dev/${first?"hit":"get"}/${CONFIG.COUNTER_NS}/${k}`);
+      if(!r.ok)return first?"—":0;const j=await r.json();return (j.value??0).toLocaleString("en-US")}catch{return "—"}};
+  const [d,m,y,t]=await Promise.all([call(keys.day),call(keys.month),call(keys.year),call(keys.total)]);
+  $("#v-day").textContent=d;$("#v-month").textContent=m;$("#v-year").textContent=y;$("#v-total").textContent=t;
+})();
+
+/* =====================================================================
+   3D BACKGROUND (Three.js)
+   ===================================================================== */
 if(window.THREE){
-  const cv=document.getElementById("bg");
+  const cv=$("#bg");
   const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x050816,0.035);
@@ -455,15 +639,12 @@ if(window.THREE){
   scene.add(new THREE.AmbientLight(0x6677aa,.8));
   const l1=new THREE.PointLight(0x4df0c8,2.2,60);l1.position.set(8,6,10);scene.add(l1);
   const l2=new THREE.PointLight(0xff5d8f,2,60);l2.position.set(-9,-5,8);scene.add(l2);
-
-  // central "tumor cell" with spikes
   const core=new THREE.Group();scene.add(core);
   const geo=new THREE.IcosahedronGeometry(2.6,3);
   const base=geo.attributes.position.array.slice();
-  const cell=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0x7b6cff,emissive:0x1a1060,shininess:90,flatShading:false}));
+  const cell=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0x7b6cff,emissive:0x1a1060,shininess:90}));
   core.add(cell);
-  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(2.75,2),new THREE.MeshBasicMaterial({color:0x4df0c8,wireframe:true,transparent:true,opacity:.18}));
-  core.add(wire);
+  core.add(new THREE.Mesh(new THREE.IcosahedronGeometry(2.75,2),new THREE.MeshBasicMaterial({color:0x4df0c8,wireframe:true,transparent:true,opacity:.18})));
   for(let i=0;i<70;i++){
     const v=new THREE.Vector3().randomDirection();
     const s=new THREE.Mesh(new THREE.CylinderGeometry(.03,.07,.9,6),new THREE.MeshPhongMaterial({color:0xff5d8f,emissive:0x40102a}));
@@ -471,34 +652,26 @@ if(window.THREE){
     const tip=new THREE.Mesh(new THREE.SphereGeometry(.12,8,8),new THREE.MeshBasicMaterial({color:0xffb3c9}));
     tip.position.copy(v.clone().multiplyScalar(3.55));core.add(tip);
   }
-
-  // orbiting "T cells"
   const tcells=[];
   for(let i=0;i<22;i++){
-    const m=new THREE.Mesh(new THREE.SphereGeometry(.28+Math.random()*.25,20,20),
-      new THREE.MeshPhongMaterial({color:i%2?0x4df0c8:0x5cc8ff,emissive:0x0a3a30,shininess:100}));
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.28+Math.random()*.25,20,20),new THREE.MeshPhongMaterial({color:i%2?0x4df0c8:0x5cc8ff,emissive:0x0a3a30,shininess:100}));
     m.userData={r:5+Math.random()*4,sp:.15+Math.random()*.35,a:Math.random()*6.28,y:(Math.random()-.5)*5,t:Math.random()*6.28};
     scene.add(m);tcells.push(m);
   }
-  // floating particles
   const N=1600,pos=new Float32Array(N*3);
   for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*70;pos[i*3+1]=(Math.random()-.5)*70;pos[i*3+2]=(Math.random()-.5)*70}
   const pg=new THREE.BufferGeometry();pg.setAttribute("position",new THREE.BufferAttribute(pos,3));
   const pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0x9bb4ff,size:.08,transparent:true,opacity:.75}));
   scene.add(pts);
-
   function resize(){renderer.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
   addEventListener("resize",resize);resize();
-
   let mx=0,my=0,sp=0;
   addEventListener("mousemove",e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5)});
   addEventListener("scroll",()=>{sp=scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight)},{passive:true});
   const c1=new THREE.Color(0x7b6cff),c2=new THREE.Color(0xff5d8f),c3=new THREE.Color(0x4df0c8),tmp=new THREE.Color();
   const clock=new THREE.Clock();
   (function loop(){
-    const t=clock.getElapsedTime();
-    // wobble the membrane
-    const p=geo.attributes.position;
+    const t=clock.getElapsedTime(),p=geo.attributes.position;
     for(let i=0;i<p.count;i++){
       const x=base[i*3],y=base[i*3+1],z=base[i*3+2];
       const k=1+.06*Math.sin(x*1.6+t*1.4)*Math.cos(y*1.6+t*1.1)+.04*Math.sin(z*2+t);
@@ -506,18 +679,16 @@ if(window.THREE){
     }
     p.needsUpdate=true;geo.computeVertexNormals();
     core.rotation.y=t*.12+sp*8;core.rotation.x=sp*3+my*.4;
-    // scroll-driven scene motion
     core.position.x=Math.sin(sp*Math.PI*3)*5;
     core.position.y=-sp*6+Math.cos(sp*9)*1.2;
-    const sc=1+Math.sin(sp*Math.PI)*.35;core.scale.setScalar(sc);
+    core.scale.setScalar(1+Math.sin(sp*Math.PI)*.35);
     cam.position.z=14-sp*5;
     cam.position.x+=((mx*4)-cam.position.x)*.04;
     cam.position.y+=((-my*3-sp*2)-cam.position.y)*.04;
     cam.lookAt(core.position.x*.3,core.position.y*.5,0);
     tmp.copy(c1).lerp(c2,Math.min(1,sp*2)).lerp(c3,Math.max(0,sp*2-1));
     cell.material.color.copy(tmp);
-    tcells.forEach(m=>{const d=m.userData;d.a+=d.sp*.01;
-      m.position.set(core.position.x+Math.cos(d.a)*d.r,core.position.y+d.y+Math.sin(t+d.t)*.6,Math.sin(d.a)*d.r)});
+    tcells.forEach(m=>{const d=m.userData;d.a+=d.sp*.01;m.position.set(core.position.x+Math.cos(d.a)*d.r,core.position.y+d.y+Math.sin(t+d.t)*.6,Math.sin(d.a)*d.r)});
     pts.rotation.y=t*.01+sp*1.5;pts.rotation.x=sp*.6;
     renderer.render(scene,cam);
     requestAnimationFrame(loop);
