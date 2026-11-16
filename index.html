@@ -47,6 +47,14 @@ section{padding:110px 8vw 60px;position:relative}
 h2{font-size:clamp(28px,4vw,46px);line-height:1.15;margin-bottom:14px}
 h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent}
 .lead{max-width:680px;color:var(--mute);margin-bottom:34px}
+/* heading row: title + small "open page" button */
+.shead{display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px;margin-bottom:14px}
+.shead h2{margin:0}
+.pagebtn{display:inline-flex;align-items:center;gap:7px;padding:6px 15px;border-radius:30px;font-size:12.5px;font-weight:700;letter-spacing:.5px;
+  color:var(--a);background:rgba(77,240,200,.08);border:1px solid rgba(77,240,200,.35);white-space:nowrap;transition:.25s}
+.pagebtn i{font-style:normal;display:inline-block;transition:transform .25s}
+.pagebtn:hover{background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border-color:transparent;transform:translateY(-2px);box-shadow:0 10px 26px rgba(77,240,200,.28)}
+.pagebtn:hover i{transform:translate(2px,-2px)}
 .reveal{opacity:0;transform:translateY(50px) scale(.97);transition:1s cubic-bezier(.2,.7,.2,1)}
 .reveal.in{opacity:1;transform:none}
 .btn{display:inline-block;padding:12px 26px;border-radius:50px;font-weight:700;font-size:14px;border:0;cursor:pointer;
@@ -125,7 +133,8 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 #allview{position:fixed;inset:0;z-index:850;background:rgba(5,8,22,.94);backdrop-filter:blur(8px);overflow-y:auto;padding:110px 8vw 80px;display:none}
 #allview.show{display:block;animation:fadeIn .4s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}}
-#allview .back{margin-bottom:26px}
+#allview .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:26px}
+#allview .back{margin:0}
 
 /* ---------- EXTRAS ---------- */
 .codewin{margin-top:26px;border-radius:18px;overflow:hidden;background:#0a0f26;border:1px solid var(--line);max-width:760px}
@@ -269,7 +278,7 @@ footer li a:hover{color:var(--a);padding-left:5px}
   <section id="blog">
     <div class="reveal">
       <span class="tag">Blog</span>
-      <h2>Latest <span>stories</span></h2>
+      <div class="shead"><h2>Latest <span>stories</span></h2><a class="pagebtn" id="blogPageBtn" href="#blog">Blog <i>↗</i></a></div>
       <p class="lead">Fresh posts from the lab and the clinic. Drag, scroll, or let them drift by.</p>
     </div>
     <div class="reveal"><div class="blog-scroll" id="blogScroll"></div></div>
@@ -325,8 +334,32 @@ const CONFIG={
   EMAIL:"",                         // put your email here to show it in the footer
   GITHUB:"https://github.com/saberafshar93",
   WEBSITE:"https://saberafshar93.github.io/Home/",
-  COUNTER_NS:"immunoafshar-saberafshar93" // visitor counter namespace
+  COUNTER_NS:"immunoafshar-saberafshar93", // visitor counter namespace
+  RENDER_HTML:false   // false = open the exact links below. true = open GitHub .html files as a rendered website (GitHub Pages) instead of showing source code
 };
+/* Page for each top-menu title (click the title) and for the "open page" buttons. Edit the links here. */
+const PAGES={
+  "Home":"https://saberafshar93.github.io/Home/",
+  "Lab":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Lab/Lab.html",
+  "Article":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Article/Article.html",
+  "Blog":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Blog/Blog.html",
+  "Book":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Book/Book.html",
+  "AI":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/AI/AI.html",
+  "Code":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Code/Code.html",
+  "Experience":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Experience/Experience.html",
+  "Gallery":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Gallery/Gallery.html",
+  "Fun":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Fun/Fun.html",
+  "Contact":"https://saberafshar93.github.io/Home/#contact"
+};
+function pageUrl(name){
+  const u=PAGES[name]||"#";
+  if(!CONFIG.RENDER_HTML)return u;
+  const m=u.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/[^/]+\/(.+\.html)$/i);
+  return m?`https://${m[1]}.github.io/${m[2]}/${m[3]}`:u;
+}
+function sameSite(u){
+  try{const a=new URL(u),n=x=>x.replace(/index\.html$/,"");return a.origin===location.origin&&n(a.pathname)===n(location.pathname)}catch{return false}
+}
 const NAV_NAMES=["Home","Lab","Article","Blog","Book","AI","Code","Experience","Gallery","Fun"];
 const HIGHLIGHTS=[
   ["lab","Lab","Lab highlights.txt","Protocols, cell cultures and the experiments that move the field forward."],
@@ -480,17 +513,27 @@ function renderNav(){
     let lines=(navData[name]||[]).filter(l=>l[0]);
     if(!lines.length)lines=[[name,"#"+name.toLowerCase()==="#home"?"#home":"#"+name.toLowerCase()]];
     const li=document.createElement("li");
-    li.innerHTML=`<a href="${esc(safeUrl(lines[0][1])!=="#"?lines[0][1]:lines[0][1])}">${esc(name)}</a><div class="drop">${lines.map(l=>`<a href="${esc(l[1]||"#")}">${esc(l[0])}</a>`).join("")}</div>`;
+    const own=name==="Home";                                           // Home opens in the same tab, the others in a new tab
+    li.innerHTML=`<a href="${esc(pageUrl(name))}" data-page="${esc(name)}"${own?"":' target="_blank" rel="noopener"'}>${esc(name)}</a><div class="drop">${lines.map(l=>`<a href="${esc(l[1]||"#")}">${esc(l[0])}</a>`).join("")}</div>`;
     menu.appendChild(li);
     li.querySelector("li>a").addEventListener("click",e=>{
       if(innerWidth<=1020&&!li.classList.contains("open")){e.preventDefault();document.querySelectorAll("#menu li.open").forEach(x=>x.classList.remove("open"));li.classList.add("open")}
     });
   });
   const ct=document.createElement("li");                               // Contact → jumps to the footer
-  ct.innerHTML='<a class="plain" href="#contact">Contact</a>';menu.appendChild(ct);
+  ct.innerHTML=`<a class="plain" data-page="Contact" href="${esc(pageUrl("Contact"))}">Contact</a>`;menu.appendChild(ct);
 }
 renderNav();
-menu.addEventListener("click",e=>{if(e.target.closest(".drop a")||e.target.closest(".plain"))$("#nav").classList.remove("show")});
+menu.addEventListener("click",e=>{
+  const a=e.target.closest("li>a[data-page]");
+  if(a&&!e.defaultPrevented&&!e.ctrlKey&&!e.metaKey&&sameSite(a.href)){      // already on this site → just scroll, no reload
+    e.preventDefault();
+    const h=new URL(a.href).hash;
+    if(h){location.hash=h}else{history.replaceState(null,"",location.pathname);scrollTo({top:0,behavior:"smooth"})}
+  }
+  if(e.target.closest(".drop a")||e.target.closest(".plain")||(a&&!e.defaultPrevented))$("#nav").classList.remove("show");
+});
+(function(){const b=$("#blogPageBtn");b.href=pageUrl("Blog");b.target="_blank";b.rel="noopener"})();
 $("#burger").onclick=()=>$("#nav").classList.toggle("show");
 
 /* =====================================================================
@@ -589,7 +632,7 @@ bs.addEventListener("scroll",()=>{
 const host=$("#sections");
 HIGHLIGHTS.forEach(([key,title,file,lead])=>{
   const sec=document.createElement("section");sec.id=key;
-  sec.innerHTML=`<div class="reveal"><span class="tag">${title}</span><h2>${title} <span>highlights</span></h2><p class="lead">${lead}</p></div>
+  sec.innerHTML=`<div class="reveal"><span class="tag">${title}</span><div class="shead"><h2>${title} <span>highlights</span></h2><a class="pagebtn" href="${esc(pageUrl(title))}" target="_blank" rel="noopener" title="Open the ${title} page">${title} <i>↗</i></a></div><p class="lead">${lead}</p></div>
   <div class="cards reveal" id="cards-${key}"><div class="empty">Loading…</div></div>
   <div class="more reveal"><a class="btn" href="#/all/${key}">Explore all ${title} →</a></div>`;
   host.appendChild(sec);
@@ -635,7 +678,8 @@ const store={};
 function showAll(key){
   const h=HIGHLIGHTS.find(x=>x[0]===key);if(!h)return;
   const v=valid(store[key]||[]).slice().reverse();
-  $("#allwrap").innerHTML=`<a class="btn ghost back" href="#${key}">← Back</a>
+  $("#allwrap").innerHTML=`<div class="topbar"><a class="btn ghost back" href="#${key}">← Back</a>
+      <a class="pagebtn" href="${esc(pageUrl(h[1]))}" target="_blank" rel="noopener" title="Open the ${h[1]} page">${h[1]} <i>↗</i></a></div>
     <span class="tag">${h[1]}</span><h2>${h[1]} <span>highlights</span></h2><p class="lead">${h[3]}</p>
     <div class="cards">${v.length?v.map(l=>cardHTML(l)).join(""):`<div class="empty">Nothing here yet.</div>`}</div>`;
   $("#allview").classList.add("show");$("#allview").scrollTop=0;document.body.classList.add("lock");
