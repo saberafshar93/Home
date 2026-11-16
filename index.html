@@ -334,29 +334,25 @@ const CONFIG={
   EMAIL:"",                         // put your email here to show it in the footer
   GITHUB:"https://github.com/saberafshar93",
   WEBSITE:"https://saberafshar93.github.io/Home/",
-  COUNTER_NS:"immunoafshar-saberafshar93", // visitor counter namespace
-  RENDER_HTML:false   // false = open the exact links below. true = open GitHub .html files as a rendered website (GitHub Pages) instead of showing source code
+  COUNTER_NS:"immunoafshar-saberafshar93" // visitor counter namespace
 };
-/* Page for each top-menu title (click the title) and for the "open page" buttons. Edit the links here. */
+/* Page for each top-menu title (click the title) and for the "open page" buttons.
+   Each page lives in the repo as  <Name>/index.html  →  https://saberafshar93.github.io/Home/<Name>   */
+const SITE="https://saberafshar93.github.io/Home/";
 const PAGES={
-  "Home":"https://saberafshar93.github.io/Home/",
-  "Lab":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Lab/Lab.html",
-  "Article":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Article/Article.html",
-  "Blog":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Blog/Blog.html",
-  "Book":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Book/Book.html",
-  "AI":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/AI/AI.html",
-  "Code":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Code/Code.html",
-  "Experience":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Experience/Experience.html",
-  "Gallery":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Gallery/Gallery.html",
-  "Fun":"https://github.com/saberafshar93/Home/blob/main/Bin/Data/Fun/Fun.html",
-  "Contact":"https://saberafshar93.github.io/Home/#contact"
+  "Home":SITE,
+  "Lab":SITE+"Lab",
+  "Article":SITE+"Article",
+  "Blog":SITE+"Blog",
+  "Book":SITE+"Book",
+  "AI":SITE+"AI",
+  "Code":SITE+"Code",
+  "Experience":SITE+"Experience",
+  "Gallery":SITE+"Gallery",
+  "Fun":SITE+"Fun",
+  "Contact":SITE+"#contact"
 };
-function pageUrl(name){
-  const u=PAGES[name]||"#";
-  if(!CONFIG.RENDER_HTML)return u;
-  const m=u.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/[^/]+\/(.+\.html)$/i);
-  return m?`https://${m[1]}.github.io/${m[2]}/${m[3]}`:u;
-}
+function pageUrl(name){return PAGES[name]||"#"}
 function sameSite(u){
   try{const a=new URL(u),n=x=>x.replace(/index\.html$/,"");return a.origin===location.origin&&n(a.pathname)===n(location.pathname)}catch{return false}
 }
