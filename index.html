@@ -158,7 +158,12 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 footer{border-top:1px solid var(--line);background:rgba(5,8,22,.86);color:var(--mute);font-size:14px}
 .fgrid{display:grid;grid-template-columns:1.3fr .8fr 1.8fr .85fr;gap:36px;padding:60px 8vw 40px}
 .bgi:first-child{-webkit-mask-image:linear-gradient(to bottom,#000 65%,transparent);mask-image:linear-gradient(to bottom,#000 65%,transparent)}
-nav li>a.plain::after{content:none}
+nav li>a.plain::after,nav li>a.home::after{content:none}
+nav li>a.home{display:flex;align-items:center;padding:0 14px;height:70px}
+nav li>a.home svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:.25s}
+nav li>a.home:hover{color:var(--a)}
+nav li>a.home:hover svg{transform:translateY(-2px);filter:drop-shadow(0 0 8px rgba(77,240,200,.7))}
+@media(max-width:1020px){nav li>a.home{height:auto;padding:14px}}
 /* contact list */
 .clist{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
 .clist li{margin:0}
@@ -506,11 +511,14 @@ const menu=$("#menu"),navData={};
 function renderNav(){
   menu.innerHTML="";
   NAV_NAMES.forEach(name=>{
-    let lines=(navData[name]||[]).filter(l=>l[0]);
-    if(!lines.length)lines=[[name,"#"+name.toLowerCase()==="#home"?"#home":"#"+name.toLowerCase()]];
     const li=document.createElement("li");
-    const own=name==="Home";                                           // Home opens in the same tab, the others in a new tab
-    li.innerHTML=`<a href="${esc(pageUrl(name))}" data-page="${esc(name)}"${own?"":' target="_blank" rel="noopener"'}>${esc(name)}</a><div class="drop">${lines.map(l=>`<a href="${esc(l[1]||"#")}">${esc(l[0])}</a>`).join("")}</div>`;
+    if(name==="Home"){                                                 // Home: house icon, no dropdown
+      li.innerHTML=`<a class="home" data-page="Home" href="${esc(pageUrl("Home"))}" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>`;
+      menu.appendChild(li);return;
+    }
+    let lines=(navData[name]||[]).filter(l=>l[0]);
+    if(!lines.length)lines=[[name,"#"+name.toLowerCase()]];
+    li.innerHTML=`<a href="${esc(pageUrl(name))}" data-page="${esc(name)}">${esc(name)}</a><div class="drop">${lines.map(l=>`<a href="${esc(l[1]||"#")}">${esc(l[0])}</a>`).join("")}</div>`;
     menu.appendChild(li);
     li.querySelector("li>a").addEventListener("click",e=>{
       if(innerWidth<=1020&&!li.classList.contains("open")){e.preventDefault();document.querySelectorAll("#menu li.open").forEach(x=>x.classList.remove("open"));li.classList.add("open")}
@@ -529,7 +537,7 @@ menu.addEventListener("click",e=>{
   }
   if(e.target.closest(".drop a")||e.target.closest(".plain")||(a&&!e.defaultPrevented))$("#nav").classList.remove("show");
 });
-(function(){const b=$("#blogPageBtn");b.href=pageUrl("Blog");b.target="_blank";b.rel="noopener"})();
+(function(){const b=$("#blogPageBtn");b.href=pageUrl("Blog")})();
 $("#burger").onclick=()=>$("#nav").classList.toggle("show");
 
 /* =====================================================================
@@ -628,7 +636,7 @@ bs.addEventListener("scroll",()=>{
 const host=$("#sections");
 HIGHLIGHTS.forEach(([key,title,file,lead])=>{
   const sec=document.createElement("section");sec.id=key;
-  sec.innerHTML=`<div class="reveal"><span class="tag">${title}</span><div class="shead"><h2>${title} <span>highlights</span></h2><a class="pagebtn" href="${esc(pageUrl(title))}" target="_blank" rel="noopener" title="Open the ${title} page">${title} <i>↗</i></a></div><p class="lead">${lead}</p></div>
+  sec.innerHTML=`<div class="reveal"><span class="tag">${title}</span><div class="shead"><h2>${title} <span>highlights</span></h2><a class="pagebtn" href="${esc(pageUrl(title))}" title="Open the ${title} page">${title} <i>↗</i></a></div><p class="lead">${lead}</p></div>
   <div class="cards reveal" id="cards-${key}"><div class="empty">Loading…</div></div>
   <div class="more reveal"><a class="btn" href="#/all/${key}">Explore all ${title} →</a></div>`;
   host.appendChild(sec);
@@ -675,7 +683,7 @@ function showAll(key){
   const h=HIGHLIGHTS.find(x=>x[0]===key);if(!h)return;
   const v=valid(store[key]||[]).slice().reverse();
   $("#allwrap").innerHTML=`<div class="topbar"><a class="btn ghost back" href="#${key}">← Back</a>
-      <a class="pagebtn" href="${esc(pageUrl(h[1]))}" target="_blank" rel="noopener" title="Open the ${h[1]} page">${h[1]} <i>↗</i></a></div>
+      <a class="pagebtn" href="${esc(pageUrl(h[1]))}" title="Open the ${h[1]} page">${h[1]} <i>↗</i></a></div>
     <span class="tag">${h[1]}</span><h2>${h[1]} <span>highlights</span></h2><p class="lead">${h[3]}</p>
     <div class="cards">${v.length?v.map(l=>cardHTML(l)).join(""):`<div class="empty">Nothing here yet.</div>`}</div>`;
   $("#allview").classList.add("show");$("#allview").scrollTop=0;document.body.classList.add("lock");
@@ -701,7 +709,7 @@ async function refresh(){
   jobs.push(getText(CONFIG.MGMT,"Code.txt").then(t=>{if(changed("code",t))renderCodeFile(t)}));
   jobs.push(getText(CONFIG.MGMT,"Contact.txt").then(t=>{if(changed("contact",t))renderContact(t)}));
   HIGHLIGHTS.forEach(([key,title,file])=>jobs.push(getLines(CONFIG.MGMT,file).then(l=>{store[key]=l;if(changed(key,l))renderHighlights(key,title,file,l)})));
-  jobs.push(Promise.all(NAV_NAMES.map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
+  jobs.push(Promise.all(NAV_NAMES.filter(n=>n!=="Home").map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
   await Promise.all(jobs);route();
 }
 refresh();setInterval(refresh,CONFIG.REFRESH_MS);
