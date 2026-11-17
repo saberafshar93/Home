@@ -213,6 +213,11 @@ button.ty:hover{filter:brightness(1.15);transform:translateY(-1px)}
 .lc .au:hover{background:rgba(255,196,104,.2);color:#ffd48a}
 .lc .au.on{background:#ffc468;color:#241500;border-color:transparent;box-shadow:0 0 18px rgba(255,196,104,.55)}
 .lc .au.on .al{color:#6a4700}
+/* multi-author row */
+.lc .aus{display:flex;flex-wrap:wrap;align-items:center;gap:6px;position:relative;z-index:2}
+.lc .aus .al{font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute);flex:none}
+.lc .aus .au{padding:3px 11px;font-size:13px;max-width:100%}
+.lc .aus .au0{color:var(--mute)}
 @media(max-width:1180px){
   .lgrid{grid-template-columns:1fr;margin:0}
   .lgrid .bbox,.lgrid .sbox{grid-column:1}
@@ -570,10 +575,12 @@ $("#burger").onclick=()=>$("#nav").classList.toggle("show");
    ===================================================================== */
 const PER_OPTS=[30,60,90];
 let per=+lsGet("bookPer");if(!PER_OPTS.includes(per))per=30;
-let page=1,rows=[],filt={type:null,dom:null,auth:null};
+let page=1,rows=[],filt={type:null,dom:null,auth:[]};
 const SPER=[20,50,100];let sper=+lsGet("bookSper");if(!SPER.includes(sper))sper=50;let spage=1;
 const dateMap={};
 let drawTimer=0;
+/* several authors in one cell are separated by ";" */
+const splitAuth=v=>[...new Set(String(v||"").split(/[;؛；]/).map(x=>x.replace(/\s+/g," ").trim()).filter(Boolean))];
 const isLink=u=>/^https?:\/\//i.test(u||"");
 
 $("#perseg").innerHTML=PER_OPTS.map(n=>`<button type="button" data-per="${n}">${n}</button>`).join("");
@@ -583,10 +590,10 @@ $("#perseg").addEventListener("click",e=>{
 });
 
 function renderBox(lines){
-  rows=lines.filter(l=>l.length>=3).map((l,i)=>({type:l[0]||"",dom:l[1]||"",title:l[2]||"",author:l[3]||"",link:l[4]||"",img:l[5]||"",idx:i}));
+  rows=lines.filter(l=>l.length>=3).map((l,i)=>({type:l[0]||"",dom:l[1]||"",title:l[2]||"",author:l[3]||"",authors:splitAuth(l[3]),link:l[4]||"",img:l[5]||"",idx:i}));
   if(filt.type&&!rows.some(r=>r.type===filt.type))filt.type=null;
   if(filt.dom&&!rows.some(r=>r.dom===filt.dom))filt.dom=null;
-  if(filt.auth&&!rows.some(r=>r.author===filt.auth))filt.auth=null;
+  filt.auth=filt.auth.filter(a=>rows.some(r=>r.authors.includes(a)));
   draw();
   resolveAll();
 }
@@ -617,7 +624,7 @@ function sorted(){
     return b.idx-a.idx;
   });
 }
-const matches=r=>(!filt.type||r.type===filt.type)&&(!filt.dom||r.dom===filt.dom)&&(!filt.auth||r.author===filt.auth);
+const matches=r=>(!filt.type||r.type===filt.type)&&(!filt.dom||r.dom===filt.dom)&&filt.auth.every(a=>r.authors.includes(a));   // every selected name must be among the authors → shared works
 const typeCls=t=>/^train/i.test(t)?"tr":/^test/i.test(t)?"te":"ot";
 function ago(d){
   const days=Math.floor((Date.now()-d.getTime())/864e5);
@@ -629,7 +636,7 @@ function dateCell(r){
   return `<div class="dt">${d?fmtFull(d):"…"}</div>`;
 }
 function draw(){
-  const list=sorted(),n=list.length,active=!!(filt.type||filt.dom||filt.auth);
+  const list=sorted(),n=list.length,active=!!(filt.type||filt.dom||filt.auth.length);
   const pages=Math.max(1,Math.ceil(n/per));
   if(page>pages)page=pages;if(page<1)page=1;
   const from=(page-1)*per,slice=list.slice(from,from+per);
@@ -643,7 +650,7 @@ function draw(){
   chips.innerHTML=active?`<span>Highlighting:</span>`
     +(filt.type?`<span class="chip">Type: ${esc(filt.type)}<button type="button" data-clear="type" aria-label="Remove">×</button></span>`:"")
     +(filt.dom?`<span class="chip">Domain: ${esc(filt.dom)}<button type="button" data-clear="dom" aria-label="Remove">×</button></span>`:"")
-    +(filt.auth?`<span class="chip">Author: ${esc(filt.auth)}<button type="button" data-clear="auth" aria-label="Remove">×</button></span>`:"")
+    +filt.auth.map(a=>`<span class="chip">Author: ${esc(a)}<button type="button" data-clear="auth" data-v="${esc(a)}" aria-label="Remove">×</button></span>`).join("")
     +`<button class="clear" type="button" data-clear="all">Clear all</button>`:"";
 
   $("#cards").innerHTML=slice.length?slice.map(r=>{
@@ -652,7 +659,7 @@ function draw(){
       <div class="ctop"><button type="button" class="dchip${filt.dom===r.dom?" on":""}" data-f="dom" data-v="${esc(r.dom)}" title="Show only ${esc(r.dom)}">${esc(r.dom||"—")}</button>${r.type?`<button type="button" class="ty ${typeCls(r.type)}${filt.type===r.type?" on":""}" data-f="type" data-v="${esc(r.type)}" title="Show only ${esc(r.type)}">${esc(r.type)}</button>`:""}</div>
       <div class="cimg">${imgOrArt(im,hash(r.title),400,250)}</div>
       <h3 class="ct">${esc(r.title)}</h3>
-      <button type="button" class="au${filt.auth===r.author?" on":""}" data-f="auth" data-v="${esc(r.author)}"><span class="al">Author:</span><span class="an">${esc(r.author||"—")}</span></button>
+      <div class="aus"><span class="al">${r.authors.length>1?"Authors:":"Author:"}</span>${r.authors.length?r.authors.map(a=>`<button type="button" class="au${filt.auth.includes(a)?" on":""}" data-f="auth" data-v="${esc(a)}" title="${filt.auth.includes(a)?"Remove from":"Add to"} the author filter">${esc(a)}</button>`).join(""):`<span class="au0">—</span>`}</div>
       ${dateCell(r)}
       ${isLink(r.link)?`<a class="stretch" href="${esc(r.link)}" target="_blank" rel="noopener" aria-label="${esc(r.title)}"></a>`:""}</article>`}).join("")
     :`<div class="empty" style="grid-column:1/-1">No books yet — add lines to Box.txt.</div>`;
@@ -703,12 +710,15 @@ $("#spg").addEventListener("click",e=>{
 $("#cards").addEventListener("click",e=>{
   const b=e.target.closest("[data-f]");if(!b)return;
   const k=b.dataset.f,v=b.dataset.v;
-  filt[k]=filt[k]===v?null:v;
+  if(k==="auth")filt.auth=filt.auth.includes(v)?filt.auth.filter(x=>x!==v):[...filt.auth,v];   // pick several names to see shared works
+  else filt[k]=filt[k]===v?null:v;
   draw();
 });
 $("#chips").addEventListener("click",e=>{
   const b=e.target.closest("[data-clear]");if(!b)return;
-  if(b.dataset.clear==="all")filt={type:null,dom:null,auth:null};else filt[b.dataset.clear]=null;
+  if(b.dataset.clear==="all")filt={type:null,dom:null,auth:[]};
+  else if(b.dataset.clear==="auth")filt.auth=filt.auth.filter(x=>x!==b.dataset.v);
+  else filt[b.dataset.clear]=null;
   draw();
 });
 
@@ -939,4 +949,4 @@ if(window.THREE){
 }
 </script>
 </body>
-</html>﻿
+</html>
