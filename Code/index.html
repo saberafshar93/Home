@@ -237,6 +237,20 @@ button.ty:hover{filter:brightness(1.15);transform:translateY(-1px)}
   .lc .cimg{width:100%}
   .cbody{flex-basis:100%}
 }
+/* mini code preview on each row */
+.cact{display:flex;flex-direction:column;align-items:stretch;gap:9px;width:clamp(210px,24vw,330px)}
+.cpv{cursor:pointer;border-radius:12px;overflow:hidden;background:#0a0f26;border:1px solid var(--line);transition:.3s}
+.cpv:hover{border-color:rgba(77,240,200,.55);box-shadow:0 10px 30px rgba(77,240,200,.15)}
+.pvbar{display:flex;align-items:center;gap:5px;padding:6px 10px;background:#0f1633}
+.pvbar i{width:8px;height:8px;border-radius:50%;background:#ff5f57}.pvbar i:nth-child(2){background:#febc2e}.pvbar i:nth-child(3){background:#28c840}
+.pvbar span{margin-left:6px;font:600 10.5px Consolas,monospace;color:var(--mute);letter-spacing:.5px}
+.pvbody{margin:0;padding:8px 0;height:7.9em;overflow:hidden;white-space:pre;font:11.5px/1.5 "JetBrains Mono",Consolas,monospace;color:#d6defa;counter-reset:pl;
+  -webkit-mask-image:linear-gradient(to bottom,#000 70%,transparent);mask-image:linear-gradient(to bottom,#000 70%,transparent)}
+.pl{display:block;padding:0 10px}
+.pl::before{counter-increment:pl;content:counter(pl);display:inline-block;width:1.8em;margin-right:.9em;text-align:right;color:#4a5683}
+.pl0{display:block;padding:0 10px;color:var(--mute)}
+.cact .codebtn{justify-content:center}
+@media(max-width:900px){.cact{width:100%}}
 /* code viewer (same window as the home page) */
 body.lock{overflow:hidden}
 #codeview{position:fixed;inset:0;z-index:850;background:rgba(5,8,22,.95);backdrop-filter:blur(8px);overflow-y:auto;padding:100px 8vw 70px;display:none}
@@ -706,7 +720,7 @@ function draw(){
         <div class="aus"><span class="al">${r.authors.length>1?"Programmers:":"Programmer:"}</span>${r.authors.length?r.authors.map(a=>`<button type="button" class="au${filt.auth.includes(a)?" on":""}" data-f="auth" data-v="${esc(a)}" title="${filt.auth.includes(a)?"Remove from":"Add to"} the programmer filter">${esc(a)}</button>`).join(""):`<span class="au0">—</span>`}</div>
         ${dateCell(r)}
       </div>
-      ${isLink(r.code)?`<div class="cact"><button type="button" class="codebtn" data-code="${esc(r.code)}" data-title="${esc(r.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m14 4-4 16"/></svg><span>View code</span></button></div>`:""}
+      ${r.code?`<div class="cact"><div class="cpv" data-code="${esc(r.code)}" data-title="${esc(r.title)}" title="Open the full code">${pv(r.code)}</div><button type="button" class="codebtn" data-code="${esc(r.code)}" data-title="${esc(r.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m14 4-4 16"/></svg><span>View full code</span></button></div>`:""}
       ${isLink(r.link)?`<a class="stretch" href="${esc(r.link)}" target="_blank" rel="noopener" aria-label="${esc(r.title)}"></a>`:""}</article>`}).join("")
     :`<div class="empty" style="grid-column:1/-1">No projects yet — add lines to Box.txt.</div>`;
 
@@ -714,6 +728,7 @@ function draw(){
   $("#pg").innerHTML=pager(page,pages);
 
   drawSide(list,active);
+  slice.forEach(r=>{if(r.code)preview(r.code)});
 }
 function drawSide(list,active){
   const n=list.length,pages=Math.max(1,Math.ceil(n/sper));
@@ -768,6 +783,26 @@ function hl(line){
 }
 const rawUrl=u=>{const m=String(u).match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/i);return m?`https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}`:u};
 let codeRaw="";
+const codeText={},codeMem={};
+const splitCode=t=>{const L=t.replace(/^﻿/,"").replace(/\r/g,"").split("\n");const lang=(L.shift()||"").trim();while(L.length&&!L[L.length-1].trim())L.pop();return {lang,lines:L}};
+function pv(url){
+  const t=codeText[url];
+  if(t==null)return `<div class="pvbar"><i></i><i></i><i></i></div><pre class="pvbody"><span class="pl0">Loading preview…</span></pre>`;
+  const {lang,lines}=splitCode(t);
+  return `<div class="pvbar"><i></i><i></i><i></i><span>${esc(lang)}</span></div><pre class="pvbody">${lines.slice(0,7).map(l=>`<span class="pl">${hl(l.length>90?l.slice(0,90):l)}</span>`).join("")||`<span class="pl0">(empty)</span>`}</pre>`;
+}
+function getCode(url){
+  if(!codeMem[url])codeMem[url]=loadCode(url).then(t=>{if(t==null)delete codeMem[url];return t});
+  return codeMem[url];
+}
+function preview(url){
+  if(codeText[url]!=null||codeMem[url])return;
+  getCode(url).then(t=>{
+    if(t==null)return;
+    codeText[url]=t;
+    document.querySelectorAll(".cpv").forEach(el=>{if(el.dataset.code===url)el.innerHTML=pv(url)});
+  });
+}
 async function loadCode(url){
   const key="code:"+url;
   try{const r=await fetch(rawUrl(url)+(/\?/.test(url)?"&":"?")+"t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const t=await r.text();lsSet(key,t);return t}
@@ -777,11 +812,9 @@ async function openCode(url,title){
   const v=$("#codeview");
   $("#cvTitle").textContent=title;$("#cvLang").textContent="(loading…)";$("#cvOut").innerHTML="";codeRaw="";
   v.classList.add("show");v.scrollTop=0;document.body.classList.add("lock");
-  const t=await loadCode(url);
+  const t=await getCode(url);
   if(t==null){$("#cvLang").textContent="";$("#cvOut").innerHTML=`<span class="cl">Could not load the code file.</span>`;return}
-  const lines=t.replace(/^﻿/,"").replace(/\r/g,"").split("\n");
-  const lang=(lines.shift()||"").trim();
-  while(lines.length&&!lines[lines.length-1].trim())lines.pop();
+  const {lang,lines}=splitCode(t);
   codeRaw=lines.join("\n");
   $("#cvLang").textContent=lang?`(${lang})`:"";
   $("#cvOut").innerHTML=lines.map(l=>`<span class="cl">${hl(l)}</span>`).join("");
@@ -1042,4 +1075,4 @@ if(window.THREE){
 }
 </script>
 </body>
-</html>﻿
+</html>
