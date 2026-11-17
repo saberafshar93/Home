@@ -225,32 +225,16 @@ button.ty:hover{filter:brightness(1.15);transform:translateY(-1px)}
 .cbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
 .ctop{justify-content:flex-start;gap:8px}
 .lc .ct{font-size:clamp(17px,1.6vw,22px);line-height:1.3}
-.cact{flex:none;position:relative;z-index:3}
-.codebtn{display:inline-flex;align-items:center;gap:9px;padding:11px 22px;border:0;border-radius:50px;cursor:pointer;font:800 13.5px "Segoe UI",sans-serif;letter-spacing:.4px;color:#041022;
-  background:linear-gradient(90deg,var(--a),var(--b),var(--a));background-size:200% 100%;box-shadow:0 8px 28px rgba(77,240,200,.28);transition:.3s;animation:btnflow 5s linear infinite}
-.codebtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
-.codebtn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 14px 38px rgba(123,108,255,.5)}
-.codebtn:hover svg{transform:scale(1.2) rotate(-6deg)}
-@keyframes btnflow{to{background-position:200% 0}}
+.codebtn{margin-left:auto;position:relative;z-index:3;display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:30px;cursor:pointer;
+  font:700 12px "Segoe UI",sans-serif;letter-spacing:.4px;color:var(--a);background:rgba(77,240,200,.08);border:1px solid rgba(77,240,200,.38);transition:.25s;white-space:nowrap}
+.codebtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.codebtn:hover{background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border-color:transparent;transform:translateY(-2px);box-shadow:0 8px 22px rgba(77,240,200,.3)}
+.codebtn:hover svg{transform:scale(1.15)}
 @media(max-width:760px){
   .lc{flex-wrap:wrap}
   .lc .cimg{width:100%}
   .cbody{flex-basis:100%}
 }
-/* mini code preview on each row */
-.cact{display:flex;flex-direction:column;align-items:stretch;gap:9px;width:clamp(210px,24vw,330px)}
-.cpv{cursor:pointer;border-radius:12px;overflow:hidden;background:#0a0f26;border:1px solid var(--line);transition:.3s}
-.cpv:hover{border-color:rgba(77,240,200,.55);box-shadow:0 10px 30px rgba(77,240,200,.15)}
-.pvbar{display:flex;align-items:center;gap:5px;padding:6px 10px;background:#0f1633}
-.pvbar i{width:8px;height:8px;border-radius:50%;background:#ff5f57}.pvbar i:nth-child(2){background:#febc2e}.pvbar i:nth-child(3){background:#28c840}
-.pvbar span{margin-left:6px;font:600 10.5px Consolas,monospace;color:var(--mute);letter-spacing:.5px}
-.pvbody{margin:0;padding:8px 0;height:7.9em;overflow:hidden;white-space:pre;font:11.5px/1.5 "JetBrains Mono",Consolas,monospace;color:#d6defa;counter-reset:pl;
-  -webkit-mask-image:linear-gradient(to bottom,#000 70%,transparent);mask-image:linear-gradient(to bottom,#000 70%,transparent)}
-.pl{display:block;padding:0 10px}
-.pl::before{counter-increment:pl;content:counter(pl);display:inline-block;width:1.8em;margin-right:.9em;text-align:right;color:#4a5683}
-.pl0{display:block;padding:0 10px;color:var(--mute)}
-.cact .codebtn{justify-content:center}
-@media(max-width:900px){.cact{width:100%}}
 /* code viewer (same window as the home page) */
 body.lock{overflow:hidden}
 #codeview{position:fixed;inset:0;z-index:850;background:rgba(5,8,22,.95);backdrop-filter:blur(8px);overflow-y:auto;padding:100px 8vw 70px;display:none}
@@ -715,12 +699,11 @@ function draw(){
     return `<article class="lc${active&&!matches(r)?" dim":""}">
       <div class="cimg">${imgOrArt(im,hash(r.title),400,250)}</div>
       <div class="cbody">
-        <div class="ctop"><button type="button" class="dchip${filt.dom===r.dom?" on":""}" data-f="dom" data-v="${esc(r.dom)}" title="Show only ${esc(r.dom)}">${esc(r.dom||"—")}</button>${r.type?`<button type="button" class="ty ${typeCls(r.type)}${filt.type===r.type?" on":""}" data-f="type" data-v="${esc(r.type)}" title="Show only ${esc(r.type)}">${esc(r.type)}</button>`:""}</div>
+        <div class="ctop"><button type="button" class="dchip${filt.dom===r.dom?" on":""}" data-f="dom" data-v="${esc(r.dom)}" title="Show only ${esc(r.dom)}">${esc(r.dom||"—")}</button>${r.type?`<button type="button" class="ty ${typeCls(r.type)}${filt.type===r.type?" on":""}" data-f="type" data-v="${esc(r.type)}" title="Show only ${esc(r.type)}">${esc(r.type)}</button>`:""}${r.code?`<button type="button" class="codebtn" data-code="${esc(r.code)}" data-title="${esc(r.title)}" title="Read and copy the code"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/></svg>View code</button>`:""}</div>
         <h3 class="ct">${esc(r.title)}</h3>
         <div class="aus"><span class="al">${r.authors.length>1?"Programmers:":"Programmer:"}</span>${r.authors.length?r.authors.map(a=>`<button type="button" class="au${filt.auth.includes(a)?" on":""}" data-f="auth" data-v="${esc(a)}" title="${filt.auth.includes(a)?"Remove from":"Add to"} the programmer filter">${esc(a)}</button>`).join(""):`<span class="au0">—</span>`}</div>
         ${dateCell(r)}
       </div>
-      ${r.code?`<div class="cact"><div class="cpv" data-code="${esc(r.code)}" data-title="${esc(r.title)}" title="Open the full code">${pv(r.code)}</div><button type="button" class="codebtn" data-code="${esc(r.code)}" data-title="${esc(r.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m14 4-4 16"/></svg><span>View full code</span></button></div>`:""}
       ${isLink(r.link)?`<a class="stretch" href="${esc(r.link)}" target="_blank" rel="noopener" aria-label="${esc(r.title)}"></a>`:""}</article>`}).join("")
     :`<div class="empty" style="grid-column:1/-1">No projects yet — add lines to Box.txt.</div>`;
 
@@ -728,7 +711,6 @@ function draw(){
   $("#pg").innerHTML=pager(page,pages);
 
   drawSide(list,active);
-  slice.forEach(r=>{if(r.code)preview(r.code)});
 }
 function drawSide(list,active){
   const n=list.length,pages=Math.max(1,Math.ceil(n/sper));
@@ -783,25 +765,11 @@ function hl(line){
 }
 const rawUrl=u=>{const m=String(u).match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/i);return m?`https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}`:u};
 let codeRaw="";
-const codeText={},codeMem={};
-const splitCode=t=>{const L=t.replace(/^﻿/,"").replace(/\r/g,"").split("\n");const lang=(L.shift()||"").trim();while(L.length&&!L[L.length-1].trim())L.pop();return {lang,lines:L}};
-function pv(url){
-  const t=codeText[url];
-  if(t==null)return `<div class="pvbar"><i></i><i></i><i></i></div><pre class="pvbody"><span class="pl0">Loading preview…</span></pre>`;
-  const {lang,lines}=splitCode(t);
-  return `<div class="pvbar"><i></i><i></i><i></i><span>${esc(lang)}</span></div><pre class="pvbody">${lines.slice(0,7).map(l=>`<span class="pl">${hl(l.length>90?l.slice(0,90):l)}</span>`).join("")||`<span class="pl0">(empty)</span>`}</pre>`;
-}
+const codeMem={};
+const splitCode=t=>{const L=t.replace(/^\uFEFF/,"").replace(/\r/g,"").split("\n");const lang=(L.shift()||"").trim();while(L.length&&!L[L.length-1].trim())L.pop();return {lang,lines:L}};
 function getCode(url){
   if(!codeMem[url])codeMem[url]=loadCode(url).then(t=>{if(t==null)delete codeMem[url];return t});
   return codeMem[url];
-}
-function preview(url){
-  if(codeText[url]!=null||codeMem[url])return;
-  getCode(url).then(t=>{
-    if(t==null)return;
-    codeText[url]=t;
-    document.querySelectorAll(".cpv").forEach(el=>{if(el.dataset.code===url)el.innerHTML=pv(url)});
-  });
 }
 async function loadCode(url){
   const key="code:"+url;
