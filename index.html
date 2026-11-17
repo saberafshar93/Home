@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ImmunoAfshar | 3D Immunotherapy Hub</title>
+<title>ImmunoAfshar | Immunotherapy Hub</title>
 <style>
 :root{
   --bg:#050816; --panel:rgba(16,22,48,.62); --line:rgba(140,170,255,.18);
@@ -298,6 +298,11 @@ mark{background:rgba(255,213,79,.26);color:#fff;border-radius:4px;padding:0 2px;
 .rcard h3{font-size:20px;line-height:1.3;margin-bottom:8px}
 .rcard p{color:var(--mute);font-size:14.5px}
 .rcard .go{display:inline-block;margin-top:12px;color:var(--a);font-size:13px;font-weight:700}
+.rtags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.rtag{display:inline-block;padding:2px 10px;border-radius:30px;font-size:11.5px;font-weight:600;letter-spacing:.4px;color:var(--a);background:rgba(77,240,200,.08);border:1px solid rgba(77,240,200,.3);cursor:pointer;transition:.2s}
+.rtag:hover{background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border-color:transparent}
+.rppl{font-size:13.5px;color:var(--txt);margin:0 0 8px;opacity:.9}
+.rppl::before{content:"\1F464  ";opacity:.8}
 .smorewrap{text-align:center;padding:10px 0}
 @media(max-width:1020px){.hbtns{display:flex}nav .sli{display:none}#sbox{top:76px}}
 </style>
@@ -997,7 +1002,7 @@ new ResizeObserver(layoutBg).observe(document.body);
    ===================================================================== */
 const SX={open:false,docs:[],voc:[],sig:"",ver:0,sel:-1,sugs:[],q:"",filter:"All",limit:30,pushed:false,
   crawl:{cache:{},running:false,done:0,total:0,last:0}};
-const SITE_URL=new URL(SITE),PAGE_CACHE_KEY="sx:pages:v2",PAGE_TTL=10*6e4,FAIL_TTL=5*6e4,MAX_PAGES=800,CONC=6,MAX_TEXT=150000;
+const SITE_URL=new URL(SITE),PAGE_CACHE_KEY="sx:pages:v3",PAGE_TTL=10*6e4,FAIL_TTL=5*6e4,MAX_PAGES=800,CONC=6,MAX_TEXT=150000;
 const HYP=/[-’'\u00ad]/g;
 const SKIP_EXT=/\.(pdf|png|jpe?g|gif|webp|svg|ico|zip|rar|7z|mp4|mp3|webm|mov|docx?|xlsx?|pptx?|css|js|json|xml)$/i;
 const STOP=new Set("the and for with that this from are was were has have had but not you your our can will all any its into than then them they their there here what when which who how why about also more most such only over just very been being per via etc".split(" "));
@@ -1031,18 +1036,19 @@ const cleanDoc=d=>{d.text=(d.text||"").replace(/\s+/g," ").trim();d.title=(d.tit
 const rest=(l,skip)=>l.filter((x,i)=>!skip.includes(i)&&x&&!isExt(x)).join(" ");   // every column (authors, …) except title and link
 function localDocs(){
   const L=[],add=d=>{cleanDoc(d);if(d.title||d.text)L.push(d)};
-  (J("first")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1],text:rest(l,[1]),url:l[3]||"#home",kind:"Slide",grp:"Home"}));
+  const extra=(l,from)=>l.slice(from).filter(x=>x&&!isExt(x)).join(" ");      // columns after the standard ones: authors, designers, coders, photographers…
+  (J("first")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1],text:rest(l,[1]),lab:l[0],pp:extra(l,5),url:l[3]||"#home",kind:"Slide",grp:"Home"}));
   const ov=(J("overview")||[]).filter(l=>l[0]);
   if(ov.length)add({title:ov[0][0],text:[ov[1]&&ov[1][0],...ov.slice(2).map(l=>l.join(" "))].join(" "),url:"#overview",kind:"Overview",grp:"Overview"});
-  (J("blog")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[0],text:rest(l,[0]),url:l[1],kind:"Blog",grp:"Blog"}));
+  (J("blog")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[0],text:rest(l,[0]),pp:extra(l,3),url:l[1],kind:"Blog",grp:"Blog"}));
   HIGHLIGHTS.forEach(([key,title,file,lead])=>{
     add({title:`${title} highlights`,text:lead,url:"#"+key,kind:"Section",grp:title});
-    (J(key)||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1]||"",text:rest(l,[1]),url:l[3]||"#"+key,kind:title,grp:title}));
+    (J(key)||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1]||"",text:rest(l,[1]),lab:l[0],pp:extra(l,4),url:l[3]||"#"+key,kind:title,grp:title}));
   });
   const code=J("codefile");
-  if(typeof code==="string"&&code.trim()){const ls=code.replace(/^﻿/,"").split(/\r?\n/);add({title:"Code — "+(ls[0]||"").trim(),text:ls.slice(1).join(" "),url:"#code",kind:"Code",grp:"Code"})}
+  if(typeof code==="string"&&code.trim()){const ls=code.replace(/^\uFEFF/,"").split(/\r?\n/);add({title:"Code — "+(ls[0]||"").trim(),text:ls.slice(1).join(" "),lab:(ls[0]||"").trim(),url:"#code",kind:"Code",grp:"Code"})}
   const ct=J("contact");
-  if(typeof ct==="string"){const rows=ct.replace(/^﻿/,"").split(/\r?\n/);CONTACTS.forEach(([name],i)=>add({title:name,text:(rows[i]||"").trim(),url:contactHref(rows[i])||"#contact",kind:"Contact",grp:"Contact"}))}
+  if(typeof ct==="string"){const rows=ct.replace(/^\uFEFF/,"").split(/\r?\n/);CONTACTS.forEach(([name],i)=>add({title:name,text:(rows[i]||"").trim(),url:contactHref(rows[i])||"#contact",kind:"Contact",grp:"Contact"}))}
   Object.entries(J("nav")||{}).forEach(([n,ls])=>(ls||[]).filter(l=>l[0]&&l[1]&&l[1]!=="#").forEach(l=>add({title:l[0],text:n,url:l[1],kind:"Menu · "+n,grp:"Menu"})));
   return L;
 }
@@ -1058,7 +1064,7 @@ function PN(p){
   }
   return v;
 }
-function attachPage(d,p){d.tb=d.text;d.pe=p;d.text=d.text+" "+(p.x||"");d.body=true}
+function attachPage(d,p){d.tb=d.text;d.pe=p;d.text=d.text+" "+(p.x||"");d.body=true;d.pa=p.a||"";d.pk=p.k||""}
 
 /* repo data files (Bin/Data/<Section>/...) → search items */
 const RPARSED=new WeakMap();
@@ -1075,11 +1081,21 @@ function parseRepo(e){
   const sepN=lines.filter(l=>l.includes(CONFIG.SEP)).length;
   if(lines.length&&sepN>=lines.length/2){
     for(const l of lines){
-      const f=l.split(CONFIG.SEP).map(x=>x.trim()),link=f.find(x=>isExt(x)&&!IMGX.test(x)),words=f.filter(x=>x&&!isExt(x));
-      const title=words.find(x=>x.split(/\s+/).length>=2)||words[0]||name;
-      out.push(cleanDoc({title,text:f.filter(x=>x!==title).join(" "),url:link||PAGES[sec]||own,kind:sec,grp:sec,lk:!!link}));
+      const f=l.split(CONFIG.SEP).map(x=>x.trim());
+      let title,lab="",pp="",link="";
+      if(f.length>=4&&isExt(f[3])){                                   // standard layout: label /$/ title /$/ text /$/ link /$/ credits…
+        title=f[1]||f[0];lab=f[1]?f[0]:"";link=IMGX.test(f[3])?"":f[3];
+        pp=f.slice(4).filter(x=>x&&!isExt(x)).join(" ");
+      }else{
+        link=f.find(x=>isExt(x)&&!IMGX.test(x))||"";
+        const words=f.filter(x=>x&&!isExt(x));
+        title=words.find(x=>x.split(/\s+/).length>=2)||words[0]||name;
+        lab=(words.length>1&&words[0]!==title&&words[0].length<=40)?words[0]:"";
+        pp=words.filter(x=>x!==title&&x!==lab).slice(1).join(" ");
+      }
+      out.push(cleanDoc({title,lab,pp,text:f.filter(x=>x!==title).join(" "),url:link||PAGES[sec]||own,kind:sec,grp:sec,lk:!!link}));
     }
-  }else out.push(cleanDoc({title:name,text:lines.join(" "),url:own,kind:sec,grp:sec}));
+  }else out.push(cleanDoc({title:name,text:lines.join(" "),pp:e.a||"",pk:e.k||"",url:own,kind:sec,grp:sec}));
   return out;
 }
 function repoDocsAll(){
@@ -1111,35 +1127,45 @@ function buildIndex(){
   const voc=new Map(),addW=(s,w)=>{for(const m of s.matchAll(WRX)){const t=m[0];if(t.length<2)continue;const e=voc.get(t)||{n:0,t:0};e.n++;e.t+=w;voc.set(t,e)}};
   L.forEach(d=>{
     d.nt=nrm(d.title);addW(d.nt,1);
+    d.nl=nrm([d.lab,d.pk,d.kind,d.grp].filter(Boolean).join(" "));      // labels / domains / keywords / section
+    d.np=nrm([d.pp,d.pa].filter(Boolean).join(" "));                    // people: authors, designers, coders, photographers…
+    addW(d.nl,1);addW(d.np,1);
     if(d.pe){
       const pn=PN(d.pe),b=nrm(d.tb);
       d.nx=b+" "+pn.n;d.nh=(d.nt+" "+b).replace(HYP,"")+" "+pn.h;
       addW(b,0);pn.w.forEach((c,w)=>{const e=voc.get(w)||{n:0,t:0};e.n+=c;voc.set(w,e)});
     }else{d.nx=nrm(d.text);d.nh=(d.nt+" "+d.nx).replace(HYP,"");addW(d.nx.slice(0,25000),0)}
+    d.nh+=" "+(d.nl+" "+d.np).replace(HYP,"");
   });
   SX.docs=L;SX.voc=[...voc].map(([w,e])=>[w,e.n+e.t*5,e.t]);
 }
 
 /* ---------- 2. searching ---------- */
-const tokensOf=q=>nrm(q).split(/\s+/).filter(Boolean).slice(0,6);
+const tokensOf=q=>{
+  const t=nrm(q).split(/[^\p{L}\p{N}'’-]+/u).map(x=>x.replace(/^['’-]+|['’-]+$/g,"")).filter(Boolean);
+  const f=t.filter(x=>x.length>1||/\p{N}/u.test(x));
+  return(f.length?f:t).slice(0,6);
+};
 function search(q){
   buildIndex();
   const toks=tokensOf(q);if(!toks.length)return{res:[],toks};
-  const full=toks.join(" "),res=[];
+  const full=toks.join(" "),res=[],ws=(s,i)=>i===0||s[i-1]===" ";
   for(const d of SX.docs){
     let sc=0,ok=true;
     for(const t of toks){
-      const ti=d.nt.indexOf(t),bi=d.nx.indexOf(t);
-      if(ti<0&&bi<0){                                   // Pre-operative ⇄ Preoperative
+      const ti=d.nt.indexOf(t),bi=d.nx.indexOf(t),pi=d.np.indexOf(t),li=d.nl.indexOf(t);
+      if(ti<0&&bi<0&&pi<0&&li<0){                       // Pre-operative ⇄ Preoperative
         const th=t.replace(HYP,"");
         if(th&&d.nh.includes(th)){sc+=4;continue}
         ok=false;break;
       }
-      if(ti>=0)sc+=12+((ti===0||d.nt[ti-1]===" ")?8:0);
+      if(ti>=0)sc+=12+(ws(d.nt,ti)?8:0);
+      if(pi>=0)sc+=14+(ws(d.np,pi)?6:0);                // author / designer / coder / photographer
+      if(li>=0)sc+=10+(ws(d.nl,li)?6:0);                // label / domain / keyword
       if(bi>=0){let c=0,p=bi;while(p>=0&&c<30){c++;p=d.nx.indexOf(t,p+t.length)}sc+=Math.min(c,20)+((bi===0||d.nx[bi-1]===" ")?2:0)}
     }
     if(!ok)continue;
-    if(toks.length>1){if(d.nt.includes(full))sc+=20;if(d.nx.includes(full))sc+=8}
+    if(toks.length>1){if(d.nt.includes(full))sc+=20;if(d.nx.includes(full))sc+=8;if(d.np.includes(full))sc+=18;if(d.nl.includes(full))sc+=12}
     if(d.nt.startsWith(full))sc+=10;
     if(d.nt===full)sc+=15;
     if(d.kind!=="Page"&&!/^Menu/.test(d.kind))sc+=1.5;
@@ -1266,25 +1292,62 @@ function jsonStrings(t){
   return o.join(" ");
 }
 /* HTML → title + full text + author/keyword/abstract meta + alt/title attributes + JSON-LD + script strings + links */
+function collectNames(v,arr){
+  if(!v)return;
+  if(typeof v==="string"){arr.push(v);return}
+  if(Array.isArray(v)){v.forEach(x=>collectNames(x,arr));return}
+  if(typeof v==="object"){if(v.name)collectNames(v.name,arr);else if(v.givenName||v.familyName)arr.push(((v.givenName||"")+" "+(v.familyName||"")).trim())}
+}
+const RPK=/author|creator|photograph|designer|developer|coder|programmer|writer|credit|contributor|illustrator|artist|translator|editor|reviewer|^by$/i;
+const RKK=/^(keywords?|tags?|labels?|categor(y|ies)|topics?|domains?|fields?|areas?|subjects?|section|articleSection|genre)$/i;
+function jsonMeta(t){
+  const P=[],K=[];
+  try{(function w(v){if(Array.isArray(v))v.forEach(w);else if(v&&typeof v==="object")for(const[k,x]of Object.entries(v)){if(RPK.test(k))collectNames(x,P);else if(RKK.test(k))collectNames(x,K);w(x)}})(JSON.parse(t))}catch{}
+  return{a:[...new Set(P.map(x=>String(x).trim()).filter(Boolean))].join(" · "),k:[...new Set(K.map(x=>String(x).trim()).filter(Boolean))].join("|")};
+}
+const RP_CLASS=/(^|[\s_-])(authors?|creators?|photographers?|designers?|developers?|coders?|programmers?|byline|writers?|credits?|contributors?|illustrators?|artists?|translators?|editors?|reviewers?)/i;
+const RK_CLASS=/(^|[\s_-])(keywords?|tags?|categor(y|ies)|topics?|labels?|badges?|chips?|domains?)($|[\s_-])/i;
+const RL_TEXT=/(?:\b(?:written|designed|developed|coded|photographed|illustrated|edited|translated|created|compiled|prepared|presented|reviewed|authored|produced|filmed|drawn|built)\s+by|\b(?:authors?|writers?|photograph(?:er|y)s?|photos?|designers?|developers?|coders?|programmers?|credits?|illustrat(?:ion|or)s?|contributors?|editors?|artists?|by|source)\s*[:：–—-]|(?:نویسنده(?:\s|‌)?(?:ها|گان)?|نگارنده|مولف|مؤلف|عکاس|طراح|برنامه(?:‌|\s)?نویس|کد(?:‌|\s)?نویس|تصویرگر|مترجم|ویراستار)\s*[:：]?)\s*([^\n|•·;<>]{2,100})/giu;
+const RB_TEXT=/\bBy\s+((?:[A-Z][\p{L}.'’-]*\.?(?:,?\s+(?:and\s+|&\s*)?|\s+))+)/gu;
+/* HTML → title + full text + people (author/designer/coder/photographer…) + labels (keywords/tags/domain) + alt/title attributes + JSON-LD + script strings + links */
 function parsePage(raw,u,own,html){
-  if(!html)return{t:(raw.split(/\r?\n/).find(l=>l.trim())||"").trim().slice(0,160),x:raw.replace(/\s+/g," ").trim().slice(0,MAX_TEXT),l:[]};
-  const doc=new DOMParser().parseFromString(raw,"text/html"),extra=[];
+  if(!html)return{t:(raw.split(/\r?\n/).find(l=>l.trim())||"").trim().slice(0,160),x:raw.replace(/\s+/g," ").trim().slice(0,MAX_TEXT),l:[],a:"",k:""};
+  const doc=new DOMParser().parseFromString(raw,"text/html"),extra=[],people=[],keys=[];
   doc.querySelectorAll("meta[content]").forEach(m=>{
     const n=(m.getAttribute("name")||m.getAttribute("property")||m.getAttribute("itemprop")||"").toLowerCase();
-    if(/author|creator|contributor|keyword|descr|title|subject|citation|dc[.:]|tag|section|publisher|abstract|date/.test(n))extra.push(m.content);
+    if(/author|creator|contributor|photograph|designer|developer|editor|artist|byline|credit/.test(n))people.push(m.content);
+    if(/keyword|tag|section|subject|category|topic/.test(n))m.content.split(/[,;|]/).forEach(x=>keys.push(x));
+    if(/author|creator|contributor|keyword|descr|title|subject|citation|dc[.:]|tag|section|publisher|abstract|date|photograph|designer|developer|editor|artist|byline|credit|topic|category/.test(n))extra.push(m.content);
   });
   const AT=["alt","title","aria-label","placeholder","data-title","data-author"];
   doc.querySelectorAll("[alt],[title],[aria-label],[placeholder],[data-title],[data-author]").forEach(e=>AT.forEach(a=>{const v=e.getAttribute(a);if(v)extra.push(v)}));
+  doc.querySelectorAll("[itemprop],[rel],[class],[id],[data-author],[data-photographer],[data-designer],[data-credit],[data-tag],[data-label],[data-category]").forEach(e=>{
+    const cls=typeof e.className==="string"?e.className:"";
+    const k=[e.getAttribute("itemprop"),e.getAttribute("rel"),cls,e.id].join(" ");
+    const tx=(e.textContent||"").replace(/\s+/g," ").trim();
+    if(tx&&tx.length<=160){
+      if(RP_CLASS.test(k))people.push(tx);
+      else if(RK_CLASS.test(k)&&tx.length<=60&&e.children.length<=2)keys.push(tx);
+    }
+    ["data-author","data-photographer","data-designer","data-credit"].forEach(a=>{const v=e.getAttribute(a);if(v)people.push(v)});
+    ["data-tag","data-label","data-category"].forEach(a=>{const v=e.getAttribute(a);if(v)keys.push(v)});
+  });
   doc.querySelectorAll("script").forEach(s=>{
     const ty=(s.type||"").toLowerCase(),c=s.textContent||"";
-    if(/json/.test(ty))extra.push(jsonStrings(c));
+    if(/json/.test(ty)){extra.push(jsonStrings(c));const jm=jsonMeta(c);if(jm.a)people.push(jm.a);if(jm.k)jm.k.split("|").forEach(x=>keys.push(x))}
     else if(own&&!s.src&&(!ty||/javascript|module/.test(ty)))extra.push(jsStrings(c));
   });
   doc.querySelectorAll("script,style,noscript,template,svg,canvas,iframe").forEach(e=>e.remove());
   const t=(doc.title||(doc.querySelector("h1")||{}).textContent||"").trim();
-  const x=(extra.join(" ")+" "+(doc.body?doc.body.textContent:"")).replace(/\s+/g," ").trim().slice(0,MAX_TEXT);
+  const bt=(doc.body?doc.body.textContent:"").replace(/\s+/g," ");
+  let m,c=0;
+  RL_TEXT.lastIndex=0;while((m=RL_TEXT.exec(bt))&&c++<15)people.push(m[1]);
+  RB_TEXT.lastIndex=0;c=0;while((m=RB_TEXT.exec(bt))&&c++<10)people.push(m[1]);
+  const cl=(arr,max)=>[...new Set(arr.map(x=>String(x).replace(/\s+/g," ").replace(/^[\s,:;–—-]+|[\s,:;–—-]+$/g,"")).filter(x=>x.length>=2&&x.length<=max))];
+  const a=cl(people,160).slice(0,40).join(" · "),k=cl(keys,60).slice(0,30).join("|");
+  const x=(extra.join(" ")+" "+a+" "+k.replace(/\|/g," ")+" "+bt).replace(/\s+/g," ").trim().slice(0,MAX_TEXT);
   const links=[];doc.querySelectorAll("a[href]").forEach(a=>{try{links.push(new URL(a.getAttribute("href"),u).href.split("#")[0])}catch{}});
-  return{t:t.slice(0,160),x,l:[...new Set(links)].slice(0,300)};
+  return{t:t.slice(0,160),x,l:[...new Set(links)].slice(0,300),a,k};
 }
 async function fetchPage(u){
   const own=isOwn(u);
@@ -1295,7 +1358,7 @@ async function fetchPage(u){
     try{g=await get(furl)}catch(e){if(!CONFIG.PROXY||own)throw e;g=await get(CONFIG.PROXY+encodeURIComponent(u));prox=true}
     const html=/html/i.test(g.ct)||/\.html?$/i.test(new URL(u).pathname)||/^\s*<(!doctype|html)/i.test(g.raw);
     const base=prox?u:(g.url||u),pg=parsePage(g.raw,base,own,html);
-    return{u,t:pg.t,x:pg.x,l:furl===u?pg.l:[],ts:Date.now()};
+    return{u,t:pg.t,x:pg.x,l:furl===u?pg.l:[],a:pg.a,k:pg.k,ts:Date.now()};
   }catch{return{u,f:1,ts:Date.now()}}
 }
 async function pool(items,n,fn){let i=0;await Promise.all(Array.from({length:n},async()=>{while(i<items.length){const it=items[i++];try{await fn(it)}catch{}}}))}
@@ -1327,11 +1390,12 @@ async function syncRepo(tree){
       const raw=await r.text(),p=f.p;
       if(html){
         const u=siteUrlFor(p),pg=parsePage(raw,/index\.html?$/i.test(p)?u+"/":u,true,true);
-        C.cache[key]={u,t:pg.t,x:pg.x,l:pg.l,sha:f.sha,ts:Date.now()};
+        C.cache[key]={u,t:pg.t,x:pg.x,l:pg.l,a:pg.a,k:pg.k,sha:f.sha,ts:Date.now()};
       }else{
-        let x=raw.replace(/^\uFEFF/,"").replace(/\r/g,"");
+        let x=raw.replace(/^\uFEFF/,"").replace(/\r/g,""),jm={a:"",k:""};
+        if(/\.json$/i.test(p))jm=jsonMeta(x);
         if(/\.js$/i.test(p))x=jsStrings(x);else if(/\.json$/i.test(p))x=jsonStrings(x);else if(/\.xml$/i.test(p))x=x.replace(/<[^>]*>/g," ").replace(/\s+/g," ");
-        C.cache[key]={rp:1,p,x:x.slice(0,2e6),sha:f.sha,ts:Date.now()};
+        C.cache[key]={rp:1,p,x:x.slice(0,2e6),a:jm.a,k:jm.k,sha:f.sha,ts:Date.now()};
       }
     }catch{}
     C.done++;if(C.done%10===0){SX.ver++;statusUpdate()}
@@ -1506,6 +1570,12 @@ function hideSearchView(){$("#searchview").classList.remove("show")}
 function closeResults(){
   if(SX.pushed&&history.length>1){SX.pushed=false;history.back()}else location.hash="#home";
 }
+function labelsOf(d){
+  const s=[],seen=new Set();
+  [d.lab,...(d.pk?d.pk.split("|"):[])].forEach(x=>{x=(x||"").trim();const n=nrm(x);if(x&&x.length<=60&&!seen.has(n)){seen.add(n);s.push(x)}});
+  return s.slice(0,8);
+}
+function peopleOf(d){return[d.pp,d.pa].filter(Boolean).join(" · ").slice(0,220)}
 function renderSearchView(){
   const v=$("#searchview"),top=v.scrollTop,q=SX.q,{res,toks}=search(q);
   const grp={};res.forEach(r=>{grp[r.d.grp]=(grp[r.d.grp]||0)+1});
@@ -1518,7 +1588,9 @@ function renderSearchView(){
       const sn=snippets(d,toks),ex=isExt(d.url);
       return`<a class="rcard" href="${esc(fragUrl(d,toks))}" data-int="${ex?0:1}" data-h="${esc(d.url)}">
         <div class="rmeta"><span class="dom">${esc(d.kind)}</span><span class="rurl" dir="ltr">${esc(shortUrl(d.url))}</span></div>
+        ${labelsOf(d).length?`<div class="rtags">${labelsOf(d).map(x=>`<span class="rtag" data-q="${esc(x)}" title="Search this label">${markHtml(x,toks)}</span>`).join("")}</div>`:""}
         <h3 dir="auto">${markHtml(d.title||d.url,toks)}</h3>
+        ${peopleOf(d)?`<div class="rppl" dir="auto">${markHtml(peopleOf(d),toks)}</div>`:""}
         ${sn.length?`<p dir="auto">${sn.join("<br>")}</p>`:""}
         <span class="go">${ex?"Read →":"Go to section →"}</span></a>`;
     }).join("")+(list.length>shown.length?`<div class="smorewrap"><button type="button" class="btn ghost" id="smore">Show more (${list.length-shown.length})</button></div>`:"");
@@ -1535,6 +1607,7 @@ function renderSearchView(){
 }
 $("#searchwrap").addEventListener("click",e=>{
   if(e.target.closest("#sBack"))return closeResults();
+  const tg=e.target.closest(".rtag");if(tg){e.preventDefault();runSearch(tg.dataset.q);return}
   const ch=e.target.closest(".chip");if(ch){SX.filter=ch.dataset.g;SX.limit=30;renderSearchView();return}
   if(e.target.closest("#smore")){SX.limit+=30;renderSearchView();return}
   const sc=e.target.closest(".schip");if(sc)return runSearch(sc.dataset.q);
