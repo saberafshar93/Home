@@ -39,7 +39,12 @@ nav li:hover .drop,nav li.open .drop{opacity:1;visibility:visible;transform:none
 .drop a{display:block;padding:10px 14px;border-radius:10px;font-size:13.5px;color:var(--mute);transition:.2s}
 .drop a:hover{background:linear-gradient(90deg,rgba(77,240,200,.15),transparent);color:#fff;padding-left:20px}
 #burger{display:none;background:none;border:1px solid var(--line);color:#fff;font-size:22px;border-radius:8px;padding:2px 10px;cursor:pointer;order:0}
-nav li>a.plain::after{content:none}
+nav li>a.plain::after,nav li>a.home::after{content:none}
+nav li>a.home{display:flex;align-items:center;padding:0 14px;height:70px}
+nav li>a.home svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:.25s}
+nav li>a.home:hover{color:var(--a)}
+nav li>a.home:hover svg{transform:translateY(-2px);filter:drop-shadow(0 0 8px rgba(77,240,200,.7))}
+@media(max-width:1020px){nav li>a.home{height:auto;padding:14px}}
 
 /* ---------- LAYOUT ---------- */
 section{padding:70px 8vw 40px;position:relative}
@@ -55,29 +60,31 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 .empty{color:var(--mute);padding:20px;border:1px dashed var(--line);border-radius:16px}
 
 /* ---------- BLOG BANNER (static curtain) ---------- */
-#top{min-height:340px;padding:150px 8vw 70px;text-align:center;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,rgba(123,108,255,.14),rgba(5,8,22,0) 85%);border-bottom:1px solid var(--line)}
-#top::after{content:"";position:absolute;left:8vw;right:8vw;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--a),var(--b),var(--c),transparent)}
-.crumbs{position:relative;z-index:2;font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:18px}
-.crumbs a{transition:.2s}.crumbs a:hover{color:var(--a)}
-.crumbs b{color:var(--a);font-weight:600}.crumbs em{font-style:normal;margin:0 10px;opacity:.5}
-#top h1{position:relative;z-index:2;font-size:clamp(64px,13vw,170px);line-height:1;font-weight:900;letter-spacing:.06em;text-transform:uppercase;
+#top{min-height:0;padding:88px 8vw 26px;text-align:center;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 0%,rgba(123,108,255,.22),rgba(5,8,22,0) 70%),linear-gradient(180deg,rgba(77,240,200,.05),rgba(5,8,22,0))}
+#top::after{content:"";position:absolute;left:8vw;right:8vw;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--a),var(--b),var(--c),transparent);background-size:200% 100%;animation:sweep 6s linear infinite}
+@keyframes sweep{to{background-position:200% 0}}
+.crumbs{position:relative;z-index:2;display:inline-flex;align-items:center;gap:2px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:6px;
+  padding:5px 16px;border-radius:30px;background:rgba(255,255,255,.04);border:1px solid var(--line);backdrop-filter:blur(8px)}
+.crumbs a{transition:.2s;display:inline-flex;align-items:center;gap:6px}.crumbs a:hover{color:var(--a)}
+.crumbs a svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.crumbs b{color:var(--a);font-weight:700}.crumbs em{font-style:normal;margin:0 8px;opacity:.45}
+#top h1{position:relative;z-index:2;font-size:clamp(46px,7.5vw,92px);line-height:1.05;font-weight:900;letter-spacing:.14em;text-transform:uppercase;padding-left:.14em;
   background:linear-gradient(90deg,var(--a),var(--b),var(--c),var(--a));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:shine 8s linear infinite;filter:drop-shadow(0 10px 40px rgba(123,108,255,.45));transition:transform .15s;transform-style:preserve-3d}
+  animation:shine 8s linear infinite;filter:drop-shadow(0 6px 28px rgba(123,108,255,.5));transition:transform .15s;transform-style:preserve-3d}
 @keyframes shine{to{background-position:300% 0}}
-#top p{position:relative;z-index:2;max-width:620px;margin-top:18px;color:var(--mute);font-size:16px}
 .rings{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
-.ring{position:absolute;border-radius:50%;border:1px solid rgba(77,240,200,.22);animation:spin 26s linear infinite}
-.ring:nth-child(1){width:360px;height:360px}
-.ring:nth-child(2){width:560px;height:560px;border-style:dashed;border-color:rgba(123,108,255,.28);animation-duration:40s;animation-direction:reverse}
-.ring:nth-child(3){width:820px;height:820px;border-color:rgba(255,93,143,.16);animation-duration:60s}
-.ring::after{content:"";position:absolute;top:-5px;left:50%;width:10px;height:10px;border-radius:50%;background:var(--a);box-shadow:0 0 18px var(--a)}
-.ring:nth-child(2)::after{background:var(--b);box-shadow:0 0 18px var(--b)}
-.ring:nth-child(3)::after{background:var(--c);box-shadow:0 0 18px var(--c)}
+.ring{position:absolute;border-radius:50%;border:1px solid rgba(77,240,200,.24);animation:spin 22s linear infinite}
+.ring:nth-child(1){width:230px;height:230px}
+.ring:nth-child(2){width:360px;height:360px;border-style:dashed;border-color:rgba(123,108,255,.3);animation-duration:34s;animation-direction:reverse}
+.ring:nth-child(3){width:520px;height:520px;border-color:rgba(255,93,143,.18);animation-duration:50s}
+.ring::after{content:"";position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 16px var(--a)}
+.ring:nth-child(2)::after{background:var(--b);box-shadow:0 0 16px var(--b)}
+.ring:nth-child(3)::after{background:var(--c);box-shadow:0 0 16px var(--c)}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ---------- HERO SLIDER ---------- */
-#slides{padding-top:60px;padding-bottom:30px}
+#slides{padding-top:26px;padding-bottom:30px}
 .slider{position:relative;height:min(520px,70vh);min-height:430px}
 .slide{position:absolute;inset:0;display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;
   opacity:0;visibility:hidden;transform:translateX(60px);transition:opacity .9s,transform .9s,visibility .9s}
@@ -230,9 +237,8 @@ a.ci:hover .ico img{filter:none}
   <!-- STATIC BLOG BANNER -->
   <section id="top">
     <div class="rings"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
-    <div class="crumbs"><a id="crHome" href="#">Home</a><em>/</em><b>Blog</b></div>
+    <div class="crumbs"><a id="crHome" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg>Home</a><em>/</em><b>Blog</b></div>
     <h1 id="bannerT">Blog</h1>
-    <p>Stories, insights and field notes from the frontier of immunotherapy — written by researchers, for curious minds.</p>
   </section>
 
   <!-- SLIDER (Blog Management/First.txt) -->
@@ -450,25 +456,41 @@ const fmtFull=r=>(r.updated?"Updated ":"")+`${MON[r.date.getMonth()]} ${pad(r.da
    NAVIGATION (shared with the home page: Home Bar/*.txt)
    ===================================================================== */
 $("#logoTop").href=CONFIG.WEBSITE;$("#logoFoot").href=CONFIG.WEBSITE;$("#crHome").href=CONFIG.WEBSITE;
+const SITE=CONFIG.WEBSITE;
+const PAGES={"Home":SITE,"Lab":SITE+"Lab","Article":SITE+"Article","Blog":SITE+"Blog","Book":SITE+"Book","AI":SITE+"AI","Code":SITE+"Code",
+  "Experience":SITE+"Experience","Gallery":SITE+"Gallery","Fun":SITE+"Fun","Contact":"#contact"};   // Contact = this page's footer
+const pageUrl=n=>PAGES[n]||"#";
+function sameSite(u){
+  try{const a=new URL(u),n=x=>x.replace(/index\.html$/,"").replace(/\/$/,"");return a.origin===location.origin&&n(a.pathname)===n(location.pathname)}catch{return false}
+}
 const menu=$("#menu"),navData={};
-const navFallback=n=>n==="Home"?CONFIG.WEBSITE:n==="Blog"?"#top":CONFIG.WEBSITE+"#"+n.toLowerCase();
 function renderNav(){
   menu.innerHTML="";
   NAV_NAMES.forEach(name=>{
-    let lines=(navData[name]||[]).filter(l=>l[0]);
-    if(!lines.length)lines=[[name,navFallback(name)]];
     const li=document.createElement("li");
-    li.innerHTML=`<a href="${esc(lines[0][1]||"#")}">${esc(name)}</a><div class="drop">${lines.map(l=>`<a href="${esc(l[1]||"#")}">${esc(l[0])}</a>`).join("")}</div>`;
+    if(name==="Home"){                                                 // Home: house icon, no dropdown
+      li.innerHTML=`<a class="home" data-page="Home" href="${esc(pageUrl("Home"))}" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>`;
+      menu.appendChild(li);return;
+    }
+    let lines=(navData[name]||[]).filter(l=>l[0]);
+    if(!lines.length)lines=[[name,pageUrl(name)]];
+    li.innerHTML=`<a href="${esc(pageUrl(name))}" data-page="${esc(name)}">${esc(name)}</a><div class="drop">${lines.map(l=>`<a href="${esc(l[1]||"#")}">${esc(l[0])}</a>`).join("")}</div>`;
     menu.appendChild(li);
     li.querySelector("li>a").addEventListener("click",e=>{
       if(innerWidth<=1020&&!li.classList.contains("open")){e.preventDefault();document.querySelectorAll("#menu li.open").forEach(x=>x.classList.remove("open"));li.classList.add("open")}
     });
   });
-  const ct=document.createElement("li");
-  ct.innerHTML='<a class="plain" href="#contact">Contact</a>';menu.appendChild(ct);
+  const ct=document.createElement("li");                               // Contact → jumps to the footer
+  ct.innerHTML=`<a class="plain" data-page="Contact" href="${esc(pageUrl("Contact"))}">Contact</a>`;menu.appendChild(ct);
 }
 renderNav();
-menu.addEventListener("click",e=>{if(e.target.closest(".drop a")||e.target.closest(".plain"))$("#nav").classList.remove("show")});
+menu.addEventListener("click",e=>{
+  const a=e.target.closest("li>a[data-page]");
+  if(a&&!e.defaultPrevented&&!e.ctrlKey&&!e.metaKey&&a.dataset.page==="Blog"&&sameSite(a.href)){   // already on the Blog page → scroll to top
+    e.preventDefault();scrollTo({top:0,behavior:"smooth"});
+  }
+  if(e.target.closest(".drop a")||e.target.closest(".plain")||(a&&!e.defaultPrevented))$("#nav").classList.remove("show");
+});
 $("#burger").onclick=()=>$("#nav").classList.toggle("show");
 
 /* =====================================================================
@@ -757,7 +779,7 @@ async function refresh(){
   jobs.push(getLines(CONFIG.BLOG_MGMT,"Overview.txt").then(l=>{if(changed("overview",l))renderOverview(l)}));
   jobs.push(getLines(CONFIG.HOME_MGMT,"Backgrounds.txt").then(l=>{if(changed("bgs",l))renderBg(l)}));
   jobs.push(getText(CONFIG.HOME_MGMT,"Contact.txt").then(t=>{if(changed("contact",t))renderContact(t)}));
-  jobs.push(Promise.all(NAV_NAMES.map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
+  jobs.push(Promise.all(NAV_NAMES.filter(n=>n!=="Home").map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
   await Promise.all(jobs);
 }
 refresh();setInterval(refresh,CONFIG.REFRESH_MS);
@@ -846,5 +868,4 @@ if(window.THREE){
 }
 </script>
 </body>
-</html>﻿
-﻿
+</html>
