@@ -187,8 +187,34 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 .srow .sa{display:flex;align-items:center;gap:7px;margin-top:4px;font-size:12px;color:var(--a);font-variant-numeric:tabular-nums}
 .srow .sa::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--a);box-shadow:0 0 8px var(--a);flex:none}
 .srow.nol .st{color:var(--mute)}
+/* ---- refinements: wider boxes, slimmer margins, filters, author tag ---- */
+.lgrid{grid-template-columns:minmax(0,1fr) 1cm calc(16.8vw + 2cm);margin:0 -3vw}
+.btool{padding:9px 24px}
+.chips{padding:8px 24px}
+.bfoot{padding:9px 24px}
+.cgrid{padding:10px 20px;gap:18px}
+.sbox{min-height:380px}
+.sinner{position:absolute;inset:0;display:flex;flex-direction:column}
+.shd{height:30px;padding:0 16px;flex:none}
+.slist{position:static;flex:1;min-height:0}
+.sfoot{flex:none;display:flex;flex-direction:column;gap:6px;padding:8px 12px;border-top:1px solid var(--line);background:rgba(255,255,255,.03);font-size:11.5px;color:var(--mute)}
+.sfoot .row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.seg.sm button{padding:3px 10px;font-size:12px}
+.pg.sm{gap:4px}
+.pg.sm button{min-width:28px;height:28px;padding:0 7px;border-radius:9px;font-size:12px}
+.srow{padding:11px 16px}
+button.ty{border:0;cursor:pointer;position:relative;z-index:2;transition:.25s}
+button.ty:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.ty.on{outline:2px solid #fff;outline-offset:2px}
+.lc .au{display:inline-flex;align-items:baseline;gap:7px;padding:5px 13px;border-radius:30px;font-size:13.5px;font-weight:700;color:#ffc468;
+  background:rgba(255,196,104,.1);border:1px solid rgba(255,196,104,.32);text-decoration:none}
+.lc .au .al{font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute);flex:none}
+.lc .au .an{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.lc .au:hover{background:rgba(255,196,104,.2);color:#ffd48a}
+.lc .au.on{background:#ffc468;color:#241500;border-color:transparent;box-shadow:0 0 18px rgba(255,196,104,.55)}
+.lc .au.on .al{color:#6a4700}
 @media(max-width:1180px){
-  .lgrid{grid-template-columns:1fr}
+  .lgrid{grid-template-columns:1fr;margin:0}
   .lgrid .bbox,.lgrid .sbox{grid-column:1}
   .sbox{margin-top:22px;min-height:0;height:430px}
   .cgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -295,16 +321,19 @@ a.ci:hover .ico img{filter:none}
       <div class="bbox reveal" id="bbox">
         <div class="btool">
           <div class="bcount" id="bcount"></div>
-          <div class="pp">Per page <div class="seg" id="perseg"></div></div>
         </div>
         <div class="chips" id="chips"></div>
         <div class="cgrid" id="cards"><div class="empty" style="grid-column:1/-1">Loading…</div></div>
-        <div class="bfoot"><span id="brange"></span><div class="pg" id="pg"></div></div>
+        <div class="bfoot"><span id="brange"></span><div class="pp">Per page <div class="seg" id="perseg"></div></div><div class="pg" id="pg"></div></div>
       </div>
-      <aside class="sbox reveal" id="sbox">
+      <aside class="sbox reveal" id="sbox"><div class="sinner">
         <div class="shd"><span>Latest <b>titles</b></span><span id="scount"></span></div>
         <div class="slist" id="slist"></div>
-      </aside>
+        <div class="sfoot">
+          <div class="row"><span id="srange"></span><div class="pp">Show <div class="seg sm" id="sperseg"></div></div></div>
+          <div class="row" style="justify-content:center"><div class="pg sm" id="spg"></div></div>
+        </div>
+      </div></aside>
     </div>
   </section>
 
@@ -491,7 +520,7 @@ async function resolveDate(link,path){
   if(v)d=new Date(v);else{d=(await commitDate(path))||new Date();lsSet(k,d.toISOString())}
   return {date:d,t:true,updated:true,img:info.img};
 }
-const fmtFull=r=>(r.updated?"Updated ":"")+`${MON[r.date.getMonth()]} ${pad(r.date.getDate())}, ${r.date.getFullYear()}`+(r.t?` · ${pad(r.date.getHours())}:${pad(r.date.getMinutes())}`:"");
+const fmtFull=r=>`${MON[r.date.getMonth()]} ${pad(r.date.getDate())}, ${r.date.getFullYear()}`+(r.t?` · ${pad(r.date.getHours())}:${pad(r.date.getMinutes())}`:"");
 
 /* =====================================================================
    NAVIGATION (shared with the home page: Home Bar/*.txt)
@@ -541,7 +570,8 @@ $("#burger").onclick=()=>$("#nav").classList.toggle("show");
    ===================================================================== */
 const PER_OPTS=[30,60,90];
 let per=+lsGet("labPer");if(!PER_OPTS.includes(per))per=30;
-let page=1,rows=[],filt={dom:null,auth:null};
+let page=1,rows=[],filt={type:null,dom:null,auth:null};
+const SPER=[20,50,100];let sper=+lsGet("labSper");if(!SPER.includes(sper))sper=50;let spage=1;
 const dateMap={};
 let drawTimer=0;
 const isLink=u=>/^https?:\/\//i.test(u||"");
@@ -554,6 +584,7 @@ $("#perseg").addEventListener("click",e=>{
 
 function renderBox(lines){
   rows=lines.filter(l=>l.length>=3).map((l,i)=>({type:l[0]||"",dom:l[1]||"",title:l[2]||"",author:l[3]||"",link:l[4]||"",img:l[5]||"",idx:i}));
+  if(filt.type&&!rows.some(r=>r.type===filt.type))filt.type=null;
   if(filt.dom&&!rows.some(r=>r.dom===filt.dom))filt.dom=null;
   if(filt.auth&&!rows.some(r=>r.author===filt.auth))filt.auth=null;
   draw();
@@ -586,7 +617,7 @@ function sorted(){
     return b.idx-a.idx;
   });
 }
-const matches=r=>(!filt.dom||r.dom===filt.dom)&&(!filt.auth||r.author===filt.auth);
+const matches=r=>(!filt.type||r.type===filt.type)&&(!filt.dom||r.dom===filt.dom)&&(!filt.auth||r.author===filt.auth);
 const typeCls=t=>/^train/i.test(t)?"tr":/^test/i.test(t)?"te":"ot";
 function ago(d){
   const days=Math.floor((Date.now()-d.getTime())/864e5);
@@ -598,7 +629,7 @@ function dateCell(r){
   return `<div class="dt">${d?fmtFull(d):"…"}</div>`;
 }
 function draw(){
-  const list=sorted(),n=list.length,active=!!(filt.dom||filt.auth);
+  const list=sorted(),n=list.length,active=!!(filt.type||filt.dom||filt.auth);
   const pages=Math.max(1,Math.ceil(n/per));
   if(page>pages)page=pages;if(page<1)page=1;
   const from=(page-1)*per,slice=list.slice(from,from+per);
@@ -610,6 +641,7 @@ function draw(){
   const chips=$("#chips");
   chips.classList.toggle("show",active);
   chips.innerHTML=active?`<span>Highlighting:</span>`
+    +(filt.type?`<span class="chip">Type: ${esc(filt.type)}<button type="button" data-clear="type" aria-label="Remove">×</button></span>`:"")
     +(filt.dom?`<span class="chip">Domain: ${esc(filt.dom)}<button type="button" data-clear="dom" aria-label="Remove">×</button></span>`:"")
     +(filt.auth?`<span class="chip">Author: ${esc(filt.auth)}<button type="button" data-clear="auth" aria-label="Remove">×</button></span>`:"")
     +`<button class="clear" type="button" data-clear="all">Clear all</button>`:"";
@@ -617,10 +649,10 @@ function draw(){
   $("#cards").innerHTML=slice.length?slice.map(r=>{
     const im=r.img||(dateMap[r.link]&&dateMap[r.link].img)||"";
     return `<article class="lc${active&&!matches(r)?" dim":""}">
-      <div class="ctop"><button type="button" class="dchip${filt.dom===r.dom?" on":""}" data-f="dom" data-v="${esc(r.dom)}" title="Show only ${esc(r.dom)}">${esc(r.dom||"—")}</button>${r.type?`<span class="ty ${typeCls(r.type)}">${esc(r.type)}</span>`:""}</div>
+      <div class="ctop"><button type="button" class="dchip${filt.dom===r.dom?" on":""}" data-f="dom" data-v="${esc(r.dom)}" title="Show only ${esc(r.dom)}">${esc(r.dom||"—")}</button>${r.type?`<button type="button" class="ty ${typeCls(r.type)}${filt.type===r.type?" on":""}" data-f="type" data-v="${esc(r.type)}" title="Show only ${esc(r.type)}">${esc(r.type)}</button>`:""}</div>
       <div class="cimg">${imgOrArt(im,hash(r.title),400,250)}</div>
       <h3 class="ct">${esc(r.title)}</h3>
-      <button type="button" class="au${filt.auth===r.author?" on":""}" data-f="auth" data-v="${esc(r.author)}">${esc(r.author||"—")}</button>
+      <button type="button" class="au${filt.auth===r.author?" on":""}" data-f="auth" data-v="${esc(r.author)}"><span class="al">Author:</span><span class="an">${esc(r.author||"—")}</span></button>
       ${dateCell(r)}
       ${isLink(r.link)?`<a class="stretch" href="${esc(r.link)}" target="_blank" rel="noopener" aria-label="${esc(r.title)}"></a>`:""}</article>`}).join("")
     :`<div class="empty" style="grid-column:1/-1">No works yet — add lines to Box.txt.</div>`;
@@ -628,29 +660,46 @@ function draw(){
   $("#brange").textContent=n?`Showing ${from+1}–${Math.min(from+per,n)} of ${n}`:"";
   $("#pg").innerHTML=pager(page,pages);
 
-  /* side box: all titles, newest first, with "N days ago" */
-  $("#scount").textContent=n?String(n):"";
-  $("#slist").innerHTML=n?list.map(r=>{
+  drawSide(list,active);
+}
+function drawSide(list,active){
+  const n=list.length,pages=Math.max(1,Math.ceil(n/sper));
+  if(spage>pages)spage=pages;if(spage<1)spage=1;
+  const from=(spage-1)*sper,slice=list.slice(from,from+sper);
+  $("#sperseg").querySelectorAll("button").forEach(b=>b.classList.toggle("on",+b.dataset.per===sper));
+  $("#scount").textContent=n?`${n} total`:"";
+  $("#srange").textContent=n?`${from+1}–${Math.min(from+sper,n)} of ${n}`:"";
+  $("#slist").innerHTML=n?slice.map(r=>{
     const d=dateMap[r.link],cls="srow"+(active&&!matches(r)?" dim":"")+(isLink(r.link)?"":" nol");
-    const when=!isLink(r.link)?"—":d?(d.updated?"Updated · ":"")+ago(d.date):"…";
+    const when=!isLink(r.link)?"—":d?ago(d.date):"…";
     const inner=`<span class="st">${esc(r.title)}</span><span class="sa">${when}</span>`;
     return isLink(r.link)?`<a class="${cls}" href="${esc(r.link)}" target="_blank" rel="noopener">${inner}</a>`:`<div class="${cls}">${inner}</div>`;
   }).join(""):`<div class="empty" style="margin:16px">Nothing here yet.</div>`;
+  $("#spg").innerHTML=pager(spage,pages,true);
 }
-function pager(p,total){
+function pager(p,total,sm){
   if(total<=1)return "";
   const set=new Set([1,total,p-1,p,p+1]);
   const nums=[...set].filter(x=>x>=1&&x<=total).sort((a,b)=>a-b);
-  let h=`<button type="button" data-p="${p-1}"${p===1?" disabled":""}>‹ Prev</button>`,prev=0;
+  let h=`<button type="button" data-p="${p-1}"${p===1?" disabled":""}>${sm?"‹":"‹ Prev"}</button>`,prev=0;
   nums.forEach(x=>{if(prev&&x-prev>1)h+=`<i>…</i>`;h+=`<button type="button" data-p="${x}"${x===p?' class="on"':""}>${x}</button>`;prev=x});
-  return h+`<button type="button" data-p="${p+1}"${p===total?" disabled":""}>Next ›</button>`;
+  return h+`<button type="button" data-p="${p+1}"${p===total?" disabled":""}>${sm?"›":"Next ›"}</button>`;
 }
 $("#pg").addEventListener("click",e=>{
   const b=e.target.closest("[data-p]");if(!b||b.disabled)return;
   page=+b.dataset.p;draw();
   $("#bbox").scrollIntoView({behavior:"smooth",block:"start"});
 });
-/* click on a domain / author toggles the highlight; clicking the same one again restores everything */
+$("#sperseg").innerHTML=SPER.map(n=>`<button type="button" data-per="${n}">${n}</button>`).join("");
+$("#sperseg").addEventListener("click",e=>{
+  const b=e.target.closest("[data-per]");if(!b)return;
+  sper=+b.dataset.per;lsSet("labSper",sper);spage=1;draw();
+});
+$("#spg").addEventListener("click",e=>{
+  const b=e.target.closest("[data-p]");if(!b||b.disabled)return;
+  spage=+b.dataset.p;draw();$("#slist").scrollTop=0;
+});
+/* click on a domain / author / type toggles the highlight; clicking the same one again restores everything */
 $("#cards").addEventListener("click",e=>{
   const b=e.target.closest("[data-f]");if(!b)return;
   const k=b.dataset.f,v=b.dataset.v;
@@ -659,7 +708,7 @@ $("#cards").addEventListener("click",e=>{
 });
 $("#chips").addEventListener("click",e=>{
   const b=e.target.closest("[data-clear]");if(!b)return;
-  if(b.dataset.clear==="all")filt={dom:null,auth:null};else filt[b.dataset.clear]=null;
+  if(b.dataset.clear==="all")filt={type:null,dom:null,auth:null};else filt[b.dataset.clear]=null;
   draw();
 });
 
@@ -890,4 +939,4 @@ if(window.THREE){
 }
 </script>
 </body>
-</html>﻿
+</html>
