@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ImmunoAfshar | 3D Immunotherapy Hub</title>
+<title>ImmunoAfshar | Immunotherapy Hub</title>
 <style>
 :root{
   --bg:#050816; --panel:rgba(16,22,48,.62); --line:rgba(140,170,255,.18);
@@ -130,11 +130,11 @@ h2 span,.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webk
 .more{margin-top:26px}
 
 /* ---------- ALL-ITEMS VIEW ---------- */
-#allview{position:fixed;inset:0;z-index:850;background:rgba(5,8,22,.94);backdrop-filter:blur(8px);overflow-y:auto;padding:110px 8vw 80px;display:none}
-#allview.show{display:block;animation:fadeIn .4s}
+#allview,#searchview{position:fixed;inset:0;z-index:850;background:rgba(5,8,22,.94);backdrop-filter:blur(8px);overflow-y:auto;padding:110px 8vw 80px;display:none}
+#allview.show,#searchview.show{display:block;animation:fadeIn .4s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}}
-#allview .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:26px}
-#allview .back{margin:0}
+#allview .topbar,#searchview .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:26px}
+#allview .back,#searchview .back{margin:0}
 
 /* ---------- EXTRAS ---------- */
 .codewin{margin-top:26px;border-radius:18px;overflow:hidden;background:#0a0f26;border:1px solid var(--line);max-width:760px}
@@ -245,6 +245,61 @@ footer li a:hover{color:var(--a);padding-left:5px}
   .fgrid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:600px){.fgrid{grid-template-columns:1fr}}
+
+/* ---------- SEARCH ---------- */
+nav .sli{display:flex;align-items:center;margin-left:10px}
+.sbtn{position:relative;width:40px;height:40px;flex:none;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--mute);cursor:pointer;display:grid;place-items:center;transition:.3s}
+.sbtn:hover{color:#041022;background:linear-gradient(135deg,var(--a),var(--b));border-color:transparent;box-shadow:0 0 22px rgba(77,240,200,.4)}
+.sbtn.open{color:#fff;border-color:rgba(77,240,200,.6);background:rgba(77,240,200,.12);box-shadow:none}
+.sbtn svg{position:absolute;width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s,opacity .25s}
+.sbtn .i-x{opacity:0;transform:rotate(-90deg) scale(.4)}
+.sbtn.open .i-s{opacity:0;transform:rotate(90deg) scale(.4)}
+.sbtn.open .i-x{opacity:1;transform:none}
+.hbtns{display:none;align-items:center;gap:10px;order:0}
+#sbox{position:fixed;top:78px;left:12px;width:min(620px,calc(100vw - 24px));z-index:910;padding:16px;border-radius:22px;
+  background:rgba(10,14,36,.97);border:1px solid var(--line);border-top:2px solid var(--a);box-shadow:0 30px 80px rgba(0,0,0,.6);backdrop-filter:blur(16px);
+  opacity:0;visibility:hidden;transform:translateY(-14px) scaleY(.9);transform-origin:top;transition:opacity .25s,transform .3s cubic-bezier(.2,.8,.2,1),visibility .3s}
+#sbox.open{opacity:1;visibility:visible;transform:none}
+#sbox::before{content:"";position:absolute;top:-10px;left:var(--ax,40px);width:16px;height:16px;margin-left:-8px;background:rgba(10,14,36,.97);border-left:1px solid var(--line);border-top:2px solid var(--a);transform:rotate(45deg);border-radius:3px 0 0 0}
+.sform{display:flex;align-items:center;gap:10px;padding:0 14px;height:52px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);transition:.25s}
+.sform:focus-within{border-color:var(--a);box-shadow:0 0 0 4px rgba(77,240,200,.12)}
+.sform svg{width:19px;height:19px;flex:none;stroke:var(--a);fill:none;stroke-width:2;stroke-linecap:round}
+.sform input{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:600 16px "Segoe UI",system-ui,sans-serif}
+.sform input::placeholder{color:var(--mute);font-weight:400}
+.sform input::-webkit-search-cancel-button{display:none}
+kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,.06);font:11px Consolas,monospace;color:var(--mute)}
+.sstat{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--mute);margin:10px 4px 6px;min-height:18px}
+.ssug{display:grid;gap:2px;max-height:min(46vh,380px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--b) transparent}
+.sg{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:12px;cursor:pointer;color:var(--txt);font-size:14.5px}
+.sg .si{flex:none;width:22px;text-align:center;color:var(--a);font-size:16px}
+.sg .st{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sg .sk{flex:none;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute)}
+.sg.active,.sg:hover{background:linear-gradient(90deg,rgba(77,240,200,.16),rgba(123,108,255,.08))}
+.sg b{color:var(--a)}
+.sgh{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);padding:10px 12px 4px}
+.schips{display:flex;flex-wrap:wrap;gap:8px;padding:4px 4px 8px}
+.schip{padding:6px 14px;border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);font:13px "Segoe UI",sans-serif;cursor:pointer;transition:.2s}
+.schip:hover{border-color:var(--a);color:var(--a)}
+mark{background:rgba(255,213,79,.26);color:#fff;border-radius:4px;padding:0 2px;box-shadow:0 0 0 1px rgba(255,213,79,.4)}
+.rform{display:flex;gap:10px;max-width:640px;margin:0 0 20px}
+.rform input{flex:1;min-width:0;height:46px;padding:0 18px;border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff;font:600 15px "Segoe UI",sans-serif;outline:0;transition:.25s}
+.rform input:focus{border-color:var(--a);box-shadow:0 0 0 4px rgba(77,240,200,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.chip{padding:6px 14px;border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--mute);font:600 13px "Segoe UI",sans-serif;cursor:pointer;transition:.2s}
+.chip small{opacity:.7;margin-left:3px}
+.chip:hover{color:#fff;border-color:rgba(77,240,200,.5)}
+.chip.on{background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border-color:transparent}
+.rlist{display:grid;gap:16px;max-width:920px}
+.rcard{display:block;padding:22px 24px;border-radius:20px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);transition:.3s}
+.rcard:hover{transform:translateY(-4px);border-color:rgba(77,240,200,.5);box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.rmeta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.rcard .dom{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--c);background:rgba(255,93,143,.12);border:1px solid rgba(255,93,143,.3);padding:3px 11px;border-radius:30px}
+.rurl{font-size:12px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.rcard h3{font-size:20px;line-height:1.3;margin-bottom:8px}
+.rcard p{color:var(--mute);font-size:14.5px}
+.rcard .go{display:inline-block;margin-top:12px;color:var(--a);font-size:13px;font-weight:700}
+.smorewrap{text-align:center;padding:10px 0}
+@media(max-width:1020px){.hbtns{display:flex}nav .sli{display:none}#sbox{top:76px}}
 </style>
 </head>
 <body>
@@ -253,7 +308,8 @@ footer li a:hover{color:var(--a);padding-left:5px}
 <canvas id="bg"></canvas>
 
 <header>
-  <button id="burger" aria-label="Menu">☰</button>
+  <div class="hbtns"><button id="burger" aria-label="Menu">☰</button>
+    <button class="sbtn" type="button" aria-label="Search" aria-expanded="false" title="Search"><svg class="i-s" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><svg class="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <nav id="nav"><ul id="menu"></ul></nav>
   <a class="logo" href="https://saberafshar93.github.io/Home/"><i></i><span><span class="im">Immuno</span>Afshar</span></a>
 </header>
@@ -293,6 +349,16 @@ footer li a:hover{color:var(--a);padding-left:5px}
 </main>
 
 <div id="allview"><div id="allwrap"></div></div>
+<div id="searchview"><div id="searchwrap"></div></div>
+<div id="sbox" role="dialog" aria-label="Site search">
+  <form class="sform" id="sform" autocomplete="off">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+    <input id="sinput" type="search" dir="auto" placeholder="Search the whole site…" spellcheck="false" autocomplete="off" aria-label="Search">
+    <kbd>/</kbd>
+  </form>
+  <div class="sstat"><span id="scount"></span><span id="sidx"></span></div>
+  <div class="ssug" id="ssug"></div>
+</div>
 
 <footer id="contact">
   <div class="fgrid">
@@ -508,6 +574,7 @@ const fmtDM=r=>`${pad(r.date.getDate())} ${MON[r.date.getMonth()]}`;
    NAVIGATION (dropdowns from Home Bar/*.txt)
    ===================================================================== */
 const menu=$("#menu"),navData={};
+const SBTN_HTML='<button class="sbtn" type="button" aria-label="Search" aria-expanded="false" title="Search ( / )"><svg class="i-s" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><svg class="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>';
 function renderNav(){
   menu.innerHTML="";
   NAV_NAMES.forEach(name=>{
@@ -526,6 +593,8 @@ function renderNav(){
   });
   const ct=document.createElement("li");                               // Contact → jumps to the footer
   ct.innerHTML=`<a class="plain" data-page="Contact" href="${esc(pageUrl("Contact"))}">Contact</a>`;menu.appendChild(ct);
+  const sl=document.createElement("li");sl.className="sli";sl.innerHTML=SBTN_HTML;menu.appendChild(sl);   // magnifier at the end of the bar
+  const sb=$("#sbox");if(sb&&sb.classList.contains("open"))sl.firstChild.classList.add("open");
 }
 renderNav();
 menu.addEventListener("click",e=>{
@@ -689,8 +758,10 @@ function showAll(key){
   $("#allview").classList.add("show");$("#allview").scrollTop=0;document.body.classList.add("lock");
 }
 function route(){
-  const m=location.hash.match(/^#\/all\/(\w+)/);
-  if(m)showAll(m[1]);else{$("#allview").classList.remove("show");document.body.classList.remove("lock")}
+  const m=location.hash.match(/^#\/all\/(\w+)/),sm=location.hash.match(/^#\/search\/(.*)$/);
+  if(m){hideSearchView();showAll(m[1])}
+  else if(sm){$("#allview").classList.remove("show");let q=sm[1];try{q=decodeURIComponent(q)}catch{}showSearchView(q)}
+  else{$("#allview").classList.remove("show");hideSearchView();document.body.classList.remove("lock")}
 }
 addEventListener("hashchange",route);
 addEventListener("keydown",e=>{if(e.key==="Escape"&&location.hash.startsWith("#/all/"))location.hash="#home"});
@@ -706,7 +777,7 @@ async function refresh(){
   jobs.push(getLines(CONFIG.MGMT,"Blog.txt").then(l=>{if(changed("blog",l))renderBlog(l)}));
   jobs.push(getLines(CONFIG.MGMT,"Overview.txt").then(l=>{if(changed("overview",l))renderOverview(l)}));
   jobs.push(getLines(CONFIG.MGMT,"Backgrounds.txt").then(l=>{if(changed("bgs",l))renderBg(l)}));
-  jobs.push(getText(CONFIG.MGMT,"Code.txt").then(t=>{if(changed("code",t))renderCodeFile(t)}));
+  jobs.push(getText(CONFIG.MGMT,"Code.txt").then(t=>{if(changed("codefile",t))renderCodeFile(t)}));
   jobs.push(getText(CONFIG.MGMT,"Contact.txt").then(t=>{if(changed("contact",t))renderContact(t)}));
   HIGHLIGHTS.forEach(([key,title,file])=>jobs.push(getLines(CONFIG.MGMT,file).then(l=>{store[key]=l;if(changed(key,l))renderHighlights(key,title,file,l)})));
   jobs.push(Promise.all(NAV_NAMES.filter(n=>n!=="Home").map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
@@ -912,6 +983,406 @@ let bgTick=false;
 addEventListener("scroll",()=>{if(!bgTick){bgTick=true;requestAnimationFrame(()=>{parallaxBg();bgTick=false})}},{passive:true});
 addEventListener("resize",layoutBg);
 new ResizeObserver(layoutBg).observe(document.body);
+
+/* =====================================================================
+   SITE SEARCH ENGINE
+   - indexes everything on this page (slides, blog, highlights, overview, code, contact, menu items)
+   - reads the linked pages / articles (and the sub-pages of this site) and indexes their full text
+   - word prediction, "did you mean", highlighted results, text-fragment highlight on the target page
+   ===================================================================== */
+const SX={open:false,docs:[],voc:[],sig:"",ver:0,sel:-1,sugs:[],q:"",filter:"All",limit:30,pushed:false,
+  crawl:{cache:{},running:false,done:0,total:0,last:0}};
+const SITE_URL=new URL(SITE),PAGE_CACHE_KEY="sx:pages:v1",PAGE_TTL=6*36e5,FAIL_TTL=30*6e4,MAX_PAGES=150,CONC=5;
+const SKIP_EXT=/\.(pdf|png|jpe?g|gif|webp|svg|ico|zip|rar|7z|mp4|mp3|webm|mov|docx?|xlsx?|pptx?|css|js|json|xml)$/i;
+const STOP=new Set("the and for with that this from are was were has have had but not you your our can will all any its into than then them they their there here what when which who how why about also more most such only over just very been being per via etc".split(" "));
+const WRX=/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu;
+const FAMAP={"ي":"ی","ك":"ک","ۀ":"ه","ة":"ه","ى":"ی","أ":"ا","إ":"ا","ؤ":"و","ئ":"ی","ـ":" "};
+
+/* length-preserving normalisation (case, Persian/Arabic letter variants, digits, accents) so match positions map back onto the original text */
+function nrm(s){
+  let o="";
+  for(const ch of String(s)){
+    if(ch.length>1){o+=ch;continue}
+    const c=ch.charCodeAt(0);
+    if(c<128){o+=ch.toLowerCase();continue}
+    if(FAMAP[ch]){o+=FAMAP[ch];continue}
+    if(c>=0x660&&c<=0x669){o+=String.fromCharCode(48+c-0x660);continue}
+    if(c>=0x6f0&&c<=0x6f9){o+=String.fromCharCode(48+c-0x6f0);continue}
+    if(c===0x200c||c===0x200d){o+=" ";continue}
+    let l=ch.toLowerCase();if(l.length!==1)l=ch;
+    const d=l.normalize("NFD");
+    o+=(d.length>1&&/[̀-ͯ]/.test(d[1])&&d[0].length===1)?d[0]:l;
+  }
+  return o;
+}
+function normUrl(u){try{const x=new URL(u);x.hash="";return x.href.replace(/\/$/,"")}catch{return String(u||"")}}
+const J=k=>{try{return JSON.parse(last[k]||"null")}catch{return null}};
+const isExt=u=>/^https?:/i.test(u||"");
+
+/* ---------- 1. documents ---------- */
+function localDocs(){
+  const L=[],add=d=>{d.text=(d.text||"").replace(/\s+/g," ").trim();d.title=(d.title||"").replace(/\s+/g," ").trim();if(d.title||d.text)L.push(d)};
+  (J("first")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1],text:`${l[0]} ${l[2]||""}`,url:l[3]||"#home",kind:"Slide",grp:"Home"}));
+  const ov=(J("overview")||[]).filter(l=>l[0]);
+  if(ov.length)add({title:ov[0][0],text:[ov[1]&&ov[1][0],...ov.slice(2).map(l=>l.join(" "))].join(" "),url:"#overview",kind:"Overview",grp:"Overview"});
+  (J("blog")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[0],text:"",url:l[1],kind:"Blog",grp:"Blog"}));
+  HIGHLIGHTS.forEach(([key,title,file,lead])=>{
+    add({title:`${title} highlights`,text:lead,url:"#"+key,kind:"Section",grp:title});
+    (J(key)||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1]||"",text:`${l[0]||""} ${l[2]||""}`,url:l[3]||"#"+key,kind:title,grp:title}));
+  });
+  const code=J("codefile");
+  if(typeof code==="string"&&code.trim()){const ls=code.replace(/^﻿/,"").split(/\r?\n/);add({title:"Code — "+(ls[0]||"").trim(),text:ls.slice(1).join(" "),url:"#code",kind:"Code",grp:"Code"})}
+  const ct=J("contact");
+  if(typeof ct==="string"){const rows=ct.replace(/^﻿/,"").split(/\r?\n/);CONTACTS.forEach(([name],i)=>add({title:name,text:(rows[i]||"").trim(),url:contactHref(rows[i])||"#contact",kind:"Contact",grp:"Contact"}))}
+  Object.entries(J("nav")||{}).forEach(([n,ls])=>(ls||[]).filter(l=>l[0]&&l[1]&&l[1]!=="#").forEach(l=>add({title:l[0],text:n,url:l[1],kind:"Menu · "+n,grp:"Menu"})));
+  return L;
+}
+function buildIndex(){
+  const sig=Object.values(last).join("¦")+"|"+SX.ver;
+  if(sig===SX.sig&&SX.docs.length)return;
+  SX.sig=sig;
+  const L=localDocs(),pages=SX.crawl.cache,used=new Set();
+  const landing=new Set(Object.entries(PAGES).filter(([n])=>n!=="Home"&&n!=="Contact").map(([,u])=>normUrl(u)));   // Lab, Article… pages are listed as pages of their own
+  L.forEach(d=>{                                  // attach the full text of a linked page to the item that links to it
+    if(!isExt(d.url)||/^Menu/.test(d.kind))return;
+    const k=normUrl(d.url),p=pages[k];
+    if(p&&!p.f&&!used.has(k)&&!landing.has(k)){used.add(k);d.text=(d.text+" "+(p.x||"")).trim();d.body=true}
+  });
+  Object.entries(pages).forEach(([k,p])=>{        // pages nobody links to directly (sub-pages of the site, articles…) become their own entries
+    if(p.f||used.has(k)||!(p.x||p.t))return;
+    L.push({title:p.t||k,text:p.x||"",url:p.u||k,kind:"Page",grp:"Pages",body:true});
+  });
+  const voc=new Map(),addW=(s,w)=>{for(const m of s.matchAll(WRX)){const t=m[0];if(t.length<2)continue;const e=voc.get(t)||{n:0,t:0};e.n++;e.t+=w;voc.set(t,e)}};
+  L.forEach(d=>{d.nt=nrm(d.title);d.nx=nrm(d.text);addW(d.nt,1);addW(d.nx.slice(0,25000),0)});
+  SX.docs=L;SX.voc=[...voc].map(([w,e])=>[w,e.n+e.t*5,e.t]);
+}
+
+/* ---------- 2. searching ---------- */
+const tokensOf=q=>nrm(q).split(/\s+/).filter(Boolean).slice(0,6);
+function search(q){
+  buildIndex();
+  const toks=tokensOf(q);if(!toks.length)return{res:[],toks};
+  const full=toks.join(" "),res=[];
+  for(const d of SX.docs){
+    let sc=0,ok=true;
+    for(const t of toks){
+      const ti=d.nt.indexOf(t),bi=d.nx.indexOf(t);
+      if(ti<0&&bi<0){ok=false;break}
+      if(ti>=0)sc+=12+((ti===0||d.nt[ti-1]===" ")?8:0);
+      if(bi>=0){let c=0,p=bi;while(p>=0&&c<30){c++;p=d.nx.indexOf(t,p+t.length)}sc+=Math.min(c,20)+((bi===0||d.nx[bi-1]===" ")?2:0)}
+    }
+    if(!ok)continue;
+    if(toks.length>1){if(d.nt.includes(full))sc+=20;if(d.nx.includes(full))sc+=8}
+    if(d.nt.startsWith(full))sc+=10;
+    if(d.nt===full)sc+=15;
+    if(d.kind!=="Page"&&!/^Menu/.test(d.kind))sc+=1.5;
+    res.push({d,sc});
+  }
+  res.sort((a,b)=>b.sc-a.sc);
+  const seen=new Set(),out=[];
+  for(const r of res){const k=normUrl(r.d.url)+"|"+r.d.nt;if(seen.has(k))continue;seen.add(k);out.push(r)}
+  return{res:out,toks};
+}
+function markHtml(str,toks){
+  const ns=nrm(str),rg=[];
+  for(const t of toks){let p=ns.indexOf(t);while(p>=0){rg.push([p,p+t.length]);p=ns.indexOf(t,p+t.length)}}
+  if(!rg.length)return esc(str);
+  rg.sort((a,b)=>a[0]-b[0]||b[1]-a[1]);
+  const m=[];for(const r of rg){const l=m[m.length-1];if(l&&r[0]<=l[1])l[1]=Math.max(l[1],r[1]);else m.push([r[0],r[1]])}
+  let o="",i=0;for(const[a,b]of m){o+=esc(str.slice(i,a))+"<mark>"+esc(str.slice(a,b))+"</mark>";i=b}
+  return o+esc(str.slice(i));
+}
+function snippets(d,toks,n=2){
+  const out=[],W=80;let from=0;
+  for(let k=0;k<n;k++){
+    let best=-1;
+    for(const t of toks){const p=d.nx.indexOf(t,from);if(p>=0&&(best<0||p<best))best=p}
+    if(best<0)break;
+    let a=Math.max(0,best-W),b=Math.min(d.text.length,best+W+toks[0].length);
+    if(a>0){const s=d.text.indexOf(" ",a);if(s>=0&&s<best)a=s+1}
+    if(b<d.text.length){const s=d.text.lastIndexOf(" ",b);if(s>best)b=s}
+    out.push((a>0?"… ":"")+markHtml(d.text.slice(a,b),toks)+(b<d.text.length?" …":""));
+    from=b+40;
+  }
+  if(!out.length&&d.text)out.push(esc(d.text.slice(0,170))+(d.text.length>170?" …":""));
+  return out;
+}
+/* open the target page and let the browser highlight the word there (text fragment) */
+function fragUrl(d,toks){
+  if(!d.body||!isExt(d.url))return d.url;
+  const t=toks.find(t=>d.nx.includes(t));if(!t)return d.url;
+  const p=d.nx.indexOf(t),w=d.text.slice(p,p+t.length).trim();if(!w)return d.url;
+  return d.url+(d.url.includes("#")?"":"#")+":~:text="+encodeURIComponent(w);
+}
+function shortUrl(u){
+  if(!isExt(u))return "On this page · "+u;
+  try{const x=new URL(u);return(x.host+x.pathname).replace(/\/$/,"").slice(0,80)}catch{return u}
+}
+
+/* ---------- 3. word prediction ---------- */
+function lev(a,b,max){
+  if(Math.abs(a.length-b.length)>max)return max+1;
+  let prev=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    const cur=[i];let mn=i;
+    for(let j=1;j<=b.length;j++){const v=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));cur[j]=v;if(v<mn)mn=v}
+    if(mn>max)return max+1;prev=cur;
+  }
+  return prev[b.length];
+}
+function suggest(q){
+  buildIndex();
+  const parts=q.replace(/^\s+/,"").split(/\s+/),endsSpace=/\s$/.test(q);
+  const tail=endsSpace?"":nrm(parts[parts.length-1]||""),head=(endsSpace?parts.join(" "):parts.slice(0,-1).join(" ")).trim();
+  const out=[],mk=(w,extra)=>({type:"word",label:w,q:(head?head+" ":"")+w,...extra});
+  if(tail){
+    const cand=SX.voc.filter(v=>!STOP.has(v[0]));
+    const pre=cand.filter(v=>v[0].startsWith(tail)&&v[0]!==tail).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    pre.forEach(v=>out.push(mk(v[0],{pre:tail})));
+    if(out.length<3&&tail.length>=3){
+      cand.filter(v=>!v[0].startsWith(tail)&&v[0].includes(tail)).sort((a,b)=>b[1]-a[1]).slice(0,3).forEach(v=>out.push(mk(v[0],{})));
+    }
+    if(!out.length&&tail.length>=3){
+      const mx=tail.length<=5?1:2;
+      cand.map(v=>[v,lev(tail,v[0],mx)]).filter(x=>x[1]>0&&x[1]<=mx).sort((a,b)=>a[1]-b[1]||b[0][1]-a[0][1]).slice(0,4).forEach(x=>out.push(mk(x[0][0],{dym:true})));
+    }
+  }
+  const nq=nrm(q.trim());
+  if(nq.length>=2){
+    const seen=new Set();
+    SX.docs.filter(d=>d.nt.includes(nq)).sort((a,b)=>(b.nt.startsWith(nq)?1:0)-(a.nt.startsWith(nq)?1:0)).forEach(d=>{
+      if(seen.has(d.nt)||seen.size>=3)return;seen.add(d.nt);out.push({type:"doc",doc:d,label:d.title});
+    });
+  }
+  return out;
+}
+
+/* ---------- 4. crawler: reads linked pages, articles and the sub-pages of this site ---------- */
+function loadPageCache(){try{SX.crawl.cache=JSON.parse(lsGet(PAGE_CACHE_KEY)||"{}")||{}}catch{SX.crawl.cache={}}}
+function savePageCache(){
+  try{
+    let s=JSON.stringify(SX.crawl.cache);
+    if(s.length>4e6){const t={};Object.entries(SX.crawl.cache).forEach(([k,v])=>t[k]={...v,x:(v.x||"").slice(0,8000),l:[]});s=JSON.stringify(t)}
+    lsSet(PAGE_CACHE_KEY,s);
+  }catch{}
+}
+function okUrl(u){
+  try{
+    const x=new URL(u);
+    if(!/^https?:$/.test(x.protocol)||SKIP_EXT.test(x.pathname))return false;
+    if(x.host==="github.com"&&!/\/blob\//.test(x.pathname))return false;      // github.com pages cannot be read from a browser
+    return true;
+  }catch{return false}
+}
+const isOwn=u=>{try{const x=new URL(u);return x.host===SITE_URL.host&&x.pathname.startsWith(SITE_URL.pathname.replace(/\/$/,""))}catch{return false}};
+function fetchUrlFor(u){const m=u.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/([^?#]+)/i);return m?`https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}/${m[4]}`:u}
+function seedLinks(){
+  const s=new Set(),add=u=>{if(isExt(u))s.add(u.trim())};
+  (J("first")||[]).forEach(l=>add(l[3]));
+  (J("blog")||[]).forEach(l=>add(l[1]));
+  HIGHLIGHTS.forEach(h=>(J(h[0])||[]).forEach(l=>add(l[3])));
+  Object.values(J("nav")||{}).forEach(ls=>(ls||[]).forEach(l=>add(l[1])));
+  Object.entries(PAGES).forEach(([n,u])=>{if(n!=="Home"&&n!=="Contact")add(u)});
+  return[...s];
+}
+async function fetchPage(u){
+  const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),9000);
+  try{
+    const furl=fetchUrlFor(u),r=await fetch(furl,{signal:ac.signal});
+    if(!r.ok)throw 0;
+    const raw=await r.text(),ct=r.headers.get("content-type")||"";
+    let t="",x="",links=[];
+    if(/html/i.test(ct)||/\.html?$/i.test(new URL(u).pathname)||/^\s*<(!doctype|html)/i.test(raw)){
+      const doc=new DOMParser().parseFromString(raw,"text/html");
+      doc.querySelectorAll("script,style,noscript,template,svg,canvas,iframe").forEach(e=>e.remove());
+      t=(doc.title||(doc.querySelector("h1")||{}).textContent||"").trim();
+      const md=(doc.querySelector('meta[name="description"]')||{}).content||"";
+      x=(md+" "+(doc.body?doc.body.textContent:"")).replace(/\s+/g," ").trim();
+      if(furl===u)doc.querySelectorAll("a[href]").forEach(a=>{try{links.push(new URL(a.getAttribute("href"),r.url||u).href.split("#")[0])}catch{}});
+    }else{x=raw.replace(/\s+/g," ").trim();t=(raw.split(/\r?\n/).find(l=>l.trim())||"").trim()}
+    return{u,t:t.slice(0,160),x:x.slice(0,40000),l:[...new Set(links)].slice(0,200),ts:Date.now()};
+  }catch{return{u,f:1,ts:Date.now()}}
+  finally{clearTimeout(tm)}
+}
+async function startCrawl(force){
+  const C=SX.crawl;
+  if(C.running||(!force&&C.last&&Date.now()-C.last<10*6e4))return;
+  C.running=true;C.done=0;
+  const queue=[],seen=new Set();
+  const push=(u,dep)=>{const k=normUrl(u);if(seen.has(k)||seen.size>=MAX_PAGES||!okUrl(u))return false;seen.add(k);queue.push({u,k,dep});return true};
+  seedLinks().forEach(u=>push(u,0));
+  C.total=queue.length;statusUpdate();
+  let step=0;
+  const worker=async()=>{
+    while(queue.length){
+      const it=queue.shift();let e=C.cache[it.k];
+      if(!(e&&Date.now()-e.ts<(e.f?FAIL_TTL:PAGE_TTL))){e=await fetchPage(it.u);C.cache[it.k]=e}
+      C.done++;
+      if(e&&!e.f&&it.dep<2&&isOwn(it.u))(e.l||[]).forEach(l=>{if(isOwn(l)&&push(l,it.dep+1))C.total++});
+      if(++step%6===0){SX.ver++;statusUpdate()}
+    }
+  };
+  await Promise.all(Array.from({length:CONC},worker));
+  Object.keys(C.cache).forEach(k=>{if(Date.now()-C.cache[k].ts>7*864e5)delete C.cache[k]});
+  C.running=false;C.last=Date.now();SX.ver++;savePageCache();statusUpdate();
+  if(SX.open)onInput();
+  if($("#searchview").classList.contains("show"))renderSearchView();
+}
+function statusUpdate(){
+  const el=$("#sidx");if(!el)return;
+  const C=SX.crawl,ok=Object.values(C.cache).filter(v=>!v.f).length;
+  if(C.running){el.textContent=`Indexing pages… ${C.done}/${C.total}`;return}
+  buildIndex();
+  el.textContent=`${SX.docs.length} items · ${ok} pages read`;
+}
+
+/* ---------- 5. search box (drops down from the magnifier) ---------- */
+function syncBtns(){document.querySelectorAll(".sbtn").forEach(b=>{b.classList.toggle("open",SX.open);b.setAttribute("aria-expanded",SX.open?"true":"false")})}
+function placePanel(){
+  const b=[...document.querySelectorAll(".sbtn")].find(x=>x.offsetParent!==null);if(!b)return;
+  const r=b.getBoundingClientRect(),box=$("#sbox"),w=Math.min(620,innerWidth-24);
+  const left=Math.min(Math.max(12,r.left+r.width/2-60),innerWidth-w-12);
+  box.style.left=left+"px";box.style.setProperty("--ax",(r.left+r.width/2-left)+"px");
+}
+function openPanel(){
+  SX.open=true;placePanel();$("#sbox").classList.add("open");syncBtns();
+  setTimeout(()=>$("#sinput").focus(),80);onInput();startCrawl();
+}
+function closePanel(){SX.open=false;$("#sbox").classList.remove("open");syncBtns();$("#sinput").blur()}
+const recents=()=>{try{return JSON.parse(lsGet("sx:recent")||"[]")}catch{return[]}};
+function renderIdle(){
+  buildIndex();
+  const rec=recents(),pop=SX.voc.filter(v=>v[2]>0&&v[0].length>=3&&!STOP.has(v[0])).sort((a,b)=>b[2]-a[2]||b[1]-a[1]).slice(0,10).map(v=>v[0]);
+  const chips=a=>`<div class="schips">${a.map(w=>`<button type="button" class="schip" data-q="${esc(w)}">${esc(w)}</button>`).join("")}</div>`;
+  $("#ssug").innerHTML=(rec.length?`<div class="sgh">Recent</div>${chips(rec)}`:"")+(pop.length?`<div class="sgh">Popular topics</div>${chips(pop)}`:"");
+  SX.sugs=[];SX.sel=-1;
+  $("#scount").innerHTML=SX.docs.length?`Search ${SX.docs.length} items across the whole site`:"Type to search the whole site";
+  statusUpdate();
+}
+function onInput(){
+  const q=$("#sinput").value;
+  if(!q.trim()){renderIdle();return}
+  const{res}=search(q),sug=suggest(q);
+  SX.sugs=sug;SX.sel=-1;
+  const toks=tokensOf(q);
+  $("#ssug").innerHTML=sug.map((s,i)=>{
+    if(s.type==="word"){
+      const w=s.label,txt=s.pre&&w.startsWith(s.pre)?`<b>${esc(w.slice(0,s.pre.length))}</b>${esc(w.slice(s.pre.length))}`:esc(w);
+      return`<div class="sg" data-i="${i}"><span class="si">⌕</span><span class="st">${s.dym?"Did you mean ":""}${txt}</span><span class="sk">${s.dym?"suggestion":"word"}</span></div>`;
+    }
+    return`<div class="sg" data-i="${i}"><span class="si">↗</span><span class="st" dir="auto">${markHtml(s.label,toks)}</span><span class="sk">${esc(s.doc.kind)}</span></div>`;
+  }).join("");
+  $("#scount").innerHTML=res.length?`${res.length} result${res.length>1?"s":""} · press <kbd>Enter</kbd>`:"No results yet";
+  statusUpdate();
+}
+function moveSel(d){
+  if(!SX.sugs.length)return;
+  SX.sel=(SX.sel+d+SX.sugs.length+1)%(SX.sugs.length+1);if(SX.sel===SX.sugs.length)SX.sel=-1;
+  document.querySelectorAll("#ssug .sg").forEach((e,i)=>e.classList.toggle("active",i===SX.sel));
+  const a=document.querySelector("#ssug .sg.active");if(a)a.scrollIntoView({block:"nearest"});
+}
+function goDoc(d,toks){
+  closePanel();
+  if(isExt(d.url)){location.href=fragUrl(d,toks||[])}else goInternal(d.url);
+}
+function goInternal(h){
+  SX.pushed=false;
+  if(!h||h==="#")return closeResults();
+  location.hash=h;
+  setTimeout(()=>{let el=null;try{el=document.querySelector(h)}catch{}if(el)el.scrollIntoView({behavior:"smooth",block:"start"})},80);
+}
+function runSearch(q){
+  q=(q||"").trim();if(!q)return;
+  const r=[q,...recents().filter(x=>x!==q)].slice(0,6);lsSet("sx:recent",JSON.stringify(r));
+  $("#sinput").value=q;closePanel();
+  const target="#/search/"+encodeURIComponent(q);
+  if(location.hash===target){SX.filter="All";SX.limit=30;showSearchView(q,true)}
+  else if(location.hash.startsWith("#/search/"))location.replace(target);
+  else{SX.pushed=true;location.hash=target}
+}
+$("#sform").addEventListener("submit",e=>{
+  e.preventDefault();
+  const s=SX.sugs[SX.sel];
+  if(s&&s.type==="doc")return goDoc(s.doc,tokensOf($("#sinput").value));
+  runSearch(s&&s.type==="word"?s.q:$("#sinput").value);
+});
+$("#sinput").addEventListener("input",onInput);
+$("#sinput").addEventListener("keydown",e=>{
+  if(e.key==="ArrowDown"){e.preventDefault();moveSel(1)}
+  else if(e.key==="ArrowUp"){e.preventDefault();moveSel(-1)}
+  else if(e.key==="Tab"&&SX.sugs.length&&!e.shiftKey){const w=SX.sugs.find(s=>s.type==="word");if(w){e.preventDefault();$("#sinput").value=w.q+" ";onInput()}}
+});
+$("#ssug").addEventListener("click",e=>{
+  const c=e.target.closest(".schip");if(c)return runSearch(c.dataset.q);
+  const g=e.target.closest(".sg");if(!g)return;
+  const s=SX.sugs[+g.dataset.i];if(!s)return;
+  if(s.type==="doc")goDoc(s.doc,tokensOf($("#sinput").value));else runSearch(s.q);
+});
+document.addEventListener("click",e=>{
+  if(e.target.closest(".sbtn")){SX.open?closePanel():openPanel();return}
+  if(SX.open&&!e.target.closest("#sbox"))closePanel();
+});
+addEventListener("keydown",e=>{
+  const typing=/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||"");
+  if((e.key==="/"&&!typing)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k")){e.preventDefault();SX.open?$("#sinput").focus():openPanel()}
+  else if(e.key==="Escape"){
+    if(SX.open)closePanel();
+    else if(location.hash.startsWith("#/search/"))closeResults();
+  }
+});
+addEventListener("resize",()=>{if(SX.open)placePanel()});
+
+/* ---------- 6. results view (same look as "Explore all") ---------- */
+function showSearchView(q,force){
+  const v=$("#searchview");
+  if(!force&&v.classList.contains("show")&&SX.q===q)return;
+  if(SX.q!==q){SX.filter="All";SX.limit=30}
+  SX.q=q;v.classList.add("show");document.body.classList.add("lock");
+  renderSearchView();v.scrollTop=0;
+}
+function hideSearchView(){$("#searchview").classList.remove("show")}
+function closeResults(){
+  if(SX.pushed&&history.length>1){SX.pushed=false;history.back()}else location.hash="#home";
+}
+function renderSearchView(){
+  const v=$("#searchview"),top=v.scrollTop,q=SX.q,{res,toks}=search(q);
+  const grp={};res.forEach(r=>{grp[r.d.grp]=(grp[r.d.grp]||0)+1});
+  const list=SX.filter==="All"?res:res.filter(r=>r.d.grp===SX.filter),shown=list.slice(0,SX.limit);
+  const pages=new Set(res.map(r=>normUrl(r.d.url))).size,C=SX.crawl;
+  const chips=[["All",res.length],...Object.entries(grp).sort((a,b)=>b[1]-a[1])].map(([g,n])=>`<button type="button" class="chip${g===SX.filter?" on":""}" data-g="${esc(g)}">${esc(g)} <small>${n}</small></button>`).join("");
+  let body;
+  if(shown.length){
+    body=shown.map(({d})=>{
+      const sn=snippets(d,toks),ex=isExt(d.url);
+      return`<a class="rcard" href="${esc(fragUrl(d,toks))}" data-int="${ex?0:1}" data-h="${esc(d.url)}">
+        <div class="rmeta"><span class="dom">${esc(d.kind)}</span><span class="rurl" dir="ltr">${esc(shortUrl(d.url))}</span></div>
+        <h3 dir="auto">${markHtml(d.title||d.url,toks)}</h3>
+        ${sn.length?`<p dir="auto">${sn.join("<br>")}</p>`:""}
+        <span class="go">${ex?"Read →":"Go to section →"}</span></a>`;
+    }).join("")+(list.length>shown.length?`<div class="smorewrap"><button type="button" class="btn ghost" id="smore">Show more (${list.length-shown.length})</button></div>`:"");
+  }else{
+    const dym=suggest(q).filter(s=>s.type==="word").slice(0,4);
+    body=`<div class="empty">No results for “${esc(q)}”${C.running?" yet — still indexing pages…":"."}${dym.length?`<div class="schips" style="margin-top:14px">${dym.map(s=>`<button type="button" class="schip" data-q="${esc(s.q)}">${esc(s.label)}</button>`).join("")}</div>`:""}</div>`;
+  }
+  $("#searchwrap").innerHTML=`<div class="topbar"><button type="button" class="btn ghost back" id="sBack">← Back</button>
+      <span class="pagebtn" style="cursor:default">${res.length} result${res.length===1?"":"s"} · ${pages} page${pages===1?"":"s"}${C.running?" · indexing…":""}</span></div>
+    <span class="tag">Search</span><h2>Results for <span>“${esc(q)}”</span></h2>
+    <form class="rform" id="rform" autocomplete="off"><input id="rinput" type="search" dir="auto" value="${esc(q)}" placeholder="Search again…"><button class="btn" type="submit">Search</button></form>
+    <div class="chips">${chips}</div><div class="rlist">${body}</div>`;
+  v.scrollTop=top;
+}
+$("#searchwrap").addEventListener("click",e=>{
+  if(e.target.closest("#sBack"))return closeResults();
+  const ch=e.target.closest(".chip");if(ch){SX.filter=ch.dataset.g;SX.limit=30;renderSearchView();return}
+  if(e.target.closest("#smore")){SX.limit+=30;renderSearchView();return}
+  const sc=e.target.closest(".schip");if(sc)return runSearch(sc.dataset.q);
+  const rc=e.target.closest(".rcard");
+  if(rc&&rc.dataset.int==="1"){e.preventDefault();goInternal(rc.dataset.h)}
+});
+$("#searchwrap").addEventListener("submit",e=>{if(e.target.id==="rform"){e.preventDefault();runSearch($("#rinput").value)}});
+
+loadPageCache();
+setTimeout(()=>startCrawl(),6000);                       // start reading the linked pages shortly after load, so search is ready when needed
 
 /* =====================================================================
    3D BACKGROUND (Three.js)
