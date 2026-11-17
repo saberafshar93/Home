@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ImmunoAfshar | Immunotherapy Hub</title>
+<title>ImmunoAfshar | 3D Immunotherapy Hub</title>
 <style>
 :root{
   --bg:#050816; --panel:rgba(16,22,48,.62); --line:rgba(140,170,255,.18);
@@ -405,7 +405,10 @@ const CONFIG={
   EMAIL:"",                         // put your email here to show it in the footer
   GITHUB:"https://github.com/saberafshar93",
   WEBSITE:"https://saberafshar93.github.io/Home/",
-  COUNTER_NS:"immunoafshar-saberafshar93" // visitor counter namespace
+  COUNTER_NS:"immunoafshar-saberafshar93",  // visitor counter namespace
+  TREE:"https://api.github.com/repos/saberafshar93/Home/git/trees/main",
+  RAWROOT:"https://raw.githubusercontent.com/saberafshar93/Home/main/",
+  PROXY:""   // optional: your own CORS-proxy URL to read external websites
 };
 /* Page for each top-menu title (click the title) and for the "open page" buttons.
    Each page lives in the repo as  <Name>/index.html  →  https://saberafshar93.github.io/Home/<Name>   */
@@ -987,12 +990,15 @@ new ResizeObserver(layoutBg).observe(document.body);
 /* =====================================================================
    SITE SEARCH ENGINE
    - indexes everything on this page (slides, blog, highlights, overview, code, contact, menu items)
-   - reads the linked pages / articles (and the sub-pages of this site) and indexes their full text
+   - reads EVERY file of the GitHub repo (GitHub tree API): html pages, txt/json/md/csv data files (all columns: authors etc.)
+   - also follows the links found in data files and pages, reads their full text and meta (author, keywords, abstract…)
+   - new / edited / deleted files are picked up automatically every 5 minutes
    - word prediction, "did you mean", highlighted results, text-fragment highlight on the target page
    ===================================================================== */
 const SX={open:false,docs:[],voc:[],sig:"",ver:0,sel:-1,sugs:[],q:"",filter:"All",limit:30,pushed:false,
   crawl:{cache:{},running:false,done:0,total:0,last:0}};
-const SITE_URL=new URL(SITE),PAGE_CACHE_KEY="sx:pages:v1",PAGE_TTL=6*36e5,FAIL_TTL=30*6e4,MAX_PAGES=150,CONC=5;
+const SITE_URL=new URL(SITE),PAGE_CACHE_KEY="sx:pages:v2",PAGE_TTL=10*6e4,FAIL_TTL=5*6e4,MAX_PAGES=800,CONC=6,MAX_TEXT=150000;
+const HYP=/[-’'\u00ad]/g;
 const SKIP_EXT=/\.(pdf|png|jpe?g|gif|webp|svg|ico|zip|rar|7z|mp4|mp3|webm|mov|docx?|xlsx?|pptx?|css|js|json|xml)$/i;
 const STOP=new Set("the and for with that this from are was were has have had but not you your our can will all any its into than then them they their there here what when which who how why about also more most such only over just very been being per via etc".split(" "));
 const WRX=/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu;
@@ -1020,15 +1026,18 @@ const J=k=>{try{return JSON.parse(last[k]||"null")}catch{return null}};
 const isExt=u=>/^https?:/i.test(u||"");
 
 /* ---------- 1. documents ---------- */
+const IMGX=/\.(png|jpe?g|gif|webp|svg|ico|avif|bmp)(\?|$)/i;
+const cleanDoc=d=>{d.text=(d.text||"").replace(/\s+/g," ").trim();d.title=(d.title||"").replace(/\s+/g," ").trim();return d};
+const rest=(l,skip)=>l.filter((x,i)=>!skip.includes(i)&&x&&!isExt(x)).join(" ");   // every column (authors, …) except title and link
 function localDocs(){
-  const L=[],add=d=>{d.text=(d.text||"").replace(/\s+/g," ").trim();d.title=(d.title||"").replace(/\s+/g," ").trim();if(d.title||d.text)L.push(d)};
-  (J("first")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1],text:`${l[0]} ${l[2]||""}`,url:l[3]||"#home",kind:"Slide",grp:"Home"}));
+  const L=[],add=d=>{cleanDoc(d);if(d.title||d.text)L.push(d)};
+  (J("first")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1],text:rest(l,[1]),url:l[3]||"#home",kind:"Slide",grp:"Home"}));
   const ov=(J("overview")||[]).filter(l=>l[0]);
   if(ov.length)add({title:ov[0][0],text:[ov[1]&&ov[1][0],...ov.slice(2).map(l=>l.join(" "))].join(" "),url:"#overview",kind:"Overview",grp:"Overview"});
-  (J("blog")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[0],text:"",url:l[1],kind:"Blog",grp:"Blog"}));
+  (J("blog")||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[0],text:rest(l,[0]),url:l[1],kind:"Blog",grp:"Blog"}));
   HIGHLIGHTS.forEach(([key,title,file,lead])=>{
     add({title:`${title} highlights`,text:lead,url:"#"+key,kind:"Section",grp:title});
-    (J(key)||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1]||"",text:`${l[0]||""} ${l[2]||""}`,url:l[3]||"#"+key,kind:title,grp:title}));
+    (J(key)||[]).filter(l=>l.length>=2).forEach(l=>add({title:l[1]||"",text:rest(l,[1]),url:l[3]||"#"+key,kind:title,grp:title}));
   });
   const code=J("codefile");
   if(typeof code==="string"&&code.trim()){const ls=code.replace(/^﻿/,"").split(/\r?\n/);add({title:"Code — "+(ls[0]||"").trim(),text:ls.slice(1).join(" "),url:"#code",kind:"Code",grp:"Code"})}
@@ -1037,23 +1046,77 @@ function localDocs(){
   Object.entries(J("nav")||{}).forEach(([n,ls])=>(ls||[]).filter(l=>l[0]&&l[1]&&l[1]!=="#").forEach(l=>add({title:l[0],text:n,url:l[1],kind:"Menu · "+n,grp:"Menu"})));
   return L;
 }
+
+/* normalised content of each page is computed only once (speed) */
+const PNM=new WeakMap();
+function PN(p){
+  let v=PNM.get(p);
+  if(!v||v.s!==p.x){
+    const n=nrm(p.x||""),w=new Map();
+    for(const m of n.slice(0,30000).matchAll(WRX)){if(m[0].length>=2)w.set(m[0],(w.get(m[0])||0)+1)}
+    v={s:p.x,n,h:n.replace(HYP,""),w};PNM.set(p,v);
+  }
+  return v;
+}
+function attachPage(d,p){d.tb=d.text;d.pe=p;d.text=d.text+" "+(p.x||"");d.body=true}
+
+/* repo data files (Bin/Data/<Section>/...) → search items */
+const RPARSED=new WeakMap();
+const encP=p=>p.split("/").map(encodeURIComponent).join("/");
+function secOf(p){
+  const a=p.split("/"),i=a.indexOf("Data");
+  const n=(i>=0&&a[i+1]&&i+1<a.length-1)?a[i+1]:(a.length>1?a[0]:"Files");
+  return NAV_NAMES.find(x=>x.toLowerCase()===n.toLowerCase())||n;
+}
+function parseRepo(e){
+  const p=e.p,a=p.split("/"),file=a[a.length-1],name=file.replace(/\.[^.]+$/,"").replace(/_+/g," "),sec=secOf(p),own=SITE+encP(p),out=[];
+  if(e.doc){out.push(cleanDoc({title:name,text:a.slice(0,-1).join(" "),url:own,kind:"File",grp:"Files"}));return out}
+  const lines=(e.x||"").split(/\n/).map(l=>l.trim()).filter(Boolean);
+  const sepN=lines.filter(l=>l.includes(CONFIG.SEP)).length;
+  if(lines.length&&sepN>=lines.length/2){
+    for(const l of lines){
+      const f=l.split(CONFIG.SEP).map(x=>x.trim()),link=f.find(x=>isExt(x)&&!IMGX.test(x)),words=f.filter(x=>x&&!isExt(x));
+      const title=words.find(x=>x.split(/\s+/).length>=2)||words[0]||name;
+      out.push(cleanDoc({title,text:f.filter(x=>x!==title).join(" "),url:link||PAGES[sec]||own,kind:sec,grp:sec,lk:!!link}));
+    }
+  }else out.push(cleanDoc({title:name,text:lines.join(" "),url:own,kind:sec,grp:sec}));
+  return out;
+}
+function repoDocsAll(){
+  const out=[];
+  for(const e of Object.values(SX.crawl.cache)){
+    if(!e.rp)continue;
+    let d=RPARSED.get(e);if(!d){d=parseRepo(e);RPARSED.set(e,d)}
+    for(const x of d)out.push({...x});
+  }
+  return out;
+}
+
 function buildIndex(){
   const sig=Object.values(last).join("¦")+"|"+SX.ver;
   if(sig===SX.sig&&SX.docs.length)return;
   SX.sig=sig;
   const L=localDocs(),pages=SX.crawl.cache,used=new Set();
-  const landing=new Set(Object.entries(PAGES).filter(([n])=>n!=="Home"&&n!=="Contact").map(([,u])=>normUrl(u)));   // Lab, Article… pages are listed as pages of their own
-  L.forEach(d=>{                                  // attach the full text of a linked page to the item that links to it
+  repoDocsAll().forEach(d=>L.push(d));
+  const landing=new Set(Object.entries(PAGES).filter(([n])=>n!=="Home"&&n!=="Contact").map(([,u])=>normUrl(u)));
+  L.forEach(d=>{                                  // the full text of a linked page is attached to the item that links to it
     if(!isExt(d.url)||/^Menu/.test(d.kind))return;
     const k=normUrl(d.url),p=pages[k];
-    if(p&&!p.f&&!used.has(k)&&!landing.has(k)){used.add(k);d.text=(d.text+" "+(p.x||"")).trim();d.body=true}
+    if(p&&!p.f&&!p.rp&&!used.has(k)&&!landing.has(k)){used.add(k);attachPage(d,p)}
   });
-  Object.entries(pages).forEach(([k,p])=>{        // pages nobody links to directly (sub-pages of the site, articles…) become their own entries
-    if(p.f||used.has(k)||!(p.x||p.t))return;
-    L.push({title:p.t||k,text:p.x||"",url:p.u||k,kind:"Page",grp:"Pages",body:true});
+  Object.entries(pages).forEach(([k,p])=>{        // pages that no item links to become items themselves
+    if(p.f||p.rp||used.has(k)||!(p.x||p.t))return;
+    const d={title:p.t||k,text:"",url:p.u||k,kind:"Page",grp:"Pages"};attachPage(d,p);L.push(d);
   });
   const voc=new Map(),addW=(s,w)=>{for(const m of s.matchAll(WRX)){const t=m[0];if(t.length<2)continue;const e=voc.get(t)||{n:0,t:0};e.n++;e.t+=w;voc.set(t,e)}};
-  L.forEach(d=>{d.nt=nrm(d.title);d.nx=nrm(d.text);addW(d.nt,1);addW(d.nx.slice(0,25000),0)});
+  L.forEach(d=>{
+    d.nt=nrm(d.title);addW(d.nt,1);
+    if(d.pe){
+      const pn=PN(d.pe),b=nrm(d.tb);
+      d.nx=b+" "+pn.n;d.nh=(d.nt+" "+b).replace(HYP,"")+" "+pn.h;
+      addW(b,0);pn.w.forEach((c,w)=>{const e=voc.get(w)||{n:0,t:0};e.n+=c;voc.set(w,e)});
+    }else{d.nx=nrm(d.text);d.nh=(d.nt+" "+d.nx).replace(HYP,"");addW(d.nx.slice(0,25000),0)}
+  });
   SX.docs=L;SX.voc=[...voc].map(([w,e])=>[w,e.n+e.t*5,e.t]);
 }
 
@@ -1067,7 +1130,11 @@ function search(q){
     let sc=0,ok=true;
     for(const t of toks){
       const ti=d.nt.indexOf(t),bi=d.nx.indexOf(t);
-      if(ti<0&&bi<0){ok=false;break}
+      if(ti<0&&bi<0){                                   // Pre-operative ⇄ Preoperative
+        const th=t.replace(HYP,"");
+        if(th&&d.nh.includes(th)){sc+=4;continue}
+        ok=false;break;
+      }
       if(ti>=0)sc+=12+((ti===0||d.nt[ti-1]===" ")?8:0);
       if(bi>=0){let c=0,p=bi;while(p>=0&&c<30){c++;p=d.nx.indexOf(t,p+t.length)}sc+=Math.min(c,20)+((bi===0||d.nx[bi-1]===" ")?2:0)}
     }
@@ -1157,25 +1224,121 @@ function suggest(q){
   return out;
 }
 
-/* ---------- 4. crawler: reads linked pages, articles and the sub-pages of this site ---------- */
+/* ---------- 4. crawler: whole repo (GitHub tree) + all site pages + links ---------- */
+const TEXTX=/\.(txt|md|markdown|csv|tsv|json|bib|ris|xml|html?|js|yml|yaml|tex)$/i,DOCX=/\.(pdf|docx?|pptx?|xlsx?)$/i;
+function siteUrlFor(p){
+  if(/(^|\/)index\.html?$/i.test(p))return SITE+encP(p.replace(/(^|\/)index\.html?$/i,"")).replace(/\/$/,"");
+  return SITE+encP(p);
+}
 function loadPageCache(){try{SX.crawl.cache=JSON.parse(lsGet(PAGE_CACHE_KEY)||"{}")||{}}catch{SX.crawl.cache={}}}
 function savePageCache(){
   try{
     let s=JSON.stringify(SX.crawl.cache);
-    if(s.length>4e6){const t={};Object.entries(SX.crawl.cache).forEach(([k,v])=>t[k]={...v,x:(v.x||"").slice(0,8000),l:[]});s=JSON.stringify(t)}
+    if(s.length>4e6){const t={};Object.entries(SX.crawl.cache).forEach(([k,v])=>t[k]={...v,x:(v.x||"").slice(0,6000),l:[],sha:""});s=JSON.stringify(t)}
     lsSet(PAGE_CACHE_KEY,s);
   }catch{}
 }
+const isOwn=u=>{try{const x=new URL(u);return x.host===SITE_URL.host&&x.pathname.startsWith(SITE_URL.pathname.replace(/\/$/,""))}catch{return false}};
 function okUrl(u){
   try{
     const x=new URL(u);
     if(!/^https?:$/.test(x.protocol)||SKIP_EXT.test(x.pathname))return false;
-    if(x.host==="github.com"&&!/\/blob\//.test(x.pathname))return false;      // github.com pages cannot be read from a browser
+    if(isOwn(u)&&/\.(txt|md|csv|tsv|bib|ris|ya?ml|tex)$/i.test(x.pathname))return false;   // data files are read through the tree path
+    if(x.host==="github.com"&&!/\/blob\//.test(x.pathname))return false;
     return true;
   }catch{return false}
 }
-const isOwn=u=>{try{const x=new URL(u);return x.host===SITE_URL.host&&x.pathname.startsWith(SITE_URL.pathname.replace(/\/$/,""))}catch{return false}};
 function fetchUrlFor(u){const m=u.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/([^?#]+)/i);return m?`https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}/${m[4]}`:u}
+
+/* extract text strings from JS / JSON (for pages that build their content with JavaScript) */
+function jsStrings(src){
+  const out=[],rx=/"((?:[^"\\\n]|\\.){4,300})"|'((?:[^'\\\n]|\\.){4,300})'|`((?:[^`\\]|\\.){4,600})`/g;let m;
+  while((m=rx.exec(src))){
+    const s=(m[1]||m[2]||m[3]||"").replace(/\\n/g," ").replace(/\\(.)/g,"$1").replace(/<[^>]*>/g," ");
+    if(/\p{L}{3,}/u.test(s)&&!/[{};]|=>|\$\{/.test(s))out.push(s);
+  }
+  return out.join(" ");
+}
+function jsonStrings(t){
+  const o=[];
+  try{(function w(v){if(typeof v==="string")o.push(v);else if(Array.isArray(v))v.forEach(w);else if(v&&typeof v==="object")Object.values(v).forEach(w);else if(typeof v==="number")o.push(String(v))})(JSON.parse(t))}
+  catch{return jsStrings(t)}
+  return o.join(" ");
+}
+/* HTML → title + full text + author/keyword/abstract meta + alt/title attributes + JSON-LD + script strings + links */
+function parsePage(raw,u,own,html){
+  if(!html)return{t:(raw.split(/\r?\n/).find(l=>l.trim())||"").trim().slice(0,160),x:raw.replace(/\s+/g," ").trim().slice(0,MAX_TEXT),l:[]};
+  const doc=new DOMParser().parseFromString(raw,"text/html"),extra=[];
+  doc.querySelectorAll("meta[content]").forEach(m=>{
+    const n=(m.getAttribute("name")||m.getAttribute("property")||m.getAttribute("itemprop")||"").toLowerCase();
+    if(/author|creator|contributor|keyword|descr|title|subject|citation|dc[.:]|tag|section|publisher|abstract|date/.test(n))extra.push(m.content);
+  });
+  const AT=["alt","title","aria-label","placeholder","data-title","data-author"];
+  doc.querySelectorAll("[alt],[title],[aria-label],[placeholder],[data-title],[data-author]").forEach(e=>AT.forEach(a=>{const v=e.getAttribute(a);if(v)extra.push(v)}));
+  doc.querySelectorAll("script").forEach(s=>{
+    const ty=(s.type||"").toLowerCase(),c=s.textContent||"";
+    if(/json/.test(ty))extra.push(jsonStrings(c));
+    else if(own&&!s.src&&(!ty||/javascript|module/.test(ty)))extra.push(jsStrings(c));
+  });
+  doc.querySelectorAll("script,style,noscript,template,svg,canvas,iframe").forEach(e=>e.remove());
+  const t=(doc.title||(doc.querySelector("h1")||{}).textContent||"").trim();
+  const x=(extra.join(" ")+" "+(doc.body?doc.body.textContent:"")).replace(/\s+/g," ").trim().slice(0,MAX_TEXT);
+  const links=[];doc.querySelectorAll("a[href]").forEach(a=>{try{links.push(new URL(a.getAttribute("href"),u).href.split("#")[0])}catch{}});
+  return{t:t.slice(0,160),x,l:[...new Set(links)].slice(0,300)};
+}
+async function fetchPage(u){
+  const own=isOwn(u);
+  const get=async url=>{const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),12000);
+    try{const r=await fetch(url,{signal:ac.signal});if(!r.ok)throw 0;return{raw:await r.text(),ct:r.headers.get("content-type")||"",url:r.url||url}}finally{clearTimeout(tm)}};
+  try{
+    const furl=fetchUrlFor(u);let g,prox=false;
+    try{g=await get(furl)}catch(e){if(!CONFIG.PROXY||own)throw e;g=await get(CONFIG.PROXY+encodeURIComponent(u));prox=true}
+    const html=/html/i.test(g.ct)||/\.html?$/i.test(new URL(u).pathname)||/^\s*<(!doctype|html)/i.test(g.raw);
+    const base=prox?u:(g.url||u),pg=parsePage(g.raw,base,own,html);
+    return{u,t:pg.t,x:pg.x,l:furl===u?pg.l:[],ts:Date.now()};
+  }catch{return{u,f:1,ts:Date.now()}}
+}
+async function pool(items,n,fn){let i=0;await Promise.all(Array.from({length:n},async()=>{while(i<items.length){const it=items[i++];try{await fn(it)}catch{}}}))}
+
+/* list of every file in the repo (cached so the API rate limit is not a problem) */
+async function loadTree(){
+  try{
+    const r=await fetch(CONFIG.TREE+"?recursive=1");if(!r.ok)throw 0;
+    const j=await r.json(),list=(j.tree||[]).filter(x=>x.type==="blob").map(x=>({p:x.path,sha:x.sha,sz:x.size||0}));
+    if(!list.length)throw 0;lsSet("sx:tree",JSON.stringify(list));return list;
+  }catch{try{return JSON.parse(lsGet("sx:tree")||"[]")||[]}catch{return[]}}
+}
+async function syncRepo(tree){
+  const C=SX.crawl,keep=new Set(),jobs=[];
+  for(const f of tree){
+    const p=f.p;
+    if(p==="index.html"||p==="404.html"||/^(\.git|\.github|node_modules)\//.test(p)||/\.min\.js$|\/(lib|vendor|node_modules)\//i.test(p)||p.startsWith(CONFIG.REPO_PATH)||f.sz>3e6)continue;
+    const isT=TEXTX.test(p),isD=DOCX.test(p);if(!isT&&!isD)continue;
+    const html=/\.html?$/i.test(p),key=html?normUrl(siteUrlFor(p)):"repo:"+p,e=C.cache[key];
+    keep.add(key);
+    if(e&&e.sha&&e.sha===f.sha){e.ts=Date.now();continue}          // unchanged → not read again
+    if(isD){C.cache[key]={rp:1,doc:1,p,x:"",sha:f.sha,ts:Date.now()};continue}
+    jobs.push({f,key,html});
+  }
+  C.total+=jobs.length;statusUpdate();
+  await pool(jobs,CONC,async({f,key,html})=>{
+    try{
+      const r=await fetch(CONFIG.RAWROOT+encP(f.p));if(!r.ok)throw 0;
+      const raw=await r.text(),p=f.p;
+      if(html){
+        const u=siteUrlFor(p),pg=parsePage(raw,/index\.html?$/i.test(p)?u+"/":u,true,true);
+        C.cache[key]={u,t:pg.t,x:pg.x,l:pg.l,sha:f.sha,ts:Date.now()};
+      }else{
+        let x=raw.replace(/^\uFEFF/,"").replace(/\r/g,"");
+        if(/\.js$/i.test(p))x=jsStrings(x);else if(/\.json$/i.test(p))x=jsonStrings(x);else if(/\.xml$/i.test(p))x=x.replace(/<[^>]*>/g," ").replace(/\s+/g," ");
+        C.cache[key]={rp:1,p,x:x.slice(0,2e6),sha:f.sha,ts:Date.now()};
+      }
+    }catch{}
+    C.done++;if(C.done%10===0){SX.ver++;statusUpdate()}
+  });
+  Object.keys(C.cache).forEach(k=>{const e=C.cache[k];if((e.rp||e.sha)&&!keep.has(k))delete C.cache[k]});   // files deleted from the repo
+}
+
 function seedLinks(){
   const s=new Set(),add=u=>{if(isExt(u))s.add(u.trim())};
   (J("first")||[]).forEach(l=>add(l[3]));
@@ -1183,46 +1346,45 @@ function seedLinks(){
   HIGHLIGHTS.forEach(h=>(J(h[0])||[]).forEach(l=>add(l[3])));
   Object.values(J("nav")||{}).forEach(ls=>(ls||[]).forEach(l=>add(l[1])));
   Object.entries(PAGES).forEach(([n,u])=>{if(n!=="Home"&&n!=="Contact")add(u)});
+  repoDocsAll().forEach(d=>{if(d.lk)add(d.url)});                    // every link found in the data files of all sections
   return[...s];
 }
-async function fetchPage(u){
-  const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),9000);
-  try{
-    const furl=fetchUrlFor(u),r=await fetch(furl,{signal:ac.signal});
-    if(!r.ok)throw 0;
-    const raw=await r.text(),ct=r.headers.get("content-type")||"";
-    let t="",x="",links=[];
-    if(/html/i.test(ct)||/\.html?$/i.test(new URL(u).pathname)||/^\s*<(!doctype|html)/i.test(raw)){
-      const doc=new DOMParser().parseFromString(raw,"text/html");
-      doc.querySelectorAll("script,style,noscript,template,svg,canvas,iframe").forEach(e=>e.remove());
-      t=(doc.title||(doc.querySelector("h1")||{}).textContent||"").trim();
-      const md=(doc.querySelector('meta[name="description"]')||{}).content||"";
-      x=(md+" "+(doc.body?doc.body.textContent:"")).replace(/\s+/g," ").trim();
-      if(furl===u)doc.querySelectorAll("a[href]").forEach(a=>{try{links.push(new URL(a.getAttribute("href"),r.url||u).href.split("#")[0])}catch{}});
-    }else{x=raw.replace(/\s+/g," ").trim();t=(raw.split(/\r?\n/).find(l=>l.trim())||"").trim()}
-    return{u,t:t.slice(0,160),x:x.slice(0,40000),l:[...new Set(links)].slice(0,200),ts:Date.now()};
-  }catch{return{u,f:1,ts:Date.now()}}
-  finally{clearTimeout(tm)}
-}
-async function startCrawl(force){
-  const C=SX.crawl;
-  if(C.running||(!force&&C.last&&Date.now()-C.last<10*6e4))return;
-  C.running=true;C.done=0;
-  const queue=[],seen=new Set();
+async function crawlLinks(){
+  const C=SX.crawl,queue=[],seen=new Set();
   const push=(u,dep)=>{const k=normUrl(u);if(seen.has(k)||seen.size>=MAX_PAGES||!okUrl(u))return false;seen.add(k);queue.push({u,k,dep});return true};
   seedLinks().forEach(u=>push(u,0));
-  C.total=queue.length;statusUpdate();
-  let step=0;
+  Object.values(C.cache).forEach(e=>{if(e&&e.u&&e.sha&&isOwn(e.u))push(e.u,0)});   // site pages that came from the repo: only to follow their links
+  try{const r=await fetch(SITE+"sitemap.xml");if(r.ok)(await r.text()).replace(/<loc>\s*([^<\s]+)\s*<\/loc>/g,(_,u)=>{push(u.trim(),1);return ""})}catch{}
+  C.total+=queue.length;statusUpdate();
+  let active=0,step=0;
   const worker=async()=>{
-    while(queue.length){
-      const it=queue.shift();let e=C.cache[it.k];
-      if(!(e&&Date.now()-e.ts<(e.f?FAIL_TTL:PAGE_TTL))){e=await fetchPage(it.u);C.cache[it.k]=e}
-      C.done++;
-      if(e&&!e.f&&it.dep<2&&isOwn(it.u))(e.l||[]).forEach(l=>{if(isOwn(l)&&push(l,it.dep+1))C.total++});
+    while(true){
+      const it=queue.shift();
+      if(!it){if(active===0)return;await new Promise(r=>setTimeout(r,60));continue}
+      active++;
+      try{
+        let e=C.cache[it.k];
+        const fresh=e&&(e.sha||Date.now()-e.ts<(e.f?FAIL_TTL:PAGE_TTL));
+        if(!fresh){e=await fetchPage(it.u);C.cache[it.k]=e}
+        C.done++;
+        if(e&&!e.f&&it.dep<4&&isOwn(it.u))(e.l||[]).forEach(l=>{if(isOwn(l)&&push(l,it.dep+1))C.total++});
+      }catch{}
+      active--;
       if(++step%6===0){SX.ver++;statusUpdate()}
     }
   };
   await Promise.all(Array.from({length:CONC},worker));
+}
+async function startCrawl(force){
+  const C=SX.crawl;
+  if(C.running||(!force&&C.last&&Date.now()-C.last<4*6e4))return;
+  C.running=true;C.done=0;C.total=0;statusUpdate();
+  try{
+    const tree=await loadTree();
+    if(tree.length)await syncRepo(tree);
+    SX.ver++;
+    await crawlLinks();
+  }catch{}
   Object.keys(C.cache).forEach(k=>{if(Date.now()-C.cache[k].ts>7*864e5)delete C.cache[k]});
   C.running=false;C.last=Date.now();SX.ver++;savePageCache();statusUpdate();
   if(SX.open)onInput();
@@ -1231,9 +1393,9 @@ async function startCrawl(force){
 function statusUpdate(){
   const el=$("#sidx");if(!el)return;
   const C=SX.crawl,ok=Object.values(C.cache).filter(v=>!v.f).length;
-  if(C.running){el.textContent=`Indexing pages… ${C.done}/${C.total}`;return}
+  if(C.running){el.textContent=`Indexing… ${C.done}/${C.total}`;return}
   buildIndex();
-  el.textContent=`${SX.docs.length} items · ${ok} pages read`;
+  el.textContent=`${SX.docs.length} items · ${ok} pages/files read`;
 }
 
 /* ---------- 5. search box (drops down from the magnifier) ---------- */
@@ -1382,7 +1544,8 @@ $("#searchwrap").addEventListener("click",e=>{
 $("#searchwrap").addEventListener("submit",e=>{if(e.target.id==="rform"){e.preventDefault();runSearch($("#rinput").value)}});
 
 loadPageCache();
-setTimeout(()=>startCrawl(),6000);                       // start reading the linked pages shortly after load, so search is ready when needed
+setTimeout(()=>startCrawl(),1500);                       // start reading the repo shortly after load, so search is ready when needed
+setInterval(()=>startCrawl(),5*6e4);                     // re-check the repo every 5 minutes (new / edited / deleted files)
 
 /* =====================================================================
    3D BACKGROUND (Three.js)
