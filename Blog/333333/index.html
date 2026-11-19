@@ -1,1 +1,716 @@
-﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>آموزش ثبت‌نام افزایش کالابرگ در سامانه دولت من؛ راهنمای تصویری و گام‌به‌گام | ImmunoAfshar</title>
+<meta name="description" content="سرپرستان خانوار با تکمیل فرم خوداظهاری در سامانه دولت من می‌توانند اطلاعات اقتصادی خود را برای بررسی افزایش اعتبار کالابرگ ثبت کنند.">
+<meta name="author" content="sa, er">
+<meta property="og:type" content="article">
+<meta property="og:title" content="آموزش ثبت‌نام افزایش کالابرگ در سامانه دولت من؛ راهنمای تصویری و گام‌به‌گام">
+<meta property="og:description" content="سرپرستان خانوار با تکمیل فرم خوداظهاری در سامانه دولت من می‌توانند اطلاعات اقتصادی خود را برای بررسی افزایش اعتبار کالابرگ ثبت کنند.">
+<meta property="og:image" content="https://static.digiato.com/digiato/2026/11/kala-644x424.jpg.webp">
+<meta property="article:published_time" content="2026-11-19T08:16:55.753Z">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+
+:root{--bg:#050816;--panel:rgba(16,22,48,.62);--line:rgba(140,170,255,.18);--txt:#e8edff;--mute:#9aa7d6;--a:#4df0c8;--b:#7b6cff;--c:#ff5d8f}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Inter,"Vazirmatn",system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0;width:100%;height:100%}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:1000;background:linear-gradient(90deg,var(--a),var(--b),var(--c))}
+main,footer{position:relative;z-index:2}
+a{color:inherit;text-decoration:none}
+header{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:70px;background:rgba(5,8,22,.55);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px;letter-spacing:.5px;order:2}
+.logo i{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--a) 35%,var(--b));box-shadow:0 0 18px var(--a);animation:pulse 3s infinite}
+.logo .im{background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo .im:hover{filter:brightness(1.3)}
+@keyframes pulse{50%{transform:scale(1.18)}}
+nav{order:1}
+nav ul{display:flex;list-style:none;gap:2px}
+nav li{position:relative}
+nav li>a{display:block;padding:24px 13px;font-size:14px;font-weight:600;letter-spacing:.4px;color:var(--mute);transition:.25s}
+nav li:hover>a,nav li.open>a{color:#fff}
+nav li>a::after{content:"▾";margin-left:5px;font-size:10px}
+.drop{position:absolute;top:100%;left:0;min-width:240px;padding:10px;border-radius:0 0 16px 16px;background:rgba(10,14,36,.94);border:1px solid var(--line);border-top:2px solid var(--a);opacity:0;visibility:hidden;transform:translateY(-10px) rotateX(-12deg);transform-origin:top;transition:.3s;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+nav li:hover .drop,nav li.open .drop{opacity:1;visibility:visible;transform:none}
+.drop a{display:block;padding:10px 14px;border-radius:10px;font-size:13.5px;color:var(--mute);transition:.2s}
+.drop a:hover{background:linear-gradient(90deg,rgba(77,240,200,.15),transparent);color:#fff;padding-left:20px}
+#burger{display:none;background:none;border:1px solid var(--line);color:#fff;font-size:22px;border-radius:8px;padding:2px 10px;cursor:pointer;order:0}
+nav li>a.plain::after,nav li>a.home::after{content:none}
+nav li>a.home{display:flex;align-items:center;padding:0 14px;height:70px}
+nav li>a.home svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:.25s}
+nav li>a.home:hover{color:var(--a)}
+nav li>a.home:hover svg{transform:translateY(-2px);filter:drop-shadow(0 0 8px rgba(77,240,200,.7))}
+.tag{display:inline-block;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--a);margin-bottom:10px}
+.grad{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-block;padding:12px 28px;border-radius:50px;font-weight:700;font-size:14px;border:0;cursor:pointer;background:linear-gradient(90deg,var(--a),var(--b));color:#041022;transition:.3s;box-shadow:0 8px 30px rgba(77,240,200,.25);font-family:inherit}
+.btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(123,108,255,.45)}
+.empty{color:var(--mute);padding:18px;border:1px dashed var(--line);border-radius:16px;font-size:14px}
+#top{min-height:0;padding:88px 8vw 26px;text-align:center;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%,rgba(123,108,255,.22),rgba(5,8,22,0) 70%),linear-gradient(180deg,rgba(77,240,200,.05),rgba(5,8,22,0))}
+#top::after{content:"";position:absolute;left:8vw;right:8vw;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--a),var(--b),var(--c),transparent);background-size:200% 100%;animation:sweep 6s linear infinite}
+@keyframes sweep{to{background-position:200% 0}}
+.crumbs{position:relative;z-index:2;display:inline-flex;align-items:center;gap:2px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:6px;padding:5px 16px;border-radius:30px;background:rgba(255,255,255,.04);border:1px solid var(--line);backdrop-filter:blur(8px)}
+.crumbs a{transition:.2s;display:inline-flex;align-items:center;gap:6px}.crumbs a:hover{color:var(--a)}
+.crumbs a svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.crumbs b{color:var(--a);font-weight:700}.crumbs em{font-style:normal;margin:0 8px;opacity:.45}
+#top h1{position:relative;z-index:2;font-size:clamp(46px,7.5vw,92px);line-height:1.05;font-weight:900;letter-spacing:.14em;text-transform:uppercase;padding-left:.14em;background:linear-gradient(90deg,var(--a),var(--b),var(--c),var(--a));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 8s linear infinite;filter:drop-shadow(0 6px 28px rgba(123,108,255,.5));transition:transform .15s;transform-style:preserve-3d}
+@keyframes shine{to{background-position:300% 0}}
+.rings{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.ring{position:absolute;border-radius:50%;border:1px solid rgba(77,240,200,.24);animation:spin 22s linear infinite}
+.ring:nth-child(1){width:230px;height:230px}
+.ring:nth-child(2){width:360px;height:360px;border-style:dashed;border-color:rgba(123,108,255,.3);animation-duration:34s;animation-direction:reverse}
+.ring:nth-child(3){width:520px;height:520px;border-color:rgba(255,93,143,.18);animation-duration:50s}
+.ring::after{content:"";position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 16px var(--a)}
+.ring:nth-child(2)::after{background:var(--b);box-shadow:0 0 16px var(--b)}
+.ring:nth-child(3)::after{background:var(--c);box-shadow:0 0 16px var(--c)}
+@keyframes spin{to{transform:rotate(360deg)}}
+#bgimgs{position:absolute;top:0;left:0;width:100%;z-index:0;pointer-events:none;overflow:hidden}
+.bgi{position:absolute;left:0;width:100%;background-size:cover;background-position:center;opacity:.12;filter:saturate(.8);will-change:transform;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent)}
+.bgi:first-child{-webkit-mask-image:linear-gradient(to bottom,#000 65%,transparent);mask-image:linear-gradient(to bottom,#000 65%,transparent)}
+
+/* ---------- POST ---------- */
+#postsecs{padding:26px 8vw 50px;display:flex;flex-direction:column;gap:38px;position:relative;z-index:2}
+.sec{position:relative}
+.sec-meta{display:flex;justify-content:center}
+.metabox{display:inline-flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 22px;padding:11px 28px;border-radius:50px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);box-shadow:0 14px 40px rgba(0,0,0,.35);font-size:14px;color:var(--mute)}
+.metabox .mi{display:inline-flex;align-items:center;gap:9px}
+.metabox svg{width:17px;height:17px;stroke:var(--a);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.metabox b{color:#fff;font-weight:700}
+.metabox .al{font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+.metabox time{font-variant-numeric:tabular-nums;color:#fff}
+.metabox .sepd{width:1px;height:18px;background:var(--line)}
+.sec-hero{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:26px;align-items:stretch}
+.sec-hero.solo{grid-template-columns:1fr}
+.hbox{border-radius:26px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);padding:clamp(22px,3vw,40px);box-shadow:0 30px 80px rgba(0,0,0,.35);min-width:0}
+.ptitle{font-size:clamp(28px,3.8vw,48px);line-height:1.2;font-weight:800;margin-bottom:16px;caret-color:#fff;overflow-wrap:anywhere}
+.psum{font-size:clamp(16px,1.4vw,19px);line-height:1.85;color:var(--mute);margin-bottom:24px;font-family:"Source Serif 4","Vazirmatn",Georgia,serif}
+.cover{margin:0;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.cover img{display:block;width:100%;height:auto;max-height:520px;object-fit:cover}
+.sbox{position:relative;min-height:380px;border-radius:24px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.sinner{position:absolute;inset:0;display:flex;flex-direction:column}
+.shd{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03);font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--mute);flex:none}
+.shd b{font-weight:800;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.slist{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--b) transparent}
+.srow{display:block;padding:11px 16px;border-bottom:1px solid rgba(140,170,255,.08);transition:background .25s}
+.srow:hover{background:linear-gradient(90deg,rgba(77,240,200,.09),transparent)}
+.srow .st{display:block;font-size:13.5px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+.srow:hover .st{color:#fff}
+.srow .sa{display:flex;align-items:center;gap:7px;margin-top:4px;font-size:12px;color:var(--a);font-variant-numeric:tabular-nums}
+.srow .sa::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--a);box-shadow:0 0 8px var(--a);flex:none}
+.srow.nol .st{color:var(--mute)}
+.sfoot{flex:none;display:flex;flex-direction:column;gap:6px;padding:8px 12px;border-top:1px solid var(--line);background:rgba(255,255,255,.03);font-size:11.5px;color:var(--mute)}
+.sfoot .row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pp{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:30px;overflow:hidden}
+.seg button{padding:3px 10px;border:0;background:transparent;color:var(--mute);font:700 12px "Segoe UI",sans-serif;cursor:pointer;transition:.25s}
+.seg button:hover{color:#fff;background:rgba(255,255,255,.06)}
+.seg button.on{background:linear-gradient(90deg,var(--a),var(--b));color:#041022}
+.pg{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.pg button{min-width:28px;height:28px;padding:0 7px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);font:700 12px "Segoe UI",sans-serif;cursor:pointer;transition:.25s}
+.pg button:hover:not(:disabled){border-color:var(--a);color:var(--a)}
+.pg button.on{background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border-color:transparent}
+.pg button:disabled{opacity:.35;cursor:default}
+.pg i{font-style:normal;color:var(--mute);padding:0 2px}
+.banners{display:flex;flex-direction:column;gap:18px}
+.bn img{display:block;width:100%;height:auto;border-radius:18px;border:1px solid var(--line);box-shadow:0 18px 50px rgba(0,0,0,.4);transition:transform .35s,box-shadow .35s}
+.bn a:hover img{transform:translateY(-4px);box-shadow:0 24px 60px rgba(77,240,200,.18)}
+.sec-article{border-radius:26px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);padding:clamp(24px,4vw,60px) clamp(18px,5vw,84px);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.art-body{max-width:780px;margin:0 auto;font-family:"Source Serif 4","Vazirmatn",Georgia,"Times New Roman",serif;font-size:19px;line-height:2;color:#dde4ff;text-align:justify;hyphens:auto;overflow-wrap:break-word}
+.art-body::after{content:"";display:block;clear:both}
+.art-body p{margin:0 0 1.3em}
+.art-body h2{clear:both;font-family:"Segoe UI","Vazirmatn",sans-serif;font-size:clamp(24px,2.6vw,32px);line-height:1.3;font-weight:800;color:#fff;margin:1.9em 0 .7em;padding-inline-start:16px;border-inline-start:4px solid var(--a);border-image:linear-gradient(var(--a),var(--b)) 1;text-align:start}
+.art-body h3{clear:both;font-family:"Segoe UI","Vazirmatn",sans-serif;font-size:clamp(19px,2vw,23px);font-weight:700;color:var(--a);margin:1.6em 0 .5em;text-align:start}
+.art-body strong{color:#fff;font-weight:700}
+.art-body em{color:#c9d3ff}
+.art-body a{color:var(--a);text-decoration:underline;text-decoration-color:rgba(77,240,200,.4);text-underline-offset:4px;transition:.2s}
+.art-body a:hover{color:#fff;text-decoration-color:var(--a)}
+.art-body blockquote{margin:1.8em 0;padding:16px 26px;border-radius:16px;border-inline-start:4px solid var(--c);background:linear-gradient(90deg,rgba(255,93,143,.1),rgba(255,93,143,.02));font-style:italic;font-size:1.06em;color:#fff;text-align:start}
+.art-body ul,.art-body ol{margin:0 0 1.3em;padding-inline-start:1.6em;text-align:start}
+.art-body li{margin-bottom:.4em}
+.art-body li::marker{color:var(--a);font-weight:700}
+.art-body hr{border:0;height:2px;margin:2.4em 0;background:linear-gradient(90deg,transparent,var(--a),var(--b),var(--c),transparent)}
+.art-body figure.fig{margin:2.2em auto;text-align:center;max-width:100%}
+.art-body figure.fig.fl{float:left;max-width:55%;margin:.5em 1.8em 1em 0}
+.art-body figure.fig.fr{float:right;max-width:55%;margin:.5em 0 1em 1.8em}
+.art-body figure img{max-width:100%;height:auto;border-radius:18px;display:block;margin:0 auto;box-shadow:0 24px 60px rgba(0,0,0,.5);border:1px solid var(--line)}
+.art-body figcaption{margin-top:12px;font-family:"Segoe UI","Vazirmatn",sans-serif;font-size:14px;line-height:1.6;color:var(--mute);font-style:italic;text-align:center}
+.gal{clear:both;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:2.2em 0}
+.gal figure{margin:0}
+.gal img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;border-radius:16px;display:block;box-shadow:0 18px 44px rgba(0,0,0,.45);border:1px solid var(--line)}
+.gal figcaption{margin-top:8px;font-size:13px;color:var(--mute);text-align:center;font-style:italic}
+img.broken{min-height:90px;background:rgba(255,255,255,.04);outline:1px dashed var(--line);color:var(--mute);font-size:13px}
+.sec-end{display:flex;align-items:center;gap:22px}
+.sec-end i{flex:1;height:2px;background:linear-gradient(90deg,transparent,var(--a),var(--b));border-radius:2px}
+.sec-end i:last-child{background:linear-gradient(90deg,var(--b),var(--c),transparent)}
+.end-t{font-size:clamp(18px,2vw,26px);font-weight:900;letter-spacing:.5em;text-transform:uppercase;padding-left:.5em;background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.sec-authors{display:flex;flex-direction:column;gap:6px}
+.alist{display:flex;flex-direction:column;gap:18px}
+.acard{position:relative;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;padding:28px 32px;border-radius:24px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden}
+.acard::before{content:"";position:absolute;width:260px;height:260px;right:-80px;top:-100px;border-radius:50%;background:radial-gradient(circle,rgba(123,108,255,.28),transparent 70%);pointer-events:none}
+.av{width:124px;height:124px;border-radius:50%;border:3px solid transparent;background:linear-gradient(#0a0f26,#0a0f26) padding-box,linear-gradient(135deg,var(--a),var(--b),var(--c)) border-box;overflow:hidden;display:grid;place-items:center;box-shadow:0 0 34px rgba(77,240,200,.22)}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av .ph{width:50%;height:50%;stroke:rgba(154,167,214,.45);fill:none;stroke-width:1.5;stroke-linecap:round}
+.ainfo{min-width:0;position:relative}
+.au-name{font-size:clamp(20px,2.2vw,27px);font-weight:800;color:#fff;line-height:1.25;overflow-wrap:anywhere}
+.au-role{font-size:12.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--a);margin:5px 0 10px;font-weight:700}
+.au-desc{font-size:15px;line-height:1.8;color:var(--mute);font-family:"Source Serif 4","Vazirmatn",Georgia,serif;margin-bottom:6px}
+.alinks{display:flex;gap:10px;margin-top:12px}
+.alink{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--a);transition:.25s}
+.alink svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.alink:hover{background:linear-gradient(135deg,var(--a),var(--b));color:#041022;border-color:transparent;transform:translateY(-3px);box-shadow:0 10px 26px rgba(77,240,200,.3)}
+.sec-comments{border-radius:26px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);padding:clamp(22px,3vw,40px);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.cm-h{font-size:clamp(22px,2.4vw,30px);font-weight:800;margin-bottom:18px}
+.cm-h span{background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cform{display:flex;flex-direction:column;gap:12px;margin-bottom:26px}
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cform input,.cform textarea{width:100%;padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);font:15px "Segoe UI","Vazirmatn",sans-serif;transition:.25s;resize:vertical}
+.cform input:focus,.cform textarea:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(77,240,200,.14)}
+.cform ::placeholder{color:#6b78a8}
+.cact{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+#cmsg{font-size:13.5px;color:var(--c)}
+#cmsg.ok{color:var(--a)}
+.cm{display:flex;gap:14px;padding:16px 0;border-top:1px solid rgba(140,170,255,.1)}
+.cav{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#041022;background:linear-gradient(135deg,var(--a),var(--b))}
+.cb{min-width:0}
+.ch{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.ch b{color:#fff}
+.ch span{font-size:12.5px;color:var(--mute);font-variant-numeric:tabular-nums}
+.cb p{margin-top:4px;color:#d3dbff;line-height:1.8;overflow-wrap:anywhere;white-space:pre-wrap}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line);background:rgba(5,8,22,.86);color:var(--mute);font-size:14px}
+.fgrid{display:grid;grid-template-columns:1.3fr .8fr 1.8fr .85fr;gap:36px;padding:60px 8vw 40px}
+footer h4{color:#fff;font-size:14px;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;position:relative;padding-bottom:10px;display:flex;align-items:center}
+footer h4::after{content:"";position:absolute;left:0;bottom:0;width:34px;height:2px;background:linear-gradient(90deg,var(--a),var(--b))}
+footer ul{list-style:none}
+footer li{margin-bottom:10px}
+footer li a{transition:.2s}
+footer li a:hover{color:var(--a);padding-left:5px}
+.fbrand .logo{order:0;margin-bottom:14px}
+.clist{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+.clist li{margin:0}
+.ci{display:flex;align-items:center;gap:10px;padding:5px 8px;border-radius:10px;font-size:13.5px;color:var(--mute);transition:.25s}
+footer .clist li a:hover{padding-left:8px}
+a.ci:hover{background:rgba(77,240,200,.1);color:#fff;transform:translateX(4px)}
+span.ci{opacity:.5;cursor:default}
+.ci .ico{flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:9px;font-size:14px;font-weight:700;color:var(--a);background:rgba(255,255,255,.06);border:1px solid var(--line);transition:.25s}
+.ci .ico img{width:15px;height:15px;filter:invert(1) opacity(.85)}
+a.ci:hover .ico{background:linear-gradient(135deg,var(--a),var(--b));border-color:transparent;color:#041022}
+a.ci:hover .ico img{filter:none}
+.vcol{display:flex;flex-direction:column;gap:8px}
+.vr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:linear-gradient(90deg,rgba(77,240,200,.09),rgba(123,108,255,.07));transition:.3s}
+.vr:hover{transform:translateX(-4px);border-color:rgba(77,240,200,.5);box-shadow:0 8px 24px rgba(77,240,200,.12)}
+.vr .l{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--mute)}
+.vr b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#3dff9a;margin-left:10px;animation:ping 1.8s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(61,255,154,.6)}70%,100%{box-shadow:0 0 0 10px rgba(61,255,154,0)}}
+.fbottom{position:relative;padding:28px 8vw;display:flex;justify-content:center;text-align:center;font-size:13.5px;letter-spacing:.8px;color:var(--mute)}
+.fbottom::before{content:"";position:absolute;top:0;left:8vw;right:8vw;height:1px;background:linear-gradient(90deg,transparent,var(--a),var(--b),var(--c),transparent)}
+.fbottom b{font-weight:800;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+@media(max-width:1020px){
+  #burger{display:block}
+  nav{position:fixed;top:70px;left:0;right:0;max-height:0;overflow:hidden;background:rgba(5,8,22,.97);transition:.4s}
+  nav.show{max-height:calc(100vh - 70px);overflow-y:auto}
+  nav ul{flex-direction:column;padding:10px 20px}
+  nav li>a{padding:14px}
+  nav li>a.home{height:auto;padding:14px}
+  .drop{position:static;opacity:1;visibility:visible;transform:none;display:none;box-shadow:none}
+  nav li.open .drop{display:block}
+  header{padding:0 18px}
+  .fgrid{grid-template-columns:1fr 1fr}
+  .sec-hero{grid-template-columns:1fr}
+  .sbox{min-height:0;height:430px}
+}
+@media(max-width:700px){
+  .acard{grid-template-columns:1fr;justify-items:center;text-align:center;padding:24px 18px}
+  .alinks{justify-content:center}
+  .crow{grid-template-columns:1fr}
+  .art-body{font-size:17px;line-height:1.9}
+  .art-body figure.fig.fl,.art-body figure.fig.fr{float:none;max-width:100%;margin:1.6em auto}
+  .end-t{letter-spacing:.3em}
+}
+@media(max-width:600px){.fgrid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="bgimgs"></div>
+<canvas id="bg"></canvas>
+
+<header>
+  <button id="burger" aria-label="Menu">☰</button>
+  <nav id="nav"><ul id="menu"></ul></nav>
+  <a class="logo" id="logoTop" href="#"><i></i><span><span class="im">Immuno</span>Afshar</span></a>
+</header>
+
+<main>
+  <section id="top">
+    <div class="rings"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
+    <div class="crumbs"><a id="crHome" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg>Home</a><em>/</em><a id="crBlog" href="#">Blog</a><em>/</em><b>Post</b></div>
+    <h1 id="bannerT">Blog</h1>
+  </section>
+
+  <div id="postsecs">
+
+<div class="sec sec-meta" data-nodrag=""><div class="metabox"><span class="mi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"></rect><path d="M8 3v4M16 3v4M3.5 10h17"></path></svg><time datetime="2026-11-19T08:16:55.753Z">Nov 19, 2026 · 11:46</time></span><span class="sepd"></span><span class="mi auth"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"></path><path d="M14.5 6.5l3 3"></path></svg><span class="al">Authors</span><b>sa, er</b></span></div></div>
+<section class="sec sec-hero"><div class="hbox"><h1 class="ptitle grad" dir="auto">آموزش ثبت‌نام افزایش کالابرگ در سامانه دولت من؛ راهنمای تصویری و گام‌به‌گام</h1><p class="psum" dir="auto">سرپرستان خانوار با تکمیل فرم خوداظهاری در سامانه دولت من می‌توانند اطلاعات اقتصادی خود را برای بررسی افزایش اعتبار کالابرگ ثبت کنند.</p><figure class="cover"><img src="https://static.digiato.com/digiato/2026/11/kala-644x424.jpg.webp" alt="آموزش ثبت‌نام افزایش کالابرگ در سامانه دولت من؛ راهنمای تصویری و گام‌به‌گام" referrerpolicy="no-referrer" decoding="async"></figure></div><aside class="sbox"><div class="sinner"><div class="shd"><span>Latest <b>titles</b></span><span id="scount" data-dyn=""></span></div><div class="slist" id="slist" data-dyn=""></div><div class="sfoot"><div class="row"><span id="srange" data-dyn=""></span><div class="pp">Show <div class="seg" id="sperseg" data-dyn=""></div></div></div><div class="row" style="justify-content:center"><div class="pg" id="spg" data-dyn=""></div></div></div></div></aside></section>
+<section class="sec sec-banners"><div class="banners"><div class="bn"><a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSY-pAyJ9tqGv9gLJWHDAJLluDKJLShRGgLMAUCcOkmsQ&amp;s=10" target="_blank" rel="noopener"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSY-pAyJ9tqGv9gLJWHDAJLluDKJLShRGgLMAUCcOkmsQ&amp;s=10" alt="" referrerpolicy="no-referrer" decoding="async"></a></div><div class="bn"><a href="https://transportsafety.ir/wp-content/uploads/2017/11/%D8%AA%D8%B9%D8%B1%DB%8C%D9%81-%D8%A7%DB%8C%D9%85%D9%86%DB%8C1.jpg" target="_blank" rel="noopener"><img src="https://transportsafety.ir/wp-content/uploads/2017/11/%D8%AA%D8%B9%D8%B1%DB%8C%D9%81-%D8%A7%DB%8C%D9%85%D9%86%DB%8C1.jpg" alt="" referrerpolicy="no-referrer" decoding="async"></a></div></div></section>
+<section class="sec sec-article"><article class="art-body">
+<p dir="auto">ثبت‌نام افزایش کالابرگ از طریق کدام سامانه انجام می‌شود؟</p>
+<p dir="auto">برای ثبت درخواست افزایش اعتبار کالابرگ باید وارد پنجره ملی خدمات دولت هوشمند به نشانی my.gov.ir شوید. در این سامانه، بخشی با عنوان «خوداظهاری افزایش کالابرگ» در نظر گرفته شده است که سرپرستان خانوار می‌توانند از طریق آن اطلاعات موردنیاز را ثبت کنند.</p>
+<p dir="auto">در این فرایند، اطلاعات هویتی و نشانی محل سکونت به همراه جزئیات وضعیت اقتصادی خانوار دریافت می‌شود. پس از تکمیل فرم و تأیید اطلاعات، درخواست برای بررسی ثبت خواهد شد. البته ثبت درخواست به معنی تأیید قطعی افزایش اعتبار کالابرگ نیست.</p>
+<p dir="auto">مراحل ثبت درخواست افزایش کالابرگ در سامانه دولت من</p>
+<p dir="auto">برای ثبت درخواست افزایش کالابرگ باید مراحل زیر را به‌ترتیب انجام دهید:</p>
+<p dir="auto">ورود به سامانه دولت من از طریق نشانی my.gov.ir</p>
+<p dir="auto">واردکردن شماره تلفن همراه سرپرست خانوار و احراز هویت با کد پیامکی</p>
+<p dir="auto">انتخاب گزینه «خوداظهاری افزایش کالابرگ» از صفحه خدمات</p>
+<p dir="auto">بررسی و تأیید اطلاعات هویتی متقاضی</p>
+<p dir="auto">ثبت کدپستی و نشانی محل سکونت خانوار</p>
+<p dir="auto">تکمیل پرسش‌نامه اقتصادی و واردکردن اطلاعات درآمد، شغل، املاک و وسایل نقلیه</p>
+<p dir="auto">مطالعه شرایط، اعلام رضایت و پذیرش مسئولیت صحت اطلاعات</p>
+<p dir="auto">بررسی نهایی اطلاعات و ثبت درخواست</p>
+<p dir="auto">آموزش مرحله‌به‌مرحله ثبت درخواست افزایش کالابرگ در سامانه دولت من</p>
+<p dir="auto">برای تکمیل فرم خوداظهاری، مراحل زیر را دنبال کنید. بهتر است پیش از شروع، شماره تلفن همراه سرپرست خانوار و کدپستی محل سکونت را در دسترس داشته باشید.</p>
+<p dir="auto">مرحله اول: ورود به سامانه دولت من</p>
+<p dir="auto">ابتدا مرورگر تلفن همراه یا رایانه خود را باز کنید و نشانی my.gov.ir را در نوار آدرس وارد کنید. پس از بازشدن صفحه اصلی، گزینه ورود به سامانه را انتخاب کنید تا به بخش احراز هویت هدایت شوید.</p>
+<p dir="auto">پنجره ملی خدمات دولت هوشمند</p>
+<p dir="auto">مرحله دوم: واردکردن شماره تلفن همراه و احراز هویت</p>
+<p dir="auto">در صفحه ورود، شماره تلفن همراه سرپرست خانوار را وارد کنید. پس از واردکردن اطلاعات موردنیاز و عبارت امنیتی، گزینه ارسال کد تأیید را بزنید.</p>
+<p dir="auto">یک رمز یک‌بارمصرف از طریق پیامک برای شماره همراه ثبت‌شده ارسال می‌شود. کد دریافتی را در کادر مربوط وارد کنید تا وارد حساب کاربری خود در سامانه دولت من شوید.</p>
+<p dir="auto">توجه داشته باشید که شماره تلفن همراه باید به نام سرپرست خانوار باشد؛ اطلاعات ورود و احراز هویت نیز باید با مشخصات او مطابقت داشته باشد.</p>
+<figure class="fig"><img src="https://static.digiato.com/digiato/2026/11/%D9%88%D8%A7%D8%B1%D8%AF%DA%A9%D8%B1%D8%AF%D9%86-%D8%B4%D9%85%D8%A7%D8%B1%D9%87-%D8%AA%D9%84%D9%81%D9%86-%D9%87%D9%85%D8%B1%D8%A7%D9%87-%D9%88-%DA%A9%D8%AF-%D8%AA%D8%A3%DB%8C%DB%8C%D8%AF-1024x570.jpg.webp" alt="" referrerpolicy="no-referrer" decoding="async"></figure>
+<p dir="auto">مرحله سوم: انتخاب گزینه خوداظهاری افزایش کالابرگ</p>
+<p dir="auto">پس از ورود، صفحه خدمات سامانه دولت من نمایش داده می‌شود. در این صفحه باید گزینه «خوداظهاری افزایش کالابرگ» را پیدا و انتخاب کنید.</p>
+<p dir="auto">با انتخاب این گزینه، فرم مربوط به ثبت اطلاعات خانوار باز می‌شود و می‌توانید مراحل تکمیل درخواست را ادامه دهید.</p>
+<p dir="auto">نکته مهم اینکه نمایش این گزینه برای همه کاربران تضمین‌شده نیست و به مشمول‌بودن سرپرست خانوار در فراخوان مربوط بستگی دارد.</p>
+<figure class="fig"><img src="https://static.digiato.com/digiato/2026/11/%DA%AF%D8%B2%DB%8C%D9%86%D9%87-%D8%AE%D9%88%D8%AF%D8%A7%D8%B8%D9%87%D8%A7%D8%B1%DB%8C-%D8%A7%D9%81%D8%B2%D8%A7%DB%8C%D8%B4-%DA%A9%D8%A7%D9%84%D8%A7%D8%A8%D8%B1%DA%AF-%D8%AF%D8%B1-%D8%B3%D8%A7%D9%85%D8%A7%D9%86%D9%87-%D8%AF%D9%88%D9%84%D8%AA-%D9%85%D9%86.jpg.webp" alt="" referrerpolicy="no-referrer" decoding="async"></figure>
+<p dir="auto">مرحله چهارم: بررسی اطلاعات هویتی</p>
+<p dir="auto">در این بخش، اطلاعات هویتی متقاضی ازجمله نام و نام خانوادگی، کد ملی و شماره تلفن همراه نمایش داده می‌شود.</p>
+<p dir="auto">اطلاعات نمایش‌داده‌شده را با دقت بررسی کنید و درصورت صحیح‌بودن، به مرحله بعد بروید. اگر مغایرتی در مشخصات وجود دارد، پیش از ثبت نهایی درخواست برای اصلاح آن اقدام کنید.</p>
+<figure class="fig"><img src="https://static.digiato.com/digiato/2026/11/%D9%85%D8%B4%D8%AE%D8%B5%D8%A7%D8%AA-%D9%87%D9%88%DB%8C%D8%AA%DB%8C-%D9%85%D8%AA%D9%82%D8%A7%D8%B6%DB%8C.jpg.webp" alt="" referrerpolicy="no-referrer" decoding="async"></figure>
+<p dir="auto">مرحله پنجم: ثبت نشانی محل سکونت و کدپستی</p>
+<p dir="auto">در ادامه، باید اطلاعات مربوط به محل سکونت خانوار را تکمیل کنید. در این قسمت، امکان ثبت نشانی از طریق واردکردن کدپستی یا انتخاب موقعیت جغرافیایی روی نقشه در نظر گرفته شده است.</p>
+<p dir="auto">اگر روش ثبت با کدپستی را انتخاب می‌کنید، کدپستی ۱۰ رقمی محل سکونت خود را وارد کنید. در روش دوم نیز باید موقعیت محل زندگی خود را روی نقشه مشخص کنید.</p>
+<p dir="auto">پس از ثبت نشانی، اطلاعات واردشده را بررسی کنید و به مرحله بعد بروید.</p>
+<figure class="fig"><img src="https://static.digiato.com/digiato/2026/11/%D8%AB%D8%A8%D8%AA-%D9%86%D8%B4%D8%A7%D9%86%DB%8C-%D9%88-%DA%A9%D8%AF%D9%BE%D8%B3%D8%AA%DB%8C.jpg.webp" alt="" referrerpolicy="no-referrer" decoding="async"></figure>
+</article></section>
+<section class="sec sec-end"><i></i><span class="end-t">The End</span><i></i></section>
+<section class="sec sec-authors"><span class="tag">About the authors</span><div class="alist"><div class="acard"><div class="av"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjgCJcR9iG46fvHHLswzUKllwxDXorjJvfkATZ8OHMbA&amp;s=10" alt="" referrerpolicy="no-referrer" decoding="async"></div><div class="ainfo"><h3 class="au-name" dir="auto">sa</h3><div class="au-role" dir="auto">sssss</div><p class="au-desc" dir="auto">sss</p><div class="alinks"><a class="alink" href="mailto:sss" title="Email" aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="m3.5 7 8.5 6.5L20.5 7"></path></svg></a><a class="alink" href="https://ssss" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"></rect><path d="M8 10.5V16M8 7.8v.1M12 16v-3.2a2.3 2.3 0 0 1 4.6 0V16M12 10.5V16"></path></svg></a></div></div></div><div class="acard"><div class="av"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSiV-lOqgXCWD1aK446jYVWQ0kQ3ZmJDiP1oqfetXBSA&amp;s=10" alt="" referrerpolicy="no-referrer" decoding="async"></div><div class="ainfo"><h3 class="au-name" dir="auto">er</h3><div class="au-role" dir="auto">re</div></div></div></div></section>
+<section class="sec sec-comments"><h2 class="cm-h">Comments <span id="ccount" data-dyn=""></span></h2><form class="cform" id="cform" novalidate=""><div class="crow"><input id="cn" placeholder="Your name" autocomplete="name"><input id="ce" type="email" placeholder="Your email (never published)" autocomplete="email"></div><textarea id="cmt" rows="4" placeholder="Write your comment…"></textarea><div class="cact"><span id="cmsg"></span><button class="btn" type="submit">Send comment</button></div></form><div id="clist" data-dyn=""></div></section>
+  
+  </div>
+</main>
+
+<footer id="contact">
+  <div class="fgrid">
+    <div class="fbrand">
+      <a class="logo" id="logoFoot" href="#"><i></i><span><span class="im">Immuno</span>Afshar</span></a>
+      <p>A 3D hub for immunotherapy research, articles, books, code and experience — built to make complex science feel alive.</p>
+    </div>
+    <div><h4>Quick Access</h4><ul id="quick"></ul></div>
+    <div><h4>Contact</h4><ul id="contactList" class="clist"></ul></div>
+    <div>
+      <h4>Visitors <i class="live"></i></h4>
+      <div class="vcol">
+        <div class="vr"><span class="l">Today</span><b id="v-day">…</b></div>
+        <div class="vr"><span class="l">Week</span><b id="v-week">…</b></div>
+        <div class="vr"><span class="l">Month</span><b id="v-month">…</b></div>
+        <div class="vr"><span class="l">Year</span><b id="v-year">…</b></div>
+        <div class="vr"><span class="l">Total</span><b id="v-total">…</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="fbottom"><span>© 2026 <b>ImmunoAfshar</b>. All rights reserved.</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+window.__POST={"mode":"final","key":"552819","ns":"immunoafshar-saberafshar93-blog-552819"};
+
+const P=window.__POST||{mode:"final",ns:"immunoafshar-saberafshar93-blog",key:"post"};
+const CONFIG={
+  RAW:"https://raw.githubusercontent.com/saberafshar93/Home/main/Bin/Data/",
+  HOME_MGMT:"Home/Home Management/",
+  BAR:"Home/Home Bar/",
+  BLOG_MGMT:"Blog/Bolg Management/",
+  REPO_PATH:"Bin/Data/",
+  API:"https://api.github.com/repos/saberafshar93/Home/commits",
+  SEP:"/$/",
+  REFRESH_MS:60000,
+  WEBSITE:"https://saberafshar93.github.io/Home/",
+  COUNTER_NS:P.ns
+};
+const NAV_NAMES=["Home","Lab","Article","Blog","Book","AI","Code","Experience","Gallery","Fun"];
+const SECTIONS=[["Lab","lab"],["Article","article"],["Book","book"],["AI","ai"],["Code","code"],["Experience","experience"],["Gallery","gallery"],["Fun","fun"]];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const pad=n=>String(n).padStart(2,"0");
+const lsGet=k=>{try{return localStorage.getItem(k)}catch{return null}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+const cssUrl=u=>String(u).replace(/['"()\s\\]/g,c=>encodeURIComponent(c));
+function parseLines(txt){
+  return txt.replace(/^\uFEFF/,"").split(/\r?\n/).map(l=>l.replace(/\uFEFF/g,"").trim()).filter(Boolean).map(l=>l.split(CONFIG.SEP).map(x=>x.trim()));
+}
+async function getText(folder,file){
+  const key="txt:"+folder+file;
+  try{
+    const r=await fetch(CONFIG.RAW+encodeURI(folder)+encodeURIComponent(file)+"?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok)throw 0;
+    const t=await r.text();lsSet(key,t);return t;
+  }catch{return lsGet(key)||""}
+}
+async function getLines(folder,file){return parseLines(await getText(folder,file))}
+document.addEventListener("error",e=>{
+  const t=e.target;
+  if(!t||t.tagName!=="IMG")return;
+  if(t.dataset.ico){
+    const list=t.dataset.ico.split(","),i=+t.dataset.i+1;
+    if(i<list.length){t.dataset.i=i;t.src=list[i]}else t.replaceWith(document.createTextNode(t.dataset.ltr||"•"));
+  }else if(t.closest(".art-body,.cover,.bn,.av")){t.classList.add("broken")}
+},true);
+if(P.mode!=="final")document.addEventListener("click",e=>{if(e.target.closest("a"))e.preventDefault()},true);
+
+/* ---------- dates (read from each linked article) ---------- */
+const MRX="(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\\.?";
+function parseInfo(html){
+  const doc=new DOMParser().parseFromString(html,"text/html");
+  const out={date:null,t:false};
+  const metas=['meta[property="article:published_time"]','meta[name="date"]','meta[name="pubdate"]','meta[itemprop="datePublished"]','meta[name="DC.date.issued"]'];
+  for(const s of metas){const m=doc.querySelector(s);if(m&&m.content){const d=new Date(m.content);if(!isNaN(d)){out.date=d;out.t=/T\d\d:\d\d/.test(m.content);return out}}}
+  const tm=doc.querySelector("time[datetime]");
+  if(tm){const d=new Date(tm.getAttribute("datetime"));if(!isNaN(d)){out.date=d;out.t=/T\d\d:\d\d/.test(tm.getAttribute("datetime"));return out}}
+  const jl=html.match(/"datePublished"\s*:\s*"([^"]+)"/);
+  if(jl){const d=new Date(jl[1]);if(!isNaN(d)){out.date=d;out.t=/T\d\d:\d\d/.test(jl[1]);return out}}
+  const txt=(doc.body?doc.body.textContent:"").replace(/\s+/g," ");
+  const cap=w=>w.slice(0,3).replace(/^./,c=>c.toUpperCase());
+  const pats=[
+    [new RegExp("\\b(\\d{4})[-/.](\\d{1,2})[-/.](\\d{1,2})\\b"),m=>[+m[1],+m[2]-1,+m[3]]],
+    [new RegExp("\\b"+MRX+"\\s+(\\d{1,2})(?:st|nd|rd|th)?,?\\s+(\\d{4})","i"),m=>[+m[3],MON.indexOf(cap(m[1])),+m[2]]],
+    [new RegExp("\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+"+MRX+",?\\s+(\\d{4})","i"),m=>[+m[3],MON.indexOf(cap(m[2])),+m[1]]]
+  ];
+  for(const [rx,f] of pats){
+    const m=txt.match(rx);
+    if(m){const [y,mo,d]=f(m);if(mo>=0){
+      const dt=new Date(y,mo,d);
+      const after=txt.slice(m.index+m[0].length,m.index+m[0].length+25).match(/(\d{1,2}):(\d{2})/);
+      if(after&&+after[1]<24){dt.setHours(+after[1],+after[2]);out.t=true}
+      out.date=dt;return out}}
+  }
+  return out;
+}
+const infoMem={};
+function pageInfo(link){
+  if(infoMem[link])return infoMem[link];
+  return infoMem[link]=(async()=>{
+    try{const c=JSON.parse(lsGet("pi:"+link)||"null");if(c&&Date.now()-c.ts<216e5)return {date:c.iso?new Date(c.iso):null,t:c.t}}catch{}
+    let res={date:null,t:false};
+    try{const r=await fetch(link);if(r.ok)res=parseInfo(await r.text())}catch{}
+    lsSet("pi:"+link,JSON.stringify({iso:res.date?res.date.toISOString():"",t:res.t,ts:Date.now()}));
+    return res;
+  })();
+}
+const commitMem={};
+function commitDate(path){
+  if(commitMem[path])return commitMem[path];
+  return commitMem[path]=(async()=>{
+    try{const r=await fetch(CONFIG.API+"?path="+encodeURIComponent(CONFIG.REPO_PATH+path)+"&per_page=1");const j=await r.json();return new Date(j[0].commit.committer.date)}catch{return null}
+  })();
+}
+async function resolveDate(link,path){
+  const info=await pageInfo(link);
+  if(info.date)return {date:info.date,t:info.t};
+  const k="pf:"+link;let v=lsGet(k);let d;
+  if(v)d=new Date(v);else{d=(await commitDate(path))||new Date();lsSet(k,d.toISOString())}
+  return {date:d,t:true};
+}
+function ago(d){
+  const sod=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime();
+  const days=Math.round((sod(new Date())-sod(d))/864e5);
+  return days<=0?"Today":days===1?"1 day ago":days+" days ago";
+}
+const isLink=u=>/^https?:\/\//i.test(u||"");
+
+/* ---------- navigation (shared with the home page) ---------- */
+const SITE=CONFIG.WEBSITE;
+$("#logoTop").href=SITE;$("#logoFoot").href=SITE;$("#crHome").href=SITE;$("#crBlog").href=SITE+"Blog";
+const PAGES={"Home":SITE,"Lab":SITE+"Lab","Article":SITE+"Article","Blog":SITE+"Blog","Book":SITE+"Book","AI":SITE+"AI","Code":SITE+"Code","Experience":SITE+"Experience","Gallery":SITE+"Gallery","Fun":SITE+"Fun","Contact":"#contact"};
+const pageUrl=n=>PAGES[n]||"#";
+const menu=$("#menu"),navData={};
+function renderNav(){
+  menu.innerHTML="";
+  NAV_NAMES.forEach(name=>{
+    const li=document.createElement("li");
+    if(name==="Home"){
+      li.innerHTML=`<a class="home" data-page="Home" href="${esc(pageUrl("Home"))}" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></a>`;
+      menu.appendChild(li);return;
+    }
+    let lines=(navData[name]||[]).filter(l=>l[0]);
+    if(!lines.length)lines=[[name,pageUrl(name)]];
+    li.innerHTML=`<a href="${esc(pageUrl(name))}" data-page="${esc(name)}">${esc(name)}</a><div class="drop">${lines.map(l=>`<a href="${esc(l[1]||"#")}">${esc(l[0])}</a>`).join("")}</div>`;
+    menu.appendChild(li);
+    li.querySelector("li>a").addEventListener("click",e=>{
+      if(innerWidth<=1020&&!li.classList.contains("open")){e.preventDefault();document.querySelectorAll("#menu li.open").forEach(x=>x.classList.remove("open"));li.classList.add("open")}
+    });
+  });
+  const ct=document.createElement("li");
+  ct.innerHTML=`<a class="plain" data-page="Contact" href="#contact">Contact</a>`;menu.appendChild(ct);
+}
+renderNav();
+menu.addEventListener("click",e=>{if(e.target.closest(".drop a")||e.target.closest(".plain"))$("#nav").classList.remove("show")});
+$("#burger").onclick=()=>$("#nav").classList.toggle("show");
+
+/* ---------- latest titles (Blog Management/Box.txt) ---------- */
+const SPER=[20,50,100];let sper=+lsGet("blogSper");if(!SPER.includes(sper))sper=20;let spage=1,srows=[];
+const dateMap={};let drawTimer=0,resolving=false;
+function renderLatest(lines){
+  srows=lines.filter(l=>l.length>=2&&l[1]).map((l,i)=>({title:l[1],link:l[3]||"",idx:i}));
+  drawSide();resolveAll();
+}
+async function resolveAll(){
+  if(resolving)return;resolving=true;
+  try{
+    const todo=[...new Set(srows.filter(r=>isLink(r.link)&&!dateMap[r.link]).map(r=>r.link))];
+    let i=0;
+    const worker=async()=>{while(i<todo.length){const link=todo[i++];dateMap[link]=await resolveDate(link,CONFIG.BLOG_MGMT+"Box.txt");clearTimeout(drawTimer);drawTimer=setTimeout(drawSide,150)}};
+    await Promise.all(Array.from({length:6},worker));
+  }finally{resolving=false}
+  clearTimeout(drawTimer);drawSide();
+}
+function sortedRows(){
+  return srows.slice().sort((a,b)=>{
+    const x=dateMap[a.link],y=dateMap[b.link];
+    if(x&&y&&(y.date-x.date))return y.date-x.date;
+    if(x&&!y)return -1;if(!x&&y)return 1;
+    return b.idx-a.idx;
+  });
+}
+function pager(p,total){
+  if(total<=1)return "";
+  const set=new Set([1,total,p-1,p,p+1]);
+  const nums=[...set].filter(x=>x>=1&&x<=total).sort((a,b)=>a-b);
+  let h=`<button type="button" data-p="${p-1}"${p===1?" disabled":""}>‹</button>`,prev=0;
+  nums.forEach(x=>{if(prev&&x-prev>1)h+=`<i>…</i>`;h+=`<button type="button" data-p="${x}"${x===p?' class="on"':""}>${x}</button>`;prev=x});
+  return h+`<button type="button" data-p="${p+1}"${p===total?" disabled":""}>›</button>`;
+}
+function drawSide(){
+  const sl=$("#slist");if(!sl)return;
+  const list=sortedRows(),n=list.length,pages=Math.max(1,Math.ceil(n/sper));
+  if(spage>pages)spage=pages;if(spage<1)spage=1;
+  const from=(spage-1)*sper,slice=list.slice(from,from+sper);
+  $("#sperseg").innerHTML=SPER.map(x=>`<button type="button" data-per="${x}" class="${x===sper?"on":""}">${x}</button>`).join("");
+  $("#scount").textContent=n?`${n} total`:"";
+  $("#srange").textContent=n?`${from+1}–${Math.min(from+sper,n)} of ${n}`:"";
+  sl.innerHTML=n?slice.map(r=>{
+    const d=dateMap[r.link],ok=isLink(r.link),cls="srow"+(ok?"":" nol");
+    const when=!ok?"—":d?ago(d.date):"…";
+    const inner=`<span class="st">${esc(r.title)}</span><span class="sa">${when}</span>`;
+    return ok?`<a class="${cls}" href="${esc(r.link)}" target="_blank" rel="noopener">${inner}</a>`:`<div class="${cls}">${inner}</div>`;
+  }).join(""):`<div class="empty" style="margin:16px">Nothing here yet.</div>`;
+  $("#spg").innerHTML=pager(spage,pages);
+}
+if($("#sperseg")){
+  $("#sperseg").addEventListener("click",e=>{const b=e.target.closest("[data-per]");if(!b)return;sper=+b.dataset.per;lsSet("blogSper",sper);spage=1;drawSide()});
+  $("#spg").addEventListener("click",e=>{const b=e.target.closest("[data-p]");if(!b||b.disabled)return;spage=+b.dataset.p;drawSide();$("#slist").scrollTop=0});
+}
+
+/* ---------- comments (stored in this browser) ---------- */
+const CK="cm:"+P.key+(P.mode==="final"?"":":"+P.mode);
+function cmLoad(){try{return JSON.parse(lsGet(CK)||"[]")}catch{return []}}
+function cmDraw(){
+  const box=$("#clist");if(!box)return;
+  const L=cmLoad();
+  $("#ccount").textContent=L.length;
+  box.innerHTML=L.length?L.slice().reverse().map(c=>{
+    const d=new Date(c.t);
+    return `<div class="cm"><div class="cav">${esc((c.n||"?").trim().charAt(0).toUpperCase()||"?")}</div><div class="cb"><div class="ch"><b>${esc(c.n)}</b><span>${MON[d.getMonth()]} ${pad(d.getDate())}, ${d.getFullYear()} · ${pad(d.getHours())}:${pad(d.getMinutes())}</span></div><p dir="auto">${esc(c.m)}</p></div></div>`;
+  }).join(""):`<div class="empty">No comments yet — be the first to share your thoughts.</div>`;
+}
+if($("#cform")){
+  $("#cform").addEventListener("submit",e=>{
+    e.preventDefault();
+    const n=$("#cn").value.trim(),em=$("#ce").value.trim(),m=$("#cmt").value.trim(),msg=$("#cmsg");
+    msg.className="";
+    if(!n||!m||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){msg.textContent="Please enter your name, a valid email and your comment.";return}
+    const L=cmLoad();L.push({n,e:em,m,t:Date.now()});lsSet(CK,JSON.stringify(L));
+    $("#cn").value="";$("#ce").value="";$("#cmt").value="";
+    msg.className="ok";msg.textContent="Thank you! Your comment was posted.";setTimeout(()=>{msg.textContent=""},4000);
+    cmDraw();
+  });
+  cmDraw();
+}
+
+/* ---------- backgrounds (shared) ---------- */
+let bgList=[];
+function layoutBg(){
+  const box=$("#bgimgs"),n=bgList.length;if(!n)return;
+  const H=Math.max(document.documentElement.scrollHeight,innerHeight);
+  box.style.height=H+"px";
+  const slot=H/n,h=Math.min(innerHeight*1.15,slot*.8);
+  Array.from(box.children).forEach((el,i)=>{el.style.height=h+"px";el.style.top=(i*slot)+"px";el.dataset.c=i*slot+h/2;el.dataset.i=i});
+  parallaxBg();
+}
+function parallaxBg(){
+  const y=scrollY+innerHeight/2;
+  document.querySelectorAll(".bgi").forEach(el=>{let o=(y-(+el.dataset.c||0))*0.12;if(el.dataset.i==="0")o=Math.max(0,o);el.style.transform=`translateY(${o.toFixed(1)}px)`});
+}
+function renderBg(lines){
+  bgList=lines.map(l=>l.find(x=>/^https?:\/\//i.test(x))).filter(Boolean);
+  $("#bgimgs").innerHTML=bgList.map(u=>`<div class="bgi" style="background-image:url('${cssUrl(u)}')"></div>`).join("");
+  layoutBg();
+}
+let bgTick=false;
+addEventListener("scroll",()=>{if(!bgTick){bgTick=true;requestAnimationFrame(()=>{parallaxBg();bgTick=false})}},{passive:true});
+addEventListener("resize",layoutBg);
+new ResizeObserver(layoutBg).observe(document.body);
+
+/* ---------- footer ---------- */
+$("#quick").innerHTML=[["Home",SITE],["Blog",SITE+"Blog"],...SECTIONS.map(([t,k])=>[t,SITE+"#"+k])].map(l=>`<li><a href="${esc(l[1])}">${esc(l[0])}</a></li>`).join("");
+const CONTACTS=[["Email","✉"],["Phone","☎"],["WhatsApp","whatsapp"],["Telegram","telegram"],["Instagram","instagram"],["LinkedIn","linkedin"],["X (Twitter)","x"],["GitHub","github"],["YouTube","youtube"],["Facebook","facebook"],["Discord","discord"],["Medium","medium"],["ResearchGate","researchgate"],["ORCID","orcid"],["Google Scholar","googlescholar"],["Website","🌐"],["Reddit","reddit"],["Threads","threads"],["Bluesky","bluesky"],["TikTok","tiktok"]];
+function contactHref(v){
+  v=(v||"").trim();if(!v)return "";
+  if(/^(https?:|mailto:|tel:)/i.test(v))return v;
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))return "mailto:"+v;
+  if(/^\+?[\d\s()-]{6,}$/.test(v))return "tel:"+v.replace(/[^\d+]/g,"");
+  if(/^[\w.-]+\.[a-z]{2,}(\/\S*)?$/i.test(v))return "https://"+v;
+  return "";
+}
+function renderContact(text){
+  const rows=(text||"").replace(/^\uFEFF/,"").split(/\r?\n/);
+  $("#contactList").innerHTML=CONTACTS.map(([name,ic],i)=>{
+    const href=contactHref(rows[i]);
+    let icon=ic;
+    if(/^[a-z]/.test(ic)){
+      const urls=["9.21.0","latest"].map(v=>`https://cdn.jsdelivr.net/npm/simple-icons@${v}/icons/${ic}.svg`);
+      icon=`<img src="${urls[0]}" alt="" data-ico="${urls.join(",")}" data-i="0" data-ltr="${esc(name[0])}">`;
+    }
+    const inner=`<span class="ico">${icon}</span>${esc(name)}`;
+    return `<li>${href?`<a class="ci" href="${esc(href)}"${/^https?:/i.test(href)?' target="_blank" rel="noopener"':""}>${inner}</a>`:`<span class="ci">${inner}</span>`}</li>`;
+  }).join("");
+}
+renderContact("");
+
+/* ---------- visitors (counted only on the published page) ---------- */
+function isoWeek(d){
+  const t=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));
+  t.setUTCDate(t.getUTCDate()+4-(t.getUTCDay()||7));
+  const y=t.getUTCFullYear(),w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);
+  return `${y}-W${pad(w)}`;
+}
+const VK=["day","week","month","year","total"],shown={};
+function setV(k,val){
+  const el=$("#v-"+k);
+  if(typeof val!=="number"||isNaN(val)){if(shown[k]===undefined)el.textContent="—";return}
+  const from=shown[k]||0;shown[k]=val;const t0=performance.now();
+  (function s(now){const p=Math.min((now-t0)/1000,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(val-from)*e).toLocaleString("en-US");if(p<1)requestAnimationFrame(s)})(t0);
+}
+async function ab(key,hit){
+  const r=await fetch(`https://abacus.jasoncameron.dev/${hit?"hit":"get"}/${CONFIG.COUNTER_NS}/${key}`);
+  if(!r.ok){if(!hit&&r.status===404)return 0;throw new Error("counter")}
+  return +(await r.json()).value||0;
+}
+async function visits(hit){
+  const n=new Date(),Y=n.getUTCFullYear(),M=`${Y}-${pad(n.getUTCMonth()+1)}`,D=`${M}-${pad(n.getUTCDate())}`;
+  const keys={day:"d"+D,week:"w"+isoWeek(n),month:"m"+M,year:"y"+Y,total:"total"};
+  let vals=null;
+  try{
+    const res=await Promise.all(VK.map(k=>ab(keys[k],hit)));
+    vals=Object.fromEntries(VK.map((k,i)=>[k,res[i]]));lsSet("vstats-"+P.key,JSON.stringify(vals));
+  }catch{try{vals=JSON.parse(lsGet("vstats-"+P.key)||"null")}catch{}}
+  VK.forEach(k=>setV(k,vals?vals[k]:NaN));
+}
+visits(P.mode==="final");setInterval(()=>visits(false),60000);
+
+/* ---------- auto-update shared parts every minute ---------- */
+const last={};
+function changed(k,v){const s=JSON.stringify(v);if(last[k]===s)return false;last[k]=s;return true}
+async function refresh(){
+  const jobs=[];
+  jobs.push(getLines(CONFIG.BLOG_MGMT,"Box.txt").then(l=>{if(changed("box",l))renderLatest(l)}));
+  jobs.push(getLines(CONFIG.HOME_MGMT,"Backgrounds.txt").then(l=>{if(changed("bgs",l))renderBg(l)}));
+  jobs.push(getText(CONFIG.HOME_MGMT,"Contact.txt").then(t=>{if(changed("contact",t))renderContact(t)}));
+  jobs.push(Promise.all(NAV_NAMES.filter(n=>n!=="Home").map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
+  await Promise.all(jobs);
+}
+refresh();setInterval(refresh,CONFIG.REFRESH_MS);
+
+addEventListener("scroll",()=>{const h=document.documentElement;$("#progress").style.width=(scrollY/Math.max(1,h.scrollHeight-innerHeight)*100)+"%"},{passive:true});
+const bt=$("#bannerT");
+$("#top").addEventListener("mousemove",e=>{const r=e.currentTarget.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;bt.style.transform=`perspective(900px) rotateY(${px*14}deg) rotateX(${-py*10}deg)`});
+$("#top").addEventListener("mouseleave",()=>{bt.style.transform=""});
+
+/* ---------- 3D background ---------- */
+if(window.THREE&&P.mode!=="edit"){
+  const cv=$("#bg");
+  const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x050816,0.035);
+  const cam=new THREE.PerspectiveCamera(60,1,0.1,200);cam.position.z=14;
+  scene.add(new THREE.AmbientLight(0x6677aa,.8));
+  const l1=new THREE.PointLight(0x4df0c8,2.2,60);l1.position.set(8,6,10);scene.add(l1);
+  const l2=new THREE.PointLight(0xff5d8f,2,60);l2.position.set(-9,-5,8);scene.add(l2);
+  const core=new THREE.Group();scene.add(core);
+  const geo=new THREE.IcosahedronGeometry(2.6,3);
+  const base=geo.attributes.position.array.slice();
+  const cell=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0x7b6cff,emissive:0x1a1060,shininess:90}));
+  core.add(cell);
+  core.add(new THREE.Mesh(new THREE.IcosahedronGeometry(2.75,2),new THREE.MeshBasicMaterial({color:0x4df0c8,wireframe:true,transparent:true,opacity:.18})));
+  for(let i=0;i<70;i++){
+    const v=new THREE.Vector3().randomDirection();
+    const s=new THREE.Mesh(new THREE.CylinderGeometry(.03,.07,.9,6),new THREE.MeshPhongMaterial({color:0xff5d8f,emissive:0x40102a}));
+    s.position.copy(v.clone().multiplyScalar(3.05));s.lookAt(v.clone().multiplyScalar(10));s.rotateX(Math.PI/2);core.add(s);
+    const tip=new THREE.Mesh(new THREE.SphereGeometry(.12,8,8),new THREE.MeshBasicMaterial({color:0xffb3c9}));
+    tip.position.copy(v.clone().multiplyScalar(3.55));core.add(tip);
+  }
+  const tcells=[];
+  for(let i=0;i<22;i++){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.28+Math.random()*.25,20,20),new THREE.MeshPhongMaterial({color:i%2?0x4df0c8:0x5cc8ff,emissive:0x0a3a30,shininess:100}));
+    m.userData={r:5+Math.random()*4,sp:.15+Math.random()*.35,a:Math.random()*6.28,y:(Math.random()-.5)*5,t:Math.random()*6.28};
+    scene.add(m);tcells.push(m);
+  }
+  const N=1600,pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*70;pos[i*3+1]=(Math.random()-.5)*70;pos[i*3+2]=(Math.random()-.5)*70}
+  const pg=new THREE.BufferGeometry();pg.setAttribute("position",new THREE.BufferAttribute(pos,3));
+  const pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0x9bb4ff,size:.08,transparent:true,opacity:.75}));
+  scene.add(pts);
+  function resize(){renderer.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+  addEventListener("resize",resize);resize();
+  let mx=0,my=0,sp=0;
+  addEventListener("mousemove",e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5)});
+  addEventListener("scroll",()=>{sp=scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight)},{passive:true});
+  const c1=new THREE.Color(0x7b6cff),c2=new THREE.Color(0xff5d8f),c3=new THREE.Color(0x4df0c8),tmp=new THREE.Color();
+  const clock=new THREE.Clock();
+  (function loop(){
+    const t=clock.getElapsedTime(),p=geo.attributes.position;
+    for(let i=0;i<p.count;i++){
+      const x=base[i*3],y=base[i*3+1],z=base[i*3+2];
+      const k=1+.06*Math.sin(x*1.6+t*1.4)*Math.cos(y*1.6+t*1.1)+.04*Math.sin(z*2+t);
+      p.setXYZ(i,x*k,y*k,z*k);
+    }
+    p.needsUpdate=true;geo.computeVertexNormals();
+    core.rotation.y=t*.12+sp*8;core.rotation.x=sp*3+my*.4;
+    core.position.x=Math.sin(sp*Math.PI*3)*5;
+    core.position.y=-sp*6+Math.cos(sp*9)*1.2;
+    core.scale.setScalar(1+Math.sin(sp*Math.PI)*.35);
+    cam.position.z=14-sp*5;
+    cam.position.x+=((mx*4)-cam.position.x)*.04;
+    cam.position.y+=((-my*3-sp*2)-cam.position.y)*.04;
+    cam.lookAt(core.position.x*.3,core.position.y*.5,0);
+    tmp.copy(c1).lerp(c2,Math.min(1,sp*2)).lerp(c3,Math.max(0,sp*2-1));
+    cell.material.color.copy(tmp);
+    tcells.forEach(m=>{const d=m.userData;d.a+=d.sp*.01;m.position.set(core.position.x+Math.cos(d.a)*d.r,core.position.y+d.y+Math.sin(t+d.t)*.6,Math.sin(d.a)*d.r)});
+    pts.rotation.y=t*.01+sp*1.5;pts.rotation.x=sp*.6;
+    renderer.render(scene,cam);
+    requestAnimationFrame(loop);
+  })();
+}
+
+</script>
+</body>
+</html>﻿
