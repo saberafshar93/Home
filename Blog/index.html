@@ -507,7 +507,7 @@ function renderSlides(lines){
   sl.forEach((s,i)=>{
     const [k,t,p,link,image]=s;const seed=hash(t);
     const d=document.createElement("div");d.className="slide"+(i===cur?" active":"");
-    d.innerHTML=`<div><div class="kicker">${esc(k)}</div><h1 class="grad">${esc(t)}</h1><p>${esc(p||"")}</p>${link?`<a class="btn" href="${esc(safeUrl(link))}" target="_blank" rel="noopener">Learn more</a>`:""}</div><div class="art">${imgOrArt(image,seed,600,500)}</div>`;
+    d.innerHTML=`<div><div class="kicker">${esc(k)}</div><h1 class="grad">${esc(t)}</h1><p>${esc(p||"")}</p>${link?`<a class="btn" href="${esc(safeUrl(link))}" target="_self" rel="noopener">Learn more</a>`:""}</div><div class="art">${imgOrArt(image,seed,600,500)}</div>`;
     slider.appendChild(d);
     const b=document.createElement("button");b.className=i===cur?"active":"";b.setAttribute("aria-label","Slide "+(i+1));
     b.onclick=()=>go(i);dots.appendChild(b);
@@ -606,7 +606,7 @@ function draw(){
 
   $("#blist").innerHTML=slice.length?slice.map(r=>`<div class="brow${active&&!matches(r)?" dim":""}">
       <div class="d"><button type="button" class="dchip${filt.dom===r.dom?" on":""}" data-f="dom" data-v="${esc(r.dom)}" title="Show only ${esc(r.dom)}">${esc(r.dom||"—")}</button></div>
-      <div class="t">${/^https?:\/\//i.test(r.link)?`<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:`<span title="Link coming soon">${esc(r.title)}</span>`}</div>
+      <div class="t">${/^https?:\/\//i.test(r.link)?`<a href="${esc(r.link)}" target="_self" rel="noopener">${esc(r.title)}</a>`:`<span title="Link coming soon">${esc(r.title)}</span>`}</div>
       <div class="a"><button type="button" class="au${filt.auth===r.author?" on":""}" data-f="auth" data-v="${esc(r.author)}">${esc(r.author||"—")}</button></div>
       ${dateCell(r)}</div>`).join("")
     :`<div class="empty" style="margin:20px">No posts yet — add lines to Box.txt.</div>`;
@@ -724,7 +724,7 @@ function renderContact(text){
       icon=`<img src="${urls[0]}" alt="" data-ico="${urls.join(",")}" data-i="0" data-ltr="${esc(name[0])}">`;
     }
     const inner=`<span class="ico">${icon}</span>${esc(name)}`;
-    return `<li>${href?`<a class="ci" href="${esc(href)}"${/^https?:/i.test(href)?' target="_blank" rel="noopener"':""}>${inner}</a>`:`<span class="ci">${inner}</span>`}</li>`;
+    return `<li>${href?`<a class="ci" href="${esc(href)}"${/^https?:/i.test(href)?' target="_self" rel="noopener"':""}>${inner}</a>`:`<span class="ci">${inner}</span>`}</li>`;
   }).join("");
 }
 renderContact("");
