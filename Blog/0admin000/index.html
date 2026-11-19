@@ -108,6 +108,7 @@ iframe{display:block;width:100%;height:calc(100vh - 150px);min-height:560px;bord
     <div class="fld"><label>حیطه (Domain) — بالای عنوان نمایش داده می‌شود</label><input data-k="domain" dir="auto" placeholder="e.g. Immunotherapy"></div>
     <div class="fld"><label>عنوان مقاله</label><input data-k="title" dir="auto" placeholder="مثلاً: How CAR-T cells are changing cancer therapy"></div>
     <div class="fld"><label>خلاصه‌ی مقاله</label><textarea data-k="summary" rows="3" dir="auto" placeholder="چند جمله‌ی کوتاه درباره‌ی مقاله…"></textarea></div>
+    <div class="fld"><label>کلیدواژه‌ها (با ; یا , جدا کنید) — نام نویسنده‌ها خودکار اضافه می‌شود</label><input data-k="keywords" dir="auto" placeholder="CAR-T; Immunotherapy; Cancer"></div>
     <div class="fld"><label>آدرس تصویر شاخص (URL) — پیش‌نمایش خودکار</label>
       <div class="urlrow"><input data-k="cover" dir="ltr" placeholder="https://…/cover.jpg"><div class="thumb" id="thCover"></div></div></div>
   </div>
@@ -131,6 +132,13 @@ iframe{display:block;width:100%;height:calc(100vh - 150px);min-height:560px;bord
         <li>پررنگ: <code>**متن**</code> — کج: <code>*متن*</code> — لینک: <code>[متن](https://…)</code></li>
         <li>لینک روی کلمه: <code>کلمه ((https://…))</code> — کلمه‌ی قبل از پرانتزها لینک می‌شود و پرانتزها دیده نمی‌شوند.</li>
       </ul></details>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><span class="num">✦</span><h3>نظر / کامنت من (چندتایی، اختیاری)</h3></div>
+    <div id="opList"></div>
+    <button type="button" class="add" id="opAdd">+ افزودن نظر</button>
+    <div class="muted" style="padding-top:12px">اندازه با متن خودکار تنظیم می‌شود (تقریباً مربع). در مرحله‌ی «ویرایش» با دستگیره‌ی صورتی بالای هر باکس آن را به هر جای صفحه ببرید.</div>
   </div>
 
   <div class="panel">
@@ -432,6 +440,29 @@ a.ci:hover .ico img{filter:none}
 .alink{width:32px;height:32px}.alink svg{width:16px;height:16px}.alinks{margin-top:8px}
 a.av{display:grid}
 @media(max-width:1020px){.sec-main,.sec-main.solo{grid-template-columns:1fr}.hbox.hasc{grid-template-columns:1fr}}
+.op-box{position:absolute;z-index:60;display:flex;gap:12px;align-items:flex-start;width:max-content;max-width:min(380px,calc(100% - 16px));padding:14px 18px 14px 14px;border-radius:20px;background:linear-gradient(145deg,rgba(52,66,140,.97),rgba(30,40,96,.97));border:1px solid rgba(160,190,255,.55);box-shadow:0 0 0 1px rgba(77,240,200,.25),0 18px 50px rgba(0,0,0,.55),0 0 38px rgba(123,108,255,.45);backdrop-filter:blur(6px)}
+.op-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 0 18px rgba(77,240,200,.5)}
+.op-ic svg{width:21px;height:21px;stroke:#041022;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.op-in{min-width:0}
+.op-lb{font-size:11px;letter-spacing:2.2px;text-transform:uppercase;color:var(--a);font-weight:800;margin-bottom:4px}
+.op-t{font-family:"Source Serif 4","Vazirmatn",Georgia,serif;font-size:15.5px;line-height:1.75;color:#fff;text-align:justify;overflow-wrap:anywhere;white-space:pre-wrap;margin:0}
+@media(max-width:1020px){.op-box{position:relative;left:auto!important;top:auto!important;width:auto;max-width:100%}}
+.op-box{position:relative;z-index:5;align-self:center;max-width:100%}
+.op-box.free{position:absolute;z-index:60;max-width:min(460px,calc(100% - 16px))}
+@media(max-width:1020px){.op-box.free{position:relative;left:auto!important;top:auto!important}}
+.bn-h a,.bn-h img{display:block;height:100%}.bn-h img{object-fit:cover}
+.kws{margin-top:10px;font-size:12px;line-height:1.9;color:var(--mute)}
+.kw{color:var(--a);transition:.2s}.kw:hover{color:#fff;text-decoration:underline}
+.ks{margin:0 2px;color:var(--mute)}
+.kwl{margin-inline-end:10px;font:800 10.5px "Segoe UI",sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--c)}
+.kws-end{margin:20px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.cat{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 16px;border-bottom:1px solid rgba(140,170,255,.08);font-size:13.5px;font-weight:700;color:#fff;transition:.25s}
+.cat:hover{background:linear-gradient(90deg,rgba(77,240,200,.09),transparent)}
+.cat span{min-width:0;overflow-wrap:anywhere}
+.cat em{flex:none;font-style:normal;font-size:12px;font-weight:700;color:var(--a);padding:1px 10px;border-radius:30px;border:1px solid rgba(77,240,200,.3);background:rgba(77,240,200,.08);font-variant-numeric:tabular-nums}
+.cat.sub{padding-left:34px;font-size:12.5px;font-weight:600}
+.cat.au{color:#c4b8ff}.cat.au em{color:#c4b8ff;border-color:rgba(123,108,255,.45);background:rgba(123,108,255,.12)}
+.cat.dm{color:#ffd48a}.cat.dm em{color:#ffd48a;border-color:rgba(255,196,104,.4);background:rgba(255,196,104,.1)}
 </script>
 
 <script type="text/plain" id="tplJS">
@@ -731,11 +762,37 @@ async function visits(hit){
 }
 visits(P.mode==="final");setInterval(()=>visits(false),60000);
 
+const SECS=[["Lab","Lab/Lab Management/","Box.txt"],["Article","Article/Article Management/","Box.txt"],["Blog","Blog/Bolg Management/","Box.txt"],["Book","Book/Book Management/","Box.txt"],["AI","AI/AI Management/","Box.txt"],["Code","Code/Code Management/","Box.txt"],["Experience","Experience/","Box.html"],["Gallery","Gallery/","Box.html"],["Fun","Fun/Fun Management/","Box.txt"]];
+let catData={au:[],dm:[]};const secCnt={};
+function countText(t){
+  const L=String(t||"").replace(/^\uFEFF/,"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const n=L.filter(l=>l.includes(CONFIG.SEP)).length;if(n)return n;
+  return /</.test(t||"")?(t.match(/<a\s/gi)||[]).length:L.length;
+}
+function renderCats(lines){
+  const au=new Map(),dm=new Map();
+  lines.filter(l=>l.length>=2&&l[1]).forEach(l=>{
+    const d=(l[0]||"").trim();if(d)dm.set(d,(dm.get(d)||0)+1);
+    new Set((l[2]||"").split(";").map(x=>x.trim()).filter(Boolean)).forEach(a=>au.set(a,(au.get(a)||0)+1));
+  });
+  const so=(a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]);
+  catData={au:[...au].sort(so),dm:[...dm].sort(so)};drawCats();
+}
+function drawCats(){
+  const el=$("#catlist");if(!el)return;
+  const a=catData.au,d=catData.dm;
+  $("#catcount").textContent=a.length+d.length+SECS.length;
+  const row=(t,n,h,c)=>`<a class="cat${c?" "+c:""}" href="${esc(h)}" target="_blank" rel="noopener"><span>${esc(t)}</span><em>${n}</em></a>`;
+  el.innerHTML=row("Authors",a.length,SITE+"Blog/")+a.map(([n,c])=>row(n,c,SITE+"Blog/?author="+encodeURIComponent(n),"sub au")).join("")
+   +row("Domains",d.length,SITE+"Blog/")+d.map(([n,c])=>row(n,c,SITE+"Blog/?domain="+encodeURIComponent(n),"sub dm")).join("")
+   +SECS.map(([n])=>row(n,secCnt[n]===undefined?"…":secCnt[n],pageUrl(n))).join("");
+}
 const last={};
 function changed(k,v){const s=JSON.stringify(v);if(last[k]===s)return false;last[k]=s;return true}
 async function refresh(){
   const jobs=[];
-  jobs.push(getLines(CONFIG.BLOG_MGMT,"Box.txt").then(l=>{if(changed("box",l))renderLatest(l)}));
+  jobs.push(getLines(CONFIG.BLOG_MGMT,"Box.txt").then(l=>{if(changed("box",l)){renderLatest(l);renderCats(l)}}));
+  SECS.forEach(([n,f,file])=>jobs.push(getText(f,file).then(t=>{secCnt[n]=countText(t);drawCats()})));
   jobs.push(getLines(CONFIG.HOME_MGMT,"Backgrounds.txt").then(l=>{if(changed("bgs",l))renderBg(l)}));
   jobs.push(getText(CONFIG.HOME_MGMT,"Contact.txt").then(t=>{if(changed("contact",t))renderContact(t)}));
   jobs.push(Promise.all(NAV_NAMES.filter(n=>n!=="Home").map(n=>getLines(CONFIG.BAR,n+".txt").then(l=>navData[n]=l))).then(()=>{if(changed("nav",navData))renderNav()}));
@@ -834,26 +891,35 @@ async function copyText(t){
 
 /* ================= state ================= */
 const defAuthor=()=>({name:"",role:"",img:"",email:"",linkedin:"",desc:""});
-let S={domain:"",title:"",summary:"",cover:"",banners:[],text:"",authors:[defAuthor()],override:null,publishedAt:null};
+let S={domain:"",keywords:"",ops:[],title:"",summary:"",cover:"",banners:[],text:"",authors:[defAuthor()],override:null,publishedAt:null};
 let formDirty=false;
 function persist(){lsSet("bb-draft",JSON.stringify(S))}
 function restore(){
-  try{const d=JSON.parse(lsGet("bb-draft")||"null");if(d&&typeof d==="object"){S=Object.assign(S,d);if(!Array.isArray(S.authors))S.authors=[defAuthor()];if(!Array.isArray(S.banners))S.banners=[]}}catch{}
+  try{const d=JSON.parse(lsGet("bb-draft")||"null");if(d&&typeof d==="object"){S=Object.assign(S,d);if(!Array.isArray(S.authors))S.authors=[defAuthor()];if(!Array.isArray(S.banners))S.banners=[];if(!Array.isArray(S.ops))S.ops=[]}}catch{}
 }
 
 /* ================= form ================= */
 const thumb=u=>isUrl(u)?`<img src="${esc(u.trim())}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'">`:"";
 function setThumb(el,u){if(el)el.innerHTML=thumb(u)}
-const POS=[["side","زیر Latest titles (ستون کنار متن)"],["beforeTitle","قبل از باکس تایتل"],["afterTitle","بعد از باکس تایتل"],["beforeEnd","قبل از The End"],["afterEnd","بعد از The End"],["afterAuthors","بعد از نام نویسندگان"],["afterComments","بعد از نظرات"]];
+const POS=[["side","زیر Latest titles / بالای Categories"],["belowCats","زیر Categories"],["beforeTitle","قبل از باکس تایتل"],["afterTitle","بعد از باکس تایتل"],["beforeEnd","قبل از The End"],["afterEnd","بعد از The End"],["afterAuthors","بعد از نام نویسندگان"],["afterComments","بعد از نظرات"]];
 function renderBn(){
   $("#bnList").innerHTML=S.banners.length?S.banners.map((b,i)=>`<div class="item">
     <div class="urlrow"><input data-l="banners" data-i="${i}" data-f="img" dir="ltr" placeholder="آدرس تصویر بنر (URL)" value="${esc(b.img)}"><div class="thumb wide">${thumb(b.img)}</div></div>
     <div class="urlrow"><input data-l="banners" data-i="${i}" data-f="link" dir="ltr" placeholder="هایپرلینک بنر (اختیاری)" value="${esc(b.link)}"></div>
     <div class="bnrow">
-      <div><label>عرض (px) — پیش‌فرض ۳۴۰ = عرض Latest titles</label><input type="number" min="40" max="1400" data-l="banners" data-i="${i}" data-f="w" value="${+b.w||340}"></div>
+      <div><label>عرض / طول (سانتی‌متر) — خالی = پیش‌فرض</label><div style="display:flex;gap:8px"><input type="number" step="0.1" min="0.5" placeholder="عرض" data-l="banners" data-i="${i}" data-f="wc" value="${b.wc||""}"><input type="number" step="0.1" min="0.5" placeholder="طول" data-l="banners" data-i="${i}" data-f="hc" value="${b.hc||""}"></div></div>
       <div><label>محل بنر</label><select data-l="banners" data-i="${i}" data-f="pos">${POS.map(p=>`<option value="${p[0]}"${(b.pos||"side")===p[0]?" selected":""}>${p[1]}</option>`).join("")}</select></div>
     </div>
     <button type="button" class="x" data-del="banners" data-i="${i}">حذف بنر</button></div>`).join(""):`<div class="muted">هنوز بنری اضافه نشده.</div>`;
+}
+const OPP=[["side","زیر Latest titles (پیش‌فرض)"],["free","شناور آزاد (در ویرایش جابه‌جا کنید)"]];
+function renderOp(){
+  $("#opList").innerHTML=S.ops.length?S.ops.map((o,i)=>`<div class="item">
+    <div class="fld"><label>عنوان باکس</label><input data-l="ops" data-i="${i}" data-f="label" dir="auto" placeholder="My Opinion" value="${esc(o.label)}"></div>
+    <div class="fld"><label>متن</label><textarea data-l="ops" data-i="${i}" data-f="text" rows="3" dir="auto">${esc(o.text)}</textarea></div>
+    <div class="bnrow"><div><label>عرض (سانتی‌متر) — خالی = خودکار</label><input type="number" step="0.1" min="3" data-l="ops" data-i="${i}" data-f="wc" value="${o.wc||""}"></div>
+    <div><label>محل اولیه</label><select data-l="ops" data-i="${i}" data-f="pos">${OPP.map(p=>`<option value="${p[0]}"${(o.pos||"side")===p[0]?" selected":""}>${p[1]}</option>`).join("")}</select></div></div>
+    <button type="button" class="x" data-del="ops" data-i="${i}">حذف این نظر</button></div>`).join(""):`<div class="muted">هنوز نظری اضافه نشده.</div>`;
 }
 function renderAu(){
   $("#auList").innerHTML=S.authors.length?S.authors.map((a,i)=>`<div class="item">
@@ -871,7 +937,7 @@ function renderAu(){
 }
 function fillForm(){
   document.querySelectorAll("[data-k]").forEach(i=>{i.value=S[i.dataset.k]||""});
-  setThumb($("#thCover"),S.cover);renderBn();renderAu();
+  setThumb($("#thCover"),S.cover);renderBn();renderAu();renderOp();
 }
 document.addEventListener("input",e=>{
   const t=e.target;
@@ -884,11 +950,12 @@ document.addEventListener("input",e=>{
 });
 document.addEventListener("click",e=>{
   const d=e.target.closest("[data-del]");
-  if(d){S[d.dataset.del].splice(+d.dataset.i,1);formDirty=true;persist();d.dataset.del==="banners"?renderBn():renderAu()}
+  if(d){S[d.dataset.del].splice(+d.dataset.i,1);formDirty=true;persist();d.dataset.del==="banners"?renderBn():d.dataset.del==="ops"?renderOp():renderAu()}
 });
-$("#bnAdd").onclick=()=>{S.banners.push({img:"",link:"",w:340,pos:"side"});formDirty=true;persist();renderBn()};
+$("#bnAdd").onclick=()=>{S.banners.push({img:"",link:"",wc:"",hc:"",pos:"side"});formDirty=true;persist();renderBn()};
+$("#opAdd").onclick=()=>{S.ops.push({label:"",text:"",wc:"",pos:"side"});formDirty=true;persist();renderOp()};
 $("#auAdd").onclick=()=>{S.authors.push(defAuthor());formDirty=true;persist();renderAu()};
-$("#reset").onclick=()=>{if(!confirm("همه‌ی فرم پاک شود؟"))return;S={domain:"",title:"",summary:"",cover:"",banners:[],text:"",authors:[defAuthor()],override:null,publishedAt:null};persist();fillForm();formDirty=false;toast("فرم پاک شد")};
+$("#reset").onclick=()=>{if(!confirm("همه‌ی فرم پاک شود؟"))return;S={domain:"",keywords:"",ops:[],title:"",summary:"",cover:"",banners:[],text:"",authors:[defAuthor()],override:null,publishedAt:null};persist();fillForm();formDirty=false;toast("فرم پاک شد")};
 
 /* ================= text → HTML ================= */
 function inl(s){
@@ -946,18 +1013,25 @@ function authorCard(a){
   const av=nm?`<a class="av" href="${esc(sUrl(nm))}" target="_blank" rel="noopener" title="Search ${esc(nm)}">${pic}</a>`:`<div class="av">${pic}</div>`;
   return `<div class="acard">${av}<div class="ainfo">${nm?`<h3 class="au-name" dir="auto"><a href="${esc(sUrl(nm))}" target="_blank" rel="noopener">${esc(nm)}</a></h3>`:""}${a.role.trim()?`<div class="au-role" dir="auto">${esc(a.role.trim())}</div>`:""}${a.desc.trim()?`<p class="au-desc" dir="auto">${nl(a.desc.trim())}</p>`:""}${links}</div></div>`;
 }
+function kwList(S){const seen=new Set(),o=[],add=x=>{x=String(x||"").trim();const k=x.toLowerCase();if(x&&!seen.has(k)){seen.add(k);o.push(x)}};(S.keywords||"").split(/[;,،؛\n]/).forEach(add);S.authors.forEach(a=>add(a.name));return o}
+function kwHtml(L,cls){return L.length?`<div class="kws${cls?" "+cls:""}" dir="auto">${cls==="kws-end"?'<span class="kwl">Keywords</span>':""}${L.map(k=>`<a class="kw" href="${esc(sUrl(k))}" target="_blank" rel="noopener">${esc(k)}</a>`).join('<span class="ks">;</span> ')}</div>`:""}
+function opHtml(o,i){
+  const t=o.text.trim(),free=o.pos==="free",w=+o.wc>0?Math.round(o.wc*37.8):Math.round(Math.min(380,Math.max(230,Math.sqrt(t.length*260)+70)));
+  return `<aside class="op-box${free?" free":""}" data-nodrag style="width:${w}px;${free?`left:${Math.min(70,58+i*3)}%;top:${140+i*40}px`:""}"><div class="op-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h4v4c0 3-1.5 5-4 6M15 7h4v4c0 3-1.5 5-4 6"/></svg></div><div class="op-in"><div class="op-lb" dir="auto">${esc((o.label||"").trim()||"My Opinion")}</div><p class="op-t" dir="auto">${esc(t)}</p></div></aside>\n`;
+}
+const CATS=`<aside class="sbox cbox"><div class="sinner"><div class="shd"><span>Categories <b id="catcount" data-dyn></b></span></div><div class="slist" id="catlist" data-dyn></div></div></aside>`;
 const LATEST=`<aside class="sbox"><div class="sinner"><div class="shd"><span>Latest <b>titles</b></span><span id="scount" data-dyn></span></div><div class="slist" id="slist" data-dyn></div><div class="sfoot"><div class="row"><span id="srange" data-dyn></span><div class="pp">Show <div class="seg" id="sperseg" data-dyn></div></div></div><div class="row" style="justify-content:center"><div class="pg" id="spg" data-dyn></div></div></div></div></aside>`;
 function genSecs(S,pub){
   const names=S.authors.map(a=>a.name.trim()).filter(Boolean);
-  const bnH=p=>S.banners.filter(b=>isUrl(b.img)&&(b.pos||"side")===p).map(b=>{const im=`<img src="${esc(b.img.trim())}" alt="" referrerpolicy="no-referrer" decoding="async">`;return `<div class="bn" style="width:${Math.max(40,+b.w||340)}px">${isUrl(b.link)?`<a href="${esc(b.link.trim())}" target="_blank" rel="noopener">${im}</a>`:im}</div>`}).join("");
+  const bnH=p=>S.banners.filter(b=>isUrl(b.img)&&(b.pos||"side")===p).map(b=>{const im=`<img src="${esc(b.img.trim())}" alt="" referrerpolicy="no-referrer" decoding="async">`;return `<div class="bn${+b.hc>0?" bn-h":""}" style="${+b.wc>0?`width:${Math.round(b.wc*37.8)}px;`:"width:100%;"}${+b.hc>0?`height:${Math.round(b.hc*37.8)}px;`:""}">${isUrl(b.link)?`<a href="${esc(b.link.trim())}" target="_blank" rel="noopener">${im}</a>`:im}</div>`}).join("");
   const bnSec=p=>{const x=bnH(p);return x?`<section class="sec sec-banners"><div class="banners">${x}</div></section>\n`:""};
   let h=`<div class="sec sec-meta" data-nodrag><div class="metabox"><span class="mi">${IC.cal}<time datetime="${pub.toISOString()}">${fmtDate(pub)}</time></span>${metaRight(names)}</div></div>\n`;
   h+=bnSec("beforeTitle");
-  const dm=(S.domain||"").trim(),hasC=isUrl(S.cover),hasT=dm||S.title.trim()||S.summary.trim();
-  if(hasC||hasT)h+=`<section class="sec sec-hero"><div class="hbox${hasC&&hasT?" hasc":""}">${hasC?`<figure class="cover"><img src="${esc(S.cover.trim())}" alt="${esc(S.title.trim())}" referrerpolicy="no-referrer" decoding="async"></figure>`:""}${hasT?`<div class="htxt">${dm?`<span class="dom" dir="auto">${esc(dm)}</span>`:""}${S.title.trim()?`<h1 class="ptitle grad" dir="auto">${esc(S.title.trim())}</h1>`:""}${S.summary.trim()?`<p class="psum" dir="auto">${nl(S.summary.trim())}</p>`:""}</div>`:""}</div></section>\n`;
+  const kwl=kwList(S),dm=(S.domain||"").trim(),hasC=isUrl(S.cover),hasT=dm||S.title.trim()||S.summary.trim()||kwl.length;
+  if(hasC||hasT)h+=`<section class="sec sec-hero"><div class="hbox${hasC&&hasT?" hasc":""}">${hasC?`<figure class="cover"><img src="${esc(S.cover.trim())}" alt="${esc(S.title.trim())}" referrerpolicy="no-referrer" decoding="async"></figure>`:""}${hasT?`<div class="htxt">${dm?`<span class="dom" dir="auto">${esc(dm)}</span>`:""}${S.title.trim()?`<h1 class="ptitle grad" dir="auto">${esc(S.title.trim())}</h1>`:""}${S.summary.trim()?`<p class="psum" dir="auto">${nl(S.summary.trim())}</p>`:""}${kwHtml(kwl)}</div>`:""}</div></section>\n`;
   h+=bnSec("afterTitle");
-  const side=bnH("side");
-  h+=`<section class="sec sec-main${S.text.trim()?"":" solo"}">${S.text.trim()?`<div class="sec-article"><article class="art-body">\n${parseText(S.text)}\n</article></div>`:""}<div class="sidecol">${LATEST}${side?`<div class="banners">${side}</div>`:""}</div></section>\n`;
+  const side=bnH("side"),below=bnH("belowCats"),ops=(S.ops||[]).filter(o=>(o.text||"").trim()),opA=ops.filter(o=>(o.pos||"side")!=="free").map(opHtml).join(""),opF=ops.filter(o=>o.pos==="free").map((o,i)=>opHtml(o,i)).join("");
+  h+=`<section class="sec sec-main${S.text.trim()?"":" solo"}">${S.text.trim()?`<div class="sec-article"><article class="art-body">\n${parseText(S.text)}\n</article>${kwHtml(kwl,"kws-end")}</div>`:""}<div class="sidecol">${LATEST}${opA}${side?`<div class="banners">${side}</div>`:""}${CATS}${below?`<div class="banners">${below}</div>`:""}</div></section>\n`;
   h+=bnSec("beforeEnd");
   if(S.text.trim())h+=`<section class="sec sec-end"><i></i><span class="end-t">The End</span><i></i></section>\n`;
   h+=bnSec("afterEnd");
@@ -966,6 +1040,7 @@ function genSecs(S,pub){
   h+=bnSec("afterAuthors");
   h+=`<section class="sec sec-comments"><h2 class="cm-h">Comments <span id="ccount" data-dyn>0</span></h2><form class="cform" id="cform" novalidate><div class="crow"><input id="cn" placeholder="Your name" autocomplete="name"><input id="ce" type="email" placeholder="Your email (never published)" autocomplete="email"></div><textarea id="cmt" rows="4" placeholder="Write your comment…"></textarea><div class="cact"><span id="cmsg"></span><button class="btn" type="submit">Send comment</button></div></form><div id="clist" data-dyn></div></section>\n`;
   h+=bnSec("afterComments");
+  h+=opF;
   return h;
 }
 function buildPage(S,mode){
@@ -1110,6 +1185,7 @@ const EDCSS=`
 .sec-article{padding-left:76px!important}
 .art-body figure{cursor:pointer}
 .sec-comments,.sbox,.metabox{pointer-events:none}
+.op-grip{position:absolute;top:-28px;left:0;height:24px;padding:0 12px;border-radius:30px;background:rgba(255,93,143,.22);border:1px solid rgba(255,93,143,.65);color:#ff8fb1;font:700 12px/22px sans-serif;cursor:grab;touch-action:none;white-space:nowrap}
 `;
 let ED=null;
 function openEdit(){
@@ -1124,11 +1200,27 @@ function initEdit(){
   ED={doc,win,saved:null,sel:null,dirty:false};
   const st=doc.createElement("style");st.id="edstyle";st.textContent=EDCSS;doc.head.appendChild(st);
   try{doc.execCommand("defaultParagraphSeparator",false,"p");doc.execCommand("styleWithCSS",false,true)}catch{}
-  const HOSTS=".art-body,.dom,.ptitle,.psum,.au-name,.au-role,.au-desc,.end-t,.cm-h";
+  const HOSTS=".art-body,.op-t,.op-lb,.dom,.ptitle,.psum,.au-name,.au-role,.au-desc,.end-t,.cm-h";
   doc.querySelectorAll(HOSTS).forEach(el=>{if(el.classList.contains("cm-h"))return;el.contentEditable="true";el.spellcheck=false});
   doc.querySelectorAll(".art-body figure").forEach(f=>{f.contentEditable="false";const c=f.querySelector("figcaption");if(c)c.contentEditable="true"});
   doc.querySelectorAll(".ptitle,.dom,.au-name,.au-role,.end-t").forEach(el=>el.addEventListener("keydown",e=>{if(e.key==="Enter")e.preventDefault()}));
   const sec=doc.getElementById("postsecs");
+  doc.querySelectorAll(".op-box").forEach(b=>{const g=doc.createElement("span");g.className="ed-ui op-grip";g.contentEditable="false";g.textContent="⠿ جابجایی نظر من";b.appendChild(g)});
+  doc.addEventListener("pointerdown",e=>{
+    const g=e.target.closest&&e.target.closest(".op-grip");if(!g)return;
+    const b=g.closest(".op-box"),c=doc.getElementById("postsecs");e.preventDefault();
+    if(!b.classList.contains("free")){const r0=b.getBoundingClientRect(),c0=c.getBoundingClientRect();b.classList.add("free");c.appendChild(b);b.style.left=((r0.left-c0.left)/c0.width*100).toFixed(2)+"%";b.style.top=Math.round(r0.top-c0.top)+"px";ED.dirty=true}
+    g.setPointerCapture(e.pointerId);
+    const cr=c.getBoundingClientRect(),br=b.getBoundingClientRect(),dx=e.clientX-br.left,dy=e.clientY-br.top;
+    const mv=ev=>{
+      const r=c.getBoundingClientRect();
+      let x=ev.clientX-r.left-dx,y=ev.clientY-r.top-dy;
+      x=Math.max(0,Math.min(x,r.width-b.offsetWidth));y=Math.max(0,Math.min(y,r.height-b.offsetHeight));
+      b.style.left=(x/r.width*100).toFixed(2)+"%";b.style.top=Math.round(y)+"px";ED.dirty=true;
+    };
+    const up=()=>{g.removeEventListener("pointermove",mv);g.removeEventListener("pointerup",up)};
+    g.addEventListener("pointermove",mv);g.addEventListener("pointerup",up);
+  });
   const mk=(el,isSec)=>{
     if(!el.classList.contains("ed-blk"))el.classList.add("ed-blk");
     if(isSec)el.classList.add("ed-sec");
@@ -1300,4 +1392,3 @@ restore();fillForm();
 </script>
 </body>
 </html>
-﻿
