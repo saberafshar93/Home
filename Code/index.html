@@ -704,7 +704,7 @@ function draw(){
         <div class="aus"><span class="al">${r.authors.length>1?"Programmers:":"Programmer:"}</span>${r.authors.length?r.authors.map(a=>`<button type="button" class="au${filt.auth.includes(a)?" on":""}" data-f="auth" data-v="${esc(a)}" title="${filt.auth.includes(a)?"Remove from":"Add to"} the programmer filter">${esc(a)}</button>`).join(""):`<span class="au0">—</span>`}</div>
         ${dateCell(r)}
       </div>
-      ${isLink(r.link)?`<a class="stretch" href="${esc(r.link)}" target="_blank" rel="noopener" aria-label="${esc(r.title)}"></a>`:""}</article>`}).join("")
+      ${isLink(r.link)?`<a class="stretch" href="${esc(r.link)}" target="_self" rel="noopener" aria-label="${esc(r.title)}"></a>`:""}</article>`}).join("")
     :`<div class="empty" style="grid-column:1/-1">No projects yet — add lines to Box.txt.</div>`;
 
   $("#brange").textContent=n?`Showing ${from+1}–${Math.min(from+per,n)} of ${n}`:"";
@@ -723,7 +723,7 @@ function drawSide(list,active){
     const d=dateMap[r.link],cls="srow"+(active&&!matches(r)?" dim":"")+(isLink(r.link)?"":" nol");
     const when=!isLink(r.link)?"—":d?ago(d.date):"…";
     const inner=`<span class="st">${esc(r.title)}</span><span class="sa">${when}</span>`;
-    return isLink(r.link)?`<a class="${cls}" href="${esc(r.link)}" target="_blank" rel="noopener">${inner}</a>`:`<div class="${cls}">${inner}</div>`;
+    return isLink(r.link)?`<a class="${cls}" href="${esc(r.link)}" target="_self" rel="noopener">${inner}</a>`:`<div class="${cls}">${inner}</div>`;
   }).join(""):`<div class="empty" style="margin:16px">Nothing here yet.</div>`;
   $("#spg").innerHTML=pager(spage,pages,true);
 }
@@ -900,7 +900,7 @@ function renderContact(text){
       icon=`<img src="${urls[0]}" alt="" data-ico="${urls.join(",")}" data-i="0" data-ltr="${esc(name[0])}">`;
     }
     const inner=`<span class="ico">${icon}</span>${esc(name)}`;
-    return `<li>${href?`<a class="ci" href="${esc(href)}"${/^https?:/i.test(href)?' target="_blank" rel="noopener"':""}>${inner}</a>`:`<span class="ci">${inner}</span>`}</li>`;
+    return `<li>${href?`<a class="ci" href="${esc(href)}"${/^https?:/i.test(href)?' target="_self" rel="noopener"':""}>${inner}</a>`:`<span class="ci">${inner}</span>`}</li>`;
   }).join("");
 }
 renderContact("");
