@@ -19,6 +19,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:
 @keyframes pulse{50%{transform:scale(1.18)}}
 .steps{display:flex;gap:8px;flex-wrap:wrap}
 .steps span{padding:5px 14px;border-radius:30px;font-size:13px;font-weight:600;color:var(--mute);border:1px solid var(--line);transition:.3s}
+.steps span{cursor:pointer}.steps span:hover{border-color:var(--a);color:#fff}
 .steps span.on{background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border-color:transparent}
 #top{padding:96px 6vw 22px;text-align:center;position:relative;overflow:hidden}
 #top::after{content:"";position:absolute;left:8vw;right:8vw;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--a),var(--b),var(--c),transparent)}
@@ -463,6 +464,23 @@ a.av{display:grid}
 .cat.sub{padding-left:34px;font-size:12.5px;font-weight:600}
 .cat.au{color:#c4b8ff}.cat.au em{color:#c4b8ff;border-color:rgba(123,108,255,.45);background:rgba(123,108,255,.12)}
 .cat.dm{color:#ffd48a}.cat.dm em{color:#ffd48a;border-color:rgba(255,196,104,.4);background:rgba(255,196,104,.1)}
+.sidecol{position:relative}
+.sidecol .sbox{height:auto;min-height:0;overflow:visible}
+.sidecol .sinner{position:static}
+.sidecol .slist{overflow:visible;flex:none}
+.alist{grid-template-columns:repeat(auto-fill,minmax(230px,280px));gap:10px;justify-content:start}
+.acard{padding:9px 12px;gap:12px;border-radius:14px}
+.av{width:52px;height:52px}
+.au-name{font-size:14.5px}.au-role{font-size:10px;margin:1px 0 3px;letter-spacing:1px}.au-desc{font-size:12px;line-height:1.5}
+.alink{width:26px;height:26px}.alink svg{width:13px;height:13px}.alinks{margin-top:5px;gap:6px}
+.op-box{pointer-events:none;padding:11px 15px 11px 11px;border-radius:16px;gap:10px;background:color-mix(in srgb,var(--ob,#2a3a8c) 30%,transparent);border:1px solid color-mix(in srgb,var(--oa,#4df0c8) 65%,transparent);box-shadow:0 8px 28px rgba(0,0,0,.28),0 0 22px color-mix(in srgb,var(--oa,#4df0c8) 30%,transparent);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px)}
+.op-ic{width:30px;height:30px;background:linear-gradient(135deg,var(--oa,#4df0c8),color-mix(in srgb,var(--oa,#4df0c8) 45%,#7b6cff));box-shadow:0 0 14px color-mix(in srgb,var(--oa,#4df0c8) 55%,transparent)}
+.op-ic svg{width:17px;height:17px}
+.op-lb{font-size:10px;letter-spacing:2px;color:var(--oa,#4df0c8);margin-bottom:3px;text-shadow:0 1px 5px rgba(0,0,0,.55)}
+.op-t{font-family:"Source Serif 4","Vazirmatn",Georgia,serif;font-size:14px;line-height:1.7;font-style:italic;font-weight:500;letter-spacing:.1px;color:var(--ot,#fff);text-shadow:0 1px 6px rgba(0,0,0,.65)}
+.op-t:dir(rtl){font-style:normal}
+.op-box.sf{position:absolute;z-index:60;align-self:auto;max-width:calc(100% - 16px)}
+@media(max-width:1020px){.op-box.sf{position:relative;right:auto!important;top:auto!important}}
 </script>
 
 <script type="text/plain" id="tplJS">
@@ -641,7 +659,7 @@ function drawSide(){
     const d=dateMap[r.link],ok=isLink(r.link),cls="srow"+(ok?"":" nol");
     const when=!ok?"—":d?ago(d.date):"…";
     const inner=`<span class="st">${esc(r.title)}</span><span class="sa">${when}</span>`;
-    return ok?`<a class="${cls}" href="${esc(r.link)}" target="_blank" rel="noopener">${inner}</a>`:`<div class="${cls}">${inner}</div>`;
+    return ok?`<a class="${cls}" href="${esc(r.link)}">${inner}</a>`:`<div class="${cls}">${inner}</div>`;
   }).join(""):`<div class="empty" style="margin:16px">Nothing here yet.</div>`;
   $("#spg").innerHTML=pager(spage,pages);
 }
@@ -727,7 +745,7 @@ function renderContact(text){
       icon=`<img src="${urls[0]}" alt="" data-ico="${urls.join(",")}" data-i="0" data-ltr="${esc(name[0])}">`;
     }
     const inner=`<span class="ico">${icon}</span>${esc(name)}`;
-    return `<li>${href?`<a class="ci" href="${esc(href)}"${/^https?:/i.test(href)?' target="_blank" rel="noopener"':""}>${inner}</a>`:`<span class="ci">${inner}</span>`}</li>`;
+    return `<li>${href?`<a class="ci" href="${esc(href)}"${/^https?:/i.test(href)?'':""}>${inner}</a>`:`<span class="ci">${inner}</span>`}</li>`;
   }).join("");
 }
 renderContact("");
@@ -782,7 +800,7 @@ function drawCats(){
   const el=$("#catlist");if(!el)return;
   const a=catData.au,d=catData.dm;
   $("#catcount").textContent=a.length+d.length+SECS.length;
-  const row=(t,n,h,c)=>`<a class="cat${c?" "+c:""}" href="${esc(h)}" target="_blank" rel="noopener"><span>${esc(t)}</span><em>${n}</em></a>`;
+  const row=(t,n,h,c)=>`<a class="cat${c?" "+c:""}" href="${esc(h)}"><span>${esc(t)}</span><em>${n}</em></a>`;
   el.innerHTML=row("Authors",a.length,SITE+"Blog/")+a.map(([n,c])=>row(n,c,SITE+"Blog/?author="+encodeURIComponent(n),"sub au")).join("")
    +row("Domains",d.length,SITE+"Blog/")+d.map(([n,c])=>row(n,c,SITE+"Blog/?domain="+encodeURIComponent(n),"sub dm")).join("")
    +SECS.map(([n])=>row(n,secCnt[n]===undefined?"…":secCnt[n],pageUrl(n))).join("");
@@ -912,13 +930,14 @@ function renderBn(){
     </div>
     <button type="button" class="x" data-del="banners" data-i="${i}">حذف بنر</button></div>`).join(""):`<div class="muted">هنوز بنری اضافه نشده.</div>`;
 }
-const OPP=[["side","زیر Latest titles (پیش‌فرض)"],["free","شناور آزاد (در ویرایش جابه‌جا کنید)"]];
+const OPP=[["side","زیر Latest titles (پیش‌فرض)"],["sidefloat","شناور روی ستون کنار (روی Latest titles)"],["free","شناور آزاد در صفحه (در ویرایش جابه‌جا کنید)"]];
 function renderOp(){
   $("#opList").innerHTML=S.ops.length?S.ops.map((o,i)=>`<div class="item">
     <div class="fld"><label>عنوان باکس</label><input data-l="ops" data-i="${i}" data-f="label" dir="auto" placeholder="My Opinion" value="${esc(o.label)}"></div>
     <div class="fld"><label>متن</label><textarea data-l="ops" data-i="${i}" data-f="text" rows="3" dir="auto">${esc(o.text)}</textarea></div>
     <div class="bnrow"><div><label>عرض (سانتی‌متر) — خالی = خودکار</label><input type="number" step="0.1" min="3" data-l="ops" data-i="${i}" data-f="wc" value="${o.wc||""}"></div>
     <div><label>محل اولیه</label><select data-l="ops" data-i="${i}" data-f="pos">${OPP.map(p=>`<option value="${p[0]}"${(o.pos||"side")===p[0]?" selected":""}>${p[1]}</option>`).join("")}</select></div></div>
+    <div class="bnrow" style="grid-template-columns:1fr 1fr 1fr"><div><label>رنگ تأکید</label><input type="color" style="height:40px;padding:3px" data-l="ops" data-i="${i}" data-f="c1" value="${o.c1||"#4df0c8"}"></div><div><label>رنگ پس‌زمینه</label><input type="color" style="height:40px;padding:3px" data-l="ops" data-i="${i}" data-f="c2" value="${o.c2||"#2a3a8c"}"></div><div><label>رنگ متن</label><input type="color" style="height:40px;padding:3px" data-l="ops" data-i="${i}" data-f="c3" value="${o.c3||"#ffffff"}"></div></div>
     <button type="button" class="x" data-del="ops" data-i="${i}">حذف این نظر</button></div>`).join(""):`<div class="muted">هنوز نظری اضافه نشده.</div>`;
 }
 function renderAu(){
@@ -960,11 +979,11 @@ $("#reset").onclick=()=>{if(!confirm("همه‌ی فرم پاک شود؟"))retur
 /* ================= text → HTML ================= */
 function inl(s){
   s=esc(s);
-  s=s.replace(/(\S+)\s*\(\((https?:\/\/[^\s)]+)\)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
-  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  s=s.replace(/(\S+)\s*\(\((https?:\/\/[^\s)]+)\)\)/g,'<a href="$2">$1</a>');
+  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2">$1</a>');
   s=s.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
   s=s.replace(/(^|[^*\w])\*([^*\n]+)\*(?!\*)/g,"$1<em>$2</em>");
-  s=s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,'$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+  s=s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,'$1<a href="$2">$2</a>');
   return s;
 }
 function figHtml(im){return `<figure class="fig"><img src="${esc(im.src)}" alt="${esc(im.cap)}" referrerpolicy="no-referrer" decoding="async">${im.cap?`<figcaption dir="auto">${inl(im.cap)}</figcaption>`:""}</figure>`}
@@ -1003,34 +1022,37 @@ const nl=s=>esc(s).replace(/\n/g,"<br>");
 const SEARCH="https://saberafshar93.github.io/Home/#/search/";
 const sUrl=n=>SEARCH+encodeURIComponent(n);
 function metaRight(names){
-  return `<span class="mi auth">${names.length?IC.pen+`<span class="al">${names.length>1?"Authors":"Author"}</span>`+names.map(n=>`<a class="an" href="${esc(sUrl(n))}" target="_blank" rel="noopener"><b>${esc(n)}</b></a>`).join(", "):""}<button type="button" class="sharebtn" id="shareBtn" title="Copy link" aria-label="Copy link">${IC.share}</button></span>`;
+  return `<span class="mi auth">${names.length?IC.pen+`<span class="al">${names.length>1?"Authors":"Author"}</span>`+names.map(n=>`<a class="an" href="${esc(sUrl(n))}"><b>${esc(n)}</b></a>`).join(", "):""}<button type="button" class="sharebtn" id="shareBtn" title="Copy link" aria-label="Copy link">${IC.share}</button></span>`;
 }
 function authorCard(a){
   const em=(a.email||"").trim().replace(/^mailto:/i,""),lk=(a.linkedin||"").trim(),nm=a.name.trim();
   const lkH=lk?(isUrl(lk)?lk:"https://"+lk.replace(/^\/+/,"")):"";
-  const links=(em||lkH)?`<div class="alinks">${em?`<a class="alink" href="mailto:${esc(em)}" title="Email" aria-label="Email">${IC.mail}</a>`:""}${lkH?`<a class="alink" href="${esc(lkH)}" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">${IC.li}</a>`:""}</div>`:"";
+  const links=(em||lkH)?`<div class="alinks">${em?`<a class="alink" href="mailto:${esc(em)}" title="Email" aria-label="Email">${IC.mail}</a>`:""}${lkH?`<a class="alink" href="${esc(lkH)}" title="LinkedIn" aria-label="LinkedIn">${IC.li}</a>`:""}</div>`:"";
   const pic=isUrl(a.img)?`<img src="${esc(a.img.trim())}" alt="" referrerpolicy="no-referrer" decoding="async">`:IC.ph;
-  const av=nm?`<a class="av" href="${esc(sUrl(nm))}" target="_blank" rel="noopener" title="Search ${esc(nm)}">${pic}</a>`:`<div class="av">${pic}</div>`;
-  return `<div class="acard">${av}<div class="ainfo">${nm?`<h3 class="au-name" dir="auto"><a href="${esc(sUrl(nm))}" target="_blank" rel="noopener">${esc(nm)}</a></h3>`:""}${a.role.trim()?`<div class="au-role" dir="auto">${esc(a.role.trim())}</div>`:""}${a.desc.trim()?`<p class="au-desc" dir="auto">${nl(a.desc.trim())}</p>`:""}${links}</div></div>`;
+  const av=nm?`<a class="av" href="${esc(sUrl(nm))}" title="Search ${esc(nm)}">${pic}</a>`:`<div class="av">${pic}</div>`;
+  return `<div class="acard">${av}<div class="ainfo">${nm?`<h3 class="au-name" dir="auto"><a href="${esc(sUrl(nm))}">${esc(nm)}</a></h3>`:""}${a.role.trim()?`<div class="au-role" dir="auto">${esc(a.role.trim())}</div>`:""}${a.desc.trim()?`<p class="au-desc" dir="auto">${nl(a.desc.trim())}</p>`:""}${links}</div></div>`;
 }
 function kwList(S){const seen=new Set(),o=[],add=x=>{x=String(x||"").trim();const k=x.toLowerCase();if(x&&!seen.has(k)){seen.add(k);o.push(x)}};(S.keywords||"").split(/[;,،؛\n]/).forEach(add);S.authors.forEach(a=>add(a.name));return o}
-function kwHtml(L,cls){return L.length?`<div class="kws${cls?" "+cls:""}" dir="auto">${cls==="kws-end"?'<span class="kwl">Keywords</span>':""}${L.map(k=>`<a class="kw" href="${esc(sUrl(k))}" target="_blank" rel="noopener">${esc(k)}</a>`).join('<span class="ks">;</span> ')}</div>`:""}
+function kwHtml(L,cls){return L.length?`<div class="kws${cls?" "+cls:""}" dir="auto">${cls==="kws-end"?'<span class="kwl">Keywords</span>':""}${L.map(k=>`<a class="kw" href="${esc(sUrl(k))}">${esc(k)}</a>`).join('<span class="ks">;</span> ')}</div>`:""}
 function opHtml(o,i){
-  const t=o.text.trim(),free=o.pos==="free",w=+o.wc>0?Math.round(o.wc*37.8):Math.round(Math.min(380,Math.max(230,Math.sqrt(t.length*260)+70)));
-  return `<aside class="op-box${free?" free":""}" data-nodrag style="width:${w}px;${free?`left:${Math.min(70,58+i*3)}%;top:${140+i*40}px`:""}"><div class="op-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h4v4c0 3-1.5 5-4 6M15 7h4v4c0 3-1.5 5-4 6"/></svg></div><div class="op-in"><div class="op-lb" dir="auto">${esc((o.label||"").trim()||"My Opinion")}</div><p class="op-t" dir="auto">${esc(t)}</p></div></aside>\n`;
+  const t=o.text.trim(),m=o.pos||"side",hx=(v,d)=>/^#[0-9a-f]{6}$/i.test(v||"")?v:d;
+  const w=+o.wc>0?Math.round(o.wc*37.8):Math.round(Math.min(340,Math.max(210,Math.sqrt(t.length*215)+64)));
+  const pos=m==="free"?`left:${Math.min(70,58+i*3)}%;top:${140+i*40}px;`:m==="sidefloat"?`right:10px;top:${50+i*150}px;`:"";
+  const cls=m==="free"?" free":m==="sidefloat"?" sf":"";
+  return `<aside class="op-box${cls}" data-nodrag style="width:${w}px;${pos}--oa:${hx(o.c1,"#4df0c8")};--ob:${hx(o.c2,"#2a3a8c")};--ot:${hx(o.c3,"#ffffff")}"><div class="op-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h4v4c0 3-1.5 5-4 6M15 7h4v4c0 3-1.5 5-4 6"/></svg></div><div class="op-in"><div class="op-lb" dir="auto">${esc((o.label||"").trim()||"My Opinion")}</div><p class="op-t" dir="auto">${esc(t)}</p></div></aside>\n`;
 }
 const CATS=`<aside class="sbox cbox"><div class="sinner"><div class="shd"><span>Categories <b id="catcount" data-dyn></b></span></div><div class="slist" id="catlist" data-dyn></div></div></aside>`;
 const LATEST=`<aside class="sbox"><div class="sinner"><div class="shd"><span>Latest <b>titles</b></span><span id="scount" data-dyn></span></div><div class="slist" id="slist" data-dyn></div><div class="sfoot"><div class="row"><span id="srange" data-dyn></span><div class="pp">Show <div class="seg" id="sperseg" data-dyn></div></div></div><div class="row" style="justify-content:center"><div class="pg" id="spg" data-dyn></div></div></div></div></aside>`;
 function genSecs(S,pub){
   const names=S.authors.map(a=>a.name.trim()).filter(Boolean);
-  const bnH=p=>S.banners.filter(b=>isUrl(b.img)&&(b.pos||"side")===p).map(b=>{const im=`<img src="${esc(b.img.trim())}" alt="" referrerpolicy="no-referrer" decoding="async">`;return `<div class="bn${+b.hc>0?" bn-h":""}" style="${+b.wc>0?`width:${Math.round(b.wc*37.8)}px;`:"width:100%;"}${+b.hc>0?`height:${Math.round(b.hc*37.8)}px;`:""}">${isUrl(b.link)?`<a href="${esc(b.link.trim())}" target="_blank" rel="noopener">${im}</a>`:im}</div>`}).join("");
+  const bnH=p=>S.banners.filter(b=>isUrl(b.img)&&(b.pos||"side")===p).map(b=>{const im=`<img src="${esc(b.img.trim())}" alt="" referrerpolicy="no-referrer" decoding="async">`;return `<div class="bn${+b.hc>0?" bn-h":""}" style="${+b.wc>0?`width:${Math.round(b.wc*37.8)}px;`:"width:100%;"}${+b.hc>0?`height:${Math.round(b.hc*37.8)}px;`:""}">${isUrl(b.link)?`<a href="${esc(b.link.trim())}">${im}</a>`:im}</div>`}).join("");
   const bnSec=p=>{const x=bnH(p);return x?`<section class="sec sec-banners"><div class="banners">${x}</div></section>\n`:""};
   let h=`<div class="sec sec-meta" data-nodrag><div class="metabox"><span class="mi">${IC.cal}<time datetime="${pub.toISOString()}">${fmtDate(pub)}</time></span>${metaRight(names)}</div></div>\n`;
   h+=bnSec("beforeTitle");
   const kwl=kwList(S),dm=(S.domain||"").trim(),hasC=isUrl(S.cover),hasT=dm||S.title.trim()||S.summary.trim()||kwl.length;
   if(hasC||hasT)h+=`<section class="sec sec-hero"><div class="hbox${hasC&&hasT?" hasc":""}">${hasC?`<figure class="cover"><img src="${esc(S.cover.trim())}" alt="${esc(S.title.trim())}" referrerpolicy="no-referrer" decoding="async"></figure>`:""}${hasT?`<div class="htxt">${dm?`<span class="dom" dir="auto">${esc(dm)}</span>`:""}${S.title.trim()?`<h1 class="ptitle grad" dir="auto">${esc(S.title.trim())}</h1>`:""}${S.summary.trim()?`<p class="psum" dir="auto">${nl(S.summary.trim())}</p>`:""}${kwHtml(kwl)}</div>`:""}</div></section>\n`;
   h+=bnSec("afterTitle");
-  const side=bnH("side"),below=bnH("belowCats"),ops=(S.ops||[]).filter(o=>(o.text||"").trim()),opA=ops.filter(o=>(o.pos||"side")!=="free").map(opHtml).join(""),opF=ops.filter(o=>o.pos==="free").map((o,i)=>opHtml(o,i)).join("");
+  const side=bnH("side"),below=bnH("belowCats"),ops=(S.ops||[]).filter(o=>(o.text||"").trim()),opA=ops.filter(o=>o.pos!=="free").map(opHtml).join(""),opF=ops.filter(o=>o.pos==="free").map((o,i)=>opHtml(o,i)).join("");
   h+=`<section class="sec sec-main${S.text.trim()?"":" solo"}">${S.text.trim()?`<div class="sec-article"><article class="art-body">\n${parseText(S.text)}\n</article>${kwHtml(kwl,"kws-end")}</div>`:""}<div class="sidecol">${LATEST}${opA}${side?`<div class="banners">${side}</div>`:""}${CATS}${below?`<div class="banners">${below}</div>`:""}</div></section>\n`;
   h+=bnSec("beforeEnd");
   if(S.text.trim())h+=`<section class="sec sec-end"><i></i><span class="end-t">The End</span><i></i></section>\n`;
@@ -1046,7 +1068,8 @@ function genSecs(S,pub){
 function buildPage(S,mode){
   const pub=new Date(S.publishedAt||Date.now());
   const tag=`<time datetime="${pub.toISOString()}">${fmtDate(pub)}</time>`;
-  const secs=S.override?S.override.html.replace(/<time datetime="[^"]*">[^<]*<\/time>/,tag):genSecs(S,pub);
+  let secs=S.override?S.override.html.replace(/<time datetime="[^"]*">[^<]*<\/time>/,tag):genSecs(S,pub);
+  secs=secs.replace(/ target="_blank"/g,"").replace(/ rel="noopener"/g,"");
   const probe=new DOMParser().parseFromString("<div>"+secs+"</div>","text/html");
   const title=((probe.querySelector(".ptitle")||{}).textContent||"").trim();
   const sum=((probe.querySelector(".psum")||{}).textContent||"").trim();
@@ -1185,7 +1208,8 @@ const EDCSS=`
 .sec-article{padding-left:76px!important}
 .art-body figure{cursor:pointer}
 .sec-comments,.sbox,.metabox{pointer-events:none}
-.op-grip{position:absolute;top:-28px;left:0;height:24px;padding:0 12px;border-radius:30px;background:rgba(255,93,143,.22);border:1px solid rgba(255,93,143,.65);color:#ff8fb1;font:700 12px/22px sans-serif;cursor:grab;touch-action:none;white-space:nowrap}
+.op-box{pointer-events:auto!important}
+.op-grip{pointer-events:auto;position:absolute;top:-28px;left:0;height:24px;padding:0 12px;border-radius:30px;background:rgba(255,93,143,.22);border:1px solid rgba(255,93,143,.65);color:#ff8fb1;font:700 12px/22px sans-serif;cursor:grab;touch-action:none;white-space:nowrap}
 `;
 let ED=null;
 function openEdit(){
@@ -1369,7 +1393,7 @@ function collect(){
     n.classList.remove("ed-blk","ed-sec","ed-sel","ed-drag");
     if(!n.getAttribute("class"))n.removeAttribute("class");
   });
-  clone.querySelectorAll(".art-body a").forEach(a=>{a.setAttribute("target","_blank");a.setAttribute("rel","noopener")});
+  clone.querySelectorAll("a").forEach(a=>{a.removeAttribute("target");a.removeAttribute("rel")});
   clone.querySelectorAll("font").forEach(f=>{const s=doc.createElement("span");while(f.firstChild)s.appendChild(f.firstChild);f.replaceWith(s)});
   const names=[...clone.querySelectorAll(".au-name")].map(x=>x.textContent.trim()).filter(Boolean);
   const mb=clone.querySelector(".metabox");
@@ -1386,6 +1410,12 @@ $("#edBack").onclick=()=>{
   if(ED&&ED.dirty&&!confirm("تغییرات ذخیره‌نشده از بین می‌رود. ادامه می‌دهید؟"))return;
   ED=null;show("vPrev");
 };
+
+document.querySelectorAll("#steps span").forEach(sp=>{sp.onclick=()=>{
+  const t=sp.dataset.s;
+  if(ED){if(ED.dirty&&confirm("ویرایش‌ها ذخیره شود؟\nOK = ذخیره  /  Cancel = نادیده گرفتن")){S.override={html:collect()};persist();formDirty=false}ED=null}
+  if(t==="vForm")show("vForm");else if(t==="vPrev")openPreview();else if(t==="vEdit")openEdit();else openCode();
+}});
 
 /* ================= init ================= */
 restore();fillForm();
