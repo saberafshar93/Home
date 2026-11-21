@@ -136,6 +136,14 @@ iframe{display:block;width:100%;height:calc(100vh - 150px);min-height:560px;bord
   </div>
 
   <div class="panel">
+    <div class="ph"><span class="num">&lt;/&gt;</span><h3>باکس کد (چندتایی، اختیاری)</h3></div>
+    <datalist id="langs"><option>Python</option><option>R</option><option>JavaScript</option><option>TypeScript</option><option>Bash</option><option>SQL</option><option>C++</option><option>C</option><option>Java</option><option>MATLAB</option><option>Julia</option><option>HTML</option><option>CSS</option><option>JSON</option></datalist>
+    <div id="cwList"></div>
+    <button type="button" class="add" id="cwAdd">+ افزودن باکس کد</button>
+    <div class="muted" style="padding-top:12px">محل اولیه (ابتدا / وسط / انتها) را انتخاب کنید؛ در مرحله‌ی «ویرایش» با دستگیره‌ی ⠿ کنار باکس کد آن را دقیقاً به جای دلخواه در متن بکشید.</div>
+  </div>
+
+  <div class="panel">
     <div class="ph"><span class="num">✦</span><h3>نظر / کامنت من (چندتایی، اختیاری)</h3></div>
     <div id="opList"></div>
     <button type="button" class="add" id="opAdd">+ افزودن نظر</button>
@@ -481,6 +489,19 @@ a.av{display:grid}
 .op-t:dir(rtl){font-style:normal}
 .op-box.sf{position:absolute;z-index:60;align-self:auto;max-width:calc(100% - 16px)}
 @media(max-width:1020px){.op-box.sf{position:relative;right:auto!important;top:auto!important}}
+.cw-wrap{clear:both;position:relative;margin:1.8em 0}
+.codewin{margin:0;border-radius:16px;overflow:hidden;background:#0a0f26;border:1px solid var(--line);direction:ltr;text-align:left;box-shadow:0 18px 50px rgba(0,0,0,.4);font-family:Consolas,monospace}
+.codewin .bar{display:flex;align-items:center;gap:7px;padding:10px 14px;background:#0f1633}
+.codewin .bar i{width:12px;height:12px;border-radius:50%}
+.ctitle{margin-left:12px;font:600 12.5px Consolas,monospace;color:var(--mute)}
+.copybtn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:4px 13px;border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--txt);font:600 12px "Segoe UI",sans-serif;cursor:pointer;transition:.25s}
+.copybtn:hover{background:linear-gradient(90deg,var(--a),var(--b));color:#041022;border-color:transparent}
+.codebody{max-height:480px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--b) transparent}
+.codewin pre{counter-reset:ln;margin:0;padding:16px 0;min-height:0;white-space:pre;tab-size:4;font:13px/1.75 "JetBrains Mono",Consolas,"Courier New",monospace;color:#d6defa;width:max-content;min-width:100%;text-align:left}
+.cl{display:block;padding-right:20px}
+.cl::before{counter-increment:ln;content:counter(ln);display:inline-block;width:3em;margin-right:1.3em;text-align:right;color:#4a5683;user-select:none}
+.cl:hover{background:rgba(255,255,255,.04)}
+.tk{color:#c792ea}.ts{color:#c3e88d}.tn{color:#f78c6c}.tc{color:#637099;font-style:italic}.tf{color:#82aaff}
 </script>
 
 <script type="text/plain" id="tplJS">
@@ -693,6 +714,13 @@ if($("#cform")){
   cmDraw();
 }
 
+document.addEventListener("click",async e=>{
+  const b=e.target.closest&&e.target.closest(".copybtn");if(!b)return;
+  const t=[...b.closest(".codewin").querySelectorAll(".cl")].map(x=>x.textContent).join("\n");let ok=false;
+  try{await navigator.clipboard.writeText(t);ok=true}
+  catch{const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();try{ok=document.execCommand("copy")}catch{}a.remove()}
+  b.textContent=ok?"✓ Copied":"Copy failed";setTimeout(()=>{b.textContent="⧉ Copy"},1800);
+});
 const sh=$("#shareBtn");
 if(sh)sh.addEventListener("click",async()=>{
   const u=location.href;let ok=false;
@@ -909,11 +937,11 @@ async function copyText(t){
 
 /* ================= state ================= */
 const defAuthor=()=>({name:"",role:"",img:"",email:"",linkedin:"",desc:""});
-let S={domain:"",keywords:"",ops:[],title:"",summary:"",cover:"",banners:[],text:"",authors:[defAuthor()],override:null,publishedAt:null};
+let S={domain:"",keywords:"",ops:[],codes:[],title:"",summary:"",cover:"",banners:[],text:"",authors:[defAuthor()],override:null,publishedAt:null};
 let formDirty=false;
 function persist(){lsSet("bb-draft",JSON.stringify(S))}
 function restore(){
-  try{const d=JSON.parse(lsGet("bb-draft")||"null");if(d&&typeof d==="object"){S=Object.assign(S,d);if(!Array.isArray(S.authors))S.authors=[defAuthor()];if(!Array.isArray(S.banners))S.banners=[];if(!Array.isArray(S.ops))S.ops=[]}}catch{}
+  try{const d=JSON.parse(lsGet("bb-draft")||"null");if(d&&typeof d==="object"){S=Object.assign(S,d);if(!Array.isArray(S.authors))S.authors=[defAuthor()];if(!Array.isArray(S.banners))S.banners=[];if(!Array.isArray(S.ops))S.ops=[];if(!Array.isArray(S.codes))S.codes=[]}}catch{}
 }
 
 /* ================= form ================= */
@@ -940,6 +968,14 @@ function renderOp(){
     <div class="bnrow" style="grid-template-columns:1fr 1fr 1fr"><div><label>رنگ تأکید</label><input type="color" style="height:40px;padding:3px" data-l="ops" data-i="${i}" data-f="c1" value="${o.c1||"#4df0c8"}"></div><div><label>رنگ پس‌زمینه</label><input type="color" style="height:40px;padding:3px" data-l="ops" data-i="${i}" data-f="c2" value="${o.c2||"#2a3a8c"}"></div><div><label>رنگ متن</label><input type="color" style="height:40px;padding:3px" data-l="ops" data-i="${i}" data-f="c3" value="${o.c3||"#ffffff"}"></div></div>
     <button type="button" class="x" data-del="ops" data-i="${i}">حذف این نظر</button></div>`).join(""):`<div class="muted">هنوز نظری اضافه نشده.</div>`;
 }
+const CWP=[["start","ابتدای متن"],["mid","وسط متن"],["end","انتهای متن"]];
+function renderCd(){
+  $("#cwList").innerHTML=S.codes.length?S.codes.map((c,i)=>`<div class="item">
+    <div class="bnrow"><div><label>زبان برنامه‌نویسی (قابل نوشتن)</label><input data-l="codes" data-i="${i}" data-f="lang" list="langs" dir="ltr" placeholder="Python" value="${esc(c.lang)}"></div>
+    <div><label>محل قرارگیری</label><select data-l="codes" data-i="${i}" data-f="pos">${CWP.map(p=>`<option value="${p[0]}"${(c.pos||"end")===p[0]?" selected":""}>${p[1]}</option>`).join("")}</select></div></div>
+    <div class="fld"><label>کد</label><textarea data-l="codes" data-i="${i}" data-f="code" rows="8" dir="ltr" spellcheck="false" style="font-family:Consolas,monospace;white-space:pre;text-align:left">${esc(c.code)}</textarea></div>
+    <button type="button" class="x" data-del="codes" data-i="${i}">حذف این کد</button></div>`).join(""):`<div class="muted">هنوز باکس کدی اضافه نشده.</div>`;
+}
 function renderAu(){
   $("#auList").innerHTML=S.authors.length?S.authors.map((a,i)=>`<div class="item">
     <div class="grid2">
@@ -956,7 +992,7 @@ function renderAu(){
 }
 function fillForm(){
   document.querySelectorAll("[data-k]").forEach(i=>{i.value=S[i.dataset.k]||""});
-  setThumb($("#thCover"),S.cover);renderBn();renderAu();renderOp();
+  setThumb($("#thCover"),S.cover);renderBn();renderAu();renderOp();renderCd();
 }
 document.addEventListener("input",e=>{
   const t=e.target;
@@ -969,12 +1005,13 @@ document.addEventListener("input",e=>{
 });
 document.addEventListener("click",e=>{
   const d=e.target.closest("[data-del]");
-  if(d){S[d.dataset.del].splice(+d.dataset.i,1);formDirty=true;persist();d.dataset.del==="banners"?renderBn():d.dataset.del==="ops"?renderOp():renderAu()}
+  if(d){S[d.dataset.del].splice(+d.dataset.i,1);formDirty=true;persist();d.dataset.del==="banners"?renderBn():d.dataset.del==="ops"?renderOp():d.dataset.del==="codes"?renderCd():renderAu()}
 });
 $("#bnAdd").onclick=()=>{S.banners.push({img:"",link:"",wc:"",hc:"",pos:"side"});formDirty=true;persist();renderBn()};
 $("#opAdd").onclick=()=>{S.ops.push({label:"",text:"",wc:"",pos:"side"});formDirty=true;persist();renderOp()};
+$("#cwAdd").onclick=()=>{S.codes.push({lang:"Python",code:"",pos:"end"});formDirty=true;persist();renderCd()};
 $("#auAdd").onclick=()=>{S.authors.push(defAuthor());formDirty=true;persist();renderAu()};
-$("#reset").onclick=()=>{if(!confirm("همه‌ی فرم پاک شود؟"))return;S={domain:"",keywords:"",ops:[],title:"",summary:"",cover:"",banners:[],text:"",authors:[defAuthor()],override:null,publishedAt:null};persist();fillForm();formDirty=false;toast("فرم پاک شد")};
+$("#reset").onclick=()=>{if(!confirm("همه‌ی فرم پاک شود؟"))return;S={domain:"",keywords:"",ops:[],codes:[],title:"",summary:"",cover:"",banners:[],text:"",authors:[defAuthor()],override:null,publishedAt:null};persist();fillForm();formDirty=false;toast("فرم پاک شد")};
 
 /* ================= text → HTML ================= */
 function inl(s){
@@ -987,7 +1024,24 @@ function inl(s){
   return s;
 }
 function figHtml(im){return `<figure class="fig"><img src="${esc(im.src)}" alt="${esc(im.cap)}" referrerpolicy="no-referrer" decoding="async">${im.cap?`<figcaption dir="auto">${inl(im.cap)}</figcaption>`:""}</figure>`}
-function parseText(raw){
+const KW=new Set("def class return if elif else for while import from as try except finally with lambda pass break continue in not and or is None True False print yield async await function const let var new this typeof null undefined true false switch case default throw catch int float double char void static public private protected struct enum include using namespace package interface extends implements final do goto bool string end then local".split(" "));
+const HLRX=/(#.*$|\/\/.*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)(?=\s*\()|([A-Za-z_]\w*)/g;
+function hl(line){
+  let out="",last=0,m;HLRX.lastIndex=0;
+  while((m=HLRX.exec(line))){
+    out+=esc(line.slice(last,m.index));
+    const t=m[0];let c="";
+    if(m[1])c="c";else if(m[2])c="s";else if(m[3])c="n";else if(KW.has(t))c="k";else if(m[4])c="f";
+    out+=c?`<span class="t${c}">${esc(t)}</span>`:esc(t);
+    last=m.index+t.length;
+  }
+  return out+esc(line.slice(last));
+}
+function codeHtml(c){
+  const lang=(c.lang||"").trim(),ls=String(c.code||"").replace(/\r/g,"").replace(/\s+$/,"").split("\n");
+  return `<div class="cw-wrap"><div class="codewin"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="ctitle">${lang?`(${esc(lang)})`:"(code)"}</span><button class="copybtn" type="button">⧉ Copy</button></div><div class="codebody"><pre>${ls.map(l=>`<span class="cl">${hl(l)}</span>`).join("")}</pre></div></div></div>`;
+}
+function parseText(raw,codes){
   const out=[];let imgs=[],list=null,quote=[];
   const fi=()=>{if(!imgs.length)return;out.push(imgs.length===1?figHtml(imgs[0]):`<div class="gal">${imgs.map(figHtml).join("")}</div>`);imgs=[]};
   const fl=()=>{if(list){out.push(`<${list.t}>${list.i.map(x=>`<li dir="auto">${inl(x)}</li>`).join("")}</${list.t}>`);list=null}};
@@ -1006,7 +1060,8 @@ function parseText(raw){
     fl();fq();out.push(`<p dir="auto">${inl(t)}</p>`);
   }
   fi();fl();fq();
-  return out.join("\n");
+  const mid=Math.ceil(out.length/2),g=p=>(codes||[]).filter(c=>(c.pos||"end")===p).map(codeHtml);
+  return [...g("start"),...out.slice(0,mid),...g("mid"),...out.slice(mid),...g("end")].join("\n");
 }
 
 /* ================= page generation ================= */
@@ -1044,7 +1099,7 @@ function opHtml(o,i){
 const CATS=`<aside class="sbox cbox"><div class="sinner"><div class="shd"><span>Categories <b id="catcount" data-dyn></b></span></div><div class="slist" id="catlist" data-dyn></div></div></aside>`;
 const LATEST=`<aside class="sbox"><div class="sinner"><div class="shd"><span>Latest <b>titles</b></span><span id="scount" data-dyn></span></div><div class="slist" id="slist" data-dyn></div><div class="sfoot"><div class="row"><span id="srange" data-dyn></span><div class="pp">Show <div class="seg" id="sperseg" data-dyn></div></div></div><div class="row" style="justify-content:center"><div class="pg" id="spg" data-dyn></div></div></div></div></aside>`;
 function genSecs(S,pub){
-  const names=S.authors.map(a=>a.name.trim()).filter(Boolean);
+  const codes=(S.codes||[]).filter(c=>(c.code||"").trim()),hasA=S.text.trim()||codes.length,names=S.authors.map(a=>a.name.trim()).filter(Boolean);
   const bnH=p=>S.banners.filter(b=>isUrl(b.img)&&(b.pos||"side")===p).map(b=>{const im=`<img src="${esc(b.img.trim())}" alt="" referrerpolicy="no-referrer" decoding="async">`;return `<div class="bn${+b.hc>0?" bn-h":""}" style="${+b.wc>0?`width:${Math.round(b.wc*37.8)}px;`:"width:100%;"}${+b.hc>0?`height:${Math.round(b.hc*37.8)}px;`:""}">${isUrl(b.link)?`<a href="${esc(b.link.trim())}">${im}</a>`:im}</div>`}).join("");
   const bnSec=p=>{const x=bnH(p);return x?`<section class="sec sec-banners"><div class="banners">${x}</div></section>\n`:""};
   let h=`<div class="sec sec-meta" data-nodrag><div class="metabox"><span class="mi">${IC.cal}<time datetime="${pub.toISOString()}">${fmtDate(pub)}</time></span>${metaRight(names)}</div></div>\n`;
@@ -1053,9 +1108,9 @@ function genSecs(S,pub){
   if(hasC||hasT)h+=`<section class="sec sec-hero"><div class="hbox${hasC&&hasT?" hasc":""}">${hasC?`<figure class="cover"><img src="${esc(S.cover.trim())}" alt="${esc(S.title.trim())}" referrerpolicy="no-referrer" decoding="async"></figure>`:""}${hasT?`<div class="htxt">${dm?`<span class="dom" dir="auto">${esc(dm)}</span>`:""}${S.title.trim()?`<h1 class="ptitle grad" dir="auto">${esc(S.title.trim())}</h1>`:""}${S.summary.trim()?`<p class="psum" dir="auto">${nl(S.summary.trim())}</p>`:""}${kwHtml(kwl)}</div>`:""}</div></section>\n`;
   h+=bnSec("afterTitle");
   const side=bnH("side"),below=bnH("belowCats"),ops=(S.ops||[]).filter(o=>(o.text||"").trim()),opA=ops.filter(o=>o.pos!=="free").map(opHtml).join(""),opF=ops.filter(o=>o.pos==="free").map((o,i)=>opHtml(o,i)).join("");
-  h+=`<section class="sec sec-main${S.text.trim()?"":" solo"}">${S.text.trim()?`<div class="sec-article"><article class="art-body">\n${parseText(S.text)}\n</article>${kwHtml(kwl,"kws-end")}</div>`:""}<div class="sidecol">${LATEST}${opA}${side?`<div class="banners">${side}</div>`:""}${CATS}${below?`<div class="banners">${below}</div>`:""}</div></section>\n`;
+  h+=`<section class="sec sec-main${hasA?"":" solo"}">${hasA?`<div class="sec-article"><article class="art-body">\n${parseText(S.text,codes)}\n</article>${kwHtml(kwl,"kws-end")}</div>`:""}<div class="sidecol">${LATEST}${opA}${side?`<div class="banners">${side}</div>`:""}${CATS}${below?`<div class="banners">${below}</div>`:""}</div></section>\n`;
   h+=bnSec("beforeEnd");
-  if(S.text.trim())h+=`<section class="sec sec-end"><i></i><span class="end-t">The End</span><i></i></section>\n`;
+  if(hasA)h+=`<section class="sec sec-end"><i></i><span class="end-t">The End</span><i></i></section>\n`;
   h+=bnSec("afterEnd");
   const au=S.authors.filter(a=>Object.values(a).some(v=>String(v).trim()));
   if(au.length)h+=`<section class="sec sec-authors"><span class="tag">${au.length>1?"About the authors":"About the author"}</span><div class="alist">${au.map(authorCard).join("")}</div></section>\n`;
@@ -1226,6 +1281,7 @@ function initEdit(){
   try{doc.execCommand("defaultParagraphSeparator",false,"p");doc.execCommand("styleWithCSS",false,true)}catch{}
   const HOSTS=".art-body,.op-t,.op-lb,.dom,.ptitle,.psum,.au-name,.au-role,.au-desc,.end-t,.cm-h";
   doc.querySelectorAll(HOSTS).forEach(el=>{if(el.classList.contains("cm-h"))return;el.contentEditable="true";el.spellcheck=false});
+  doc.querySelectorAll(".cw-wrap").forEach(f=>{f.contentEditable="false"});
   doc.querySelectorAll(".art-body figure").forEach(f=>{f.contentEditable="false";const c=f.querySelector("figcaption");if(c)c.contentEditable="true"});
   doc.querySelectorAll(".ptitle,.dom,.au-name,.au-role,.end-t").forEach(el=>el.addEventListener("keydown",e=>{if(e.key==="Enter")e.preventDefault()}));
   const sec=doc.getElementById("postsecs");
